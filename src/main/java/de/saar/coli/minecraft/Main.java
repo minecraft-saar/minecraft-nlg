@@ -1,11 +1,13 @@
 package de.saar.coli.minecraft;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.InputStreamReader;
+
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
-
-import java.io.*;
 
 
 @Command(name = "mcrealizer", mixinStandardHelpOptions = true, version = "Ḿinecraft realizer 0.1")
@@ -35,8 +37,8 @@ public class Main implements Runnable {
                     input = is.readLine();
                 }
             } else {
-                if (inputLocation.length == 0) {
-                    System.err.println("You need to either run in continuous mode or provide a location via positional argument!");
+                if (inputLocation == null || inputLocation.length != 1) {
+                    System.err.println("You need to either run in continuous mode or provide a single location via positional argument!");
                     System.exit(1);
                 }
                 System.out.println(mcr.generateStatement(inputLocation[0]));
