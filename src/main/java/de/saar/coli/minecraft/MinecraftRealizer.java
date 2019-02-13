@@ -1,7 +1,8 @@
 package de.saar.coli.minecraft;
 
-import java.io.*;
-import java.util.Iterator;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Set;
 
@@ -48,10 +49,9 @@ public class MinecraftRealizer {
         Set<List<String>> refInput = ref.parseString("{"+location+"}");
         TreeAutomaton ta = irtg.parseSimple(refI, refInput);
         TreeAutomaton outputChart = irtg.decodeToAutomaton(strI, ta);
-        Iterator<Tree<String>> it = outputChart.languageIterator();
-        if (it.hasNext()) {
-            ret = String.join(" ", strI.getAlgebra().evaluate(it.next()));
-        }
+        Tree<String> bestTree = outputChart.viterbi();
+        if (bestTree != null)
+            ret = String.join(" ", strI.getAlgebra().evaluate(bestTree));
         return ret;
     }
     /*
