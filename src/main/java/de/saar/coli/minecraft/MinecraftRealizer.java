@@ -6,14 +6,13 @@ import java.io.InputStreamReader;
 import java.util.List;
 import java.util.Set;
 
+import de.saar.basic.Pair;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
-import de.up.ling.irtg.TemplateInterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
 import de.up.ling.irtg.algebra.SetAlgebra;
 import de.up.ling.irtg.automata.TreeAutomaton;
 import de.up.ling.irtg.codec.IrtgInputCodec;
-import de.up.ling.irtg.codec.TemplateIrtgInputCodec;
 import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.Tree;
 
@@ -49,11 +48,16 @@ public class MinecraftRealizer {
     public String generateStatement(String action, String location) throws ParserException {
         String ret = "**NONE**";
         Set<List<String>> refInput = refA.parseString("{"+location+"}");
-        TreeAutomaton ta = irtg.parseSimple(refI, refInput);
-        TreeAutomaton<List<String>> outputChart = irtg.decodeToAutomaton(strI, ta);
-        Tree<String> bestTree = outputChart.viterbi();
-        if (bestTree != null)
-            ret = String.join(" ", strI.getAlgebra().evaluate(bestTree));
+        TreeAutomaton<Pair<String, Set<List<String>>>> ta = irtg.parseSimple(refI, refInput);
+        Tree<String> bestTree = ta.viterbi();
+        // TODO: Ask alexander what this was supposed to do and why it resulted in different
+        // outputs than the line above together with building the stringTree below.
+        // TreeAutomaton<List<String>> outputChart = irtg.decodeToAutomaton(strI, ta);
+        // Tree<String> bestTree = outputChart.viterbi();
+        if (bestTree != null) {
+            Tree<String> stringTree = strI.getHomomorphism().apply(bestTree);
+            ret = String.join(" ", strI.getAlgebra().evaluate(stringTree));
+        }
         return action +" " + ret;
     }
     /*

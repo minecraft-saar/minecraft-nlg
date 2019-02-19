@@ -5,7 +5,7 @@ interpretation ref: de.up.ling.irtg.algebra.SetAlgebra
 // Terminalsymbole dürfen nur in einer einzigen Regel auftreten
 
 S! -> s(RefLoc) [0.9]
-  [string] *("the block", ?1)
+  [string] *("the stone block", ?1)
   [ref] ?1
 
 RefBlock -> blockloc(RefLoc) [0.9]
