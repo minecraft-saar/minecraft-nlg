@@ -54,7 +54,7 @@ public class MinecraftRealizer {
         Tree<String> bestTree = outputChart.viterbi();
         if (bestTree != null)
             ret = String.join(" ", strI.getAlgebra().evaluate(bestTree));
-        return ret;
+        return action +" " + ret;
     }
     /*
     TemplateInterpretedTreeAutomaton tirtg = new TemplateIrtgInputCodec().read(MCTIRTG)
