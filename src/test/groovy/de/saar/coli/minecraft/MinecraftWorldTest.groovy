@@ -7,6 +7,7 @@ import de.up.ling.irtg.TemplateInterpretedTreeAutomaton
 import de.up.ling.irtg.algebra.Algebra
 import de.up.ling.irtg.algebra.SetAlgebra
 import de.up.ling.irtg.algebra.SubsetAlgebra
+import de.up.ling.irtg.codec.IrtgInputCodec
 import de.up.ling.irtg.codec.TemplateIrtgInputCodec
 import de.up.ling.irtg.util.FirstOrderModel
 import de.up.ling.irtg.util.Util
@@ -48,10 +49,10 @@ class MinecraftWorldTest {
 
     @Test
     public void testMCRealizer() {
-        TemplateInterpretedTreeAutomaton tirtg = new TemplateIrtgInputCodec().read(new StringBufferInputStream(MCTIRTG))
+        InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(new StringBufferInputStream(MCTIRTG))
         FirstOrderModel mcModel = FirstOrderModel.read(new StringReader(TESTJSON))
-        def mcr = new MinecraftRealizer(tirtg, mcModel)
-        def res = mcr.generateStatement("loc28")
+        def mcr = new MinecraftRealizer(irtg, mcModel)
+        def res = mcr.generateStatement("put", "loc28")
         assert res.length() > 10
     }
 
@@ -64,20 +65,10 @@ interpretation sem: de.up.ling.irtg.algebra.SubsetAlgebra
 // a referent is always the location the current subtree refers to
 // Terminalsymbole dürfen nur in einer einzigen Regel auftreten
 
-foreach {loc| location(loc)}:
-S! -> s_$loc(RefLoc)
+S! -> s(RefLoc)
   [string] *("put the block", ?1)
-//  [ref] uniq_$loc(?1)
   [ref] ?1
   [sem] ?1 
-  //dunion(?1, "at($loc,bxx)")
-
-// RefBlock - refers to a position which is guaranteed to contain a block
-foreach {block | it(block)}:
-RefBlock -> prefblock_$block
-  [string] "the previous block"
-  [ref] project_2(intersect_1(at, member_$block(T)))
-  [sem] EMPTYSET
 
 RefBlock -> blockloc(RefLoc)
   [string] *("the block", ?1)
@@ -86,8 +77,6 @@ RefBlock -> blockloc(RefLoc)
 
 // RefLoc - refers to a position which may or may not contain a block
 
-// refer to above of before
-// foreach { l1, obj, l2 | top-of(l1,l2) and location(l1) and location(l2) and at(obj,l2)}:
 RefLoc -> top(RefBlock)
   [string] *("on top of", ?1)
   [ref] project_1(intersect_2(top-of,?1))
@@ -113,7 +102,7 @@ RefLoc -> front(RefBlock)
   [ref] project_1(intersect_2(in-front-of,?1))
   [sem] ?1
   
-RefLoc -> front(RefBlock)
+RefLoc -> behind(RefBlock)
   [string] *("behind of", ?1)
   [ref] project_2(intersect_1(in-front-of,?1))
   [sem] ?1
@@ -137,6 +126,11 @@ AdjBlock -> yellowblock
 AdjBlock -> blueblock
   [string] "blue block"
   [ref] blue
+  [sem] EMPTYSET
+
+AdjBlock -> prevblock
+  [string] "previous block"
+  [ref] it
   [sem] EMPTYSET
 '''
     

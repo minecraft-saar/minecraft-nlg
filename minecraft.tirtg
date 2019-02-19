@@ -4,16 +4,9 @@ interpretation ref: de.up.ling.irtg.algebra.SetAlgebra
 // a referent is always the location the current subtree refers to
 // Terminalsymbole dürfen nur in einer einzigen Regel auftreten
 
-foreach {loc| location(loc)}:
-S! -> s_$loc(RefLoc) [0.9]
-  [string] *("put the block", ?1)
+S! -> s(RefLoc) [0.9]
+  [string] *("the block", ?1)
   [ref] ?1
-
-// RefBlock - refers to a position which is guaranteed to contain a block
-// foreach {block | it(block)}:
-RefBlock -> prefblock [0.9]
-  [string] "the previous block"
-  [ref] size_1(project_2(intersect_1(at, it(block))))
 
 RefBlock -> blockloc(RefLoc) [0.9]
   [string] *("the block", ?1)
@@ -63,12 +56,6 @@ AdjBlock -> blueblock [0.9]
   [string] "blue block"
   [ref] blue
 
-AdjBlock -> prevlock [0.9]
+AdjBlock -> prevblock [0.9]
   [string] "previous block"
   [ref] it
-
-
-
-RefBlock -> prefblock [0.9]
-  [string] "the previous block"
-  [ref] size_1(project_2(intersect_1(at, it(block))))

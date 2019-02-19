@@ -12,6 +12,7 @@ import de.up.ling.irtg.TemplateInterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
 import de.up.ling.irtg.algebra.SetAlgebra;
 import de.up.ling.irtg.automata.TreeAutomaton;
+import de.up.ling.irtg.codec.IrtgInputCodec;
 import de.up.ling.irtg.codec.TemplateIrtgInputCodec;
 import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.Tree;
@@ -21,34 +22,35 @@ public class MinecraftRealizer {
     private final InterpretedTreeAutomaton irtg;
     private final Interpretation<List<String>> strI;
     private final Interpretation<Set<List<String>>> refI;
-    private final SetAlgebra ref;
+    private final SetAlgebra refA;
 
     public static MinecraftRealizer createRealizer(File tirtgFile, File modelFile) throws Exception {
         try (
                 FileInputStream tirtgin = new FileInputStream(tirtgFile);
                 FileInputStream modelin = new FileInputStream(modelFile);
         ) {
-            TemplateInterpretedTreeAutomaton tirtg = new TemplateIrtgInputCodec().read(tirtgin);
             FirstOrderModel mcModel = FirstOrderModel.read(new InputStreamReader(modelin));
-            return new MinecraftRealizer(tirtg, mcModel);
+            InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(tirtgin);
+
+            return new MinecraftRealizer(irtg, mcModel);
         }
     }
 
-    public MinecraftRealizer(TemplateInterpretedTreeAutomaton tirtg, FirstOrderModel mcModel) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        irtg = tirtg.instantiate(mcModel);
+    public MinecraftRealizer(InterpretedTreeAutomaton irtg, FirstOrderModel mcModel) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+        this.irtg = irtg;
         refI = (Interpretation<Set<List<String>>>) irtg.getInterpretation("ref");
-        ref = (SetAlgebra)refI.getAlgebra();
+        refA = (SetAlgebra)refI.getAlgebra();
         // Interpretation<Set<List<String>>> refI = irtg.getInterpretation("ref");
         // put inputs here
         strI = (Interpretation<List<String>>) irtg.getInterpretation("string");
-        ref.setModel(mcModel);
+        refA.setModel(mcModel);
     }
 
-    public String generateStatement(String location) throws ParserException {
+    public String generateStatement(String action, String location) throws ParserException {
         String ret = "**NONE**";
-        Set<List<String>> refInput = ref.parseString("{"+location+"}");
+        Set<List<String>> refInput = refA.parseString("{"+location+"}");
         TreeAutomaton ta = irtg.parseSimple(refI, refInput);
-        TreeAutomaton outputChart = irtg.decodeToAutomaton(strI, ta);
+        TreeAutomaton<List<String>> outputChart = irtg.decodeToAutomaton(strI, ta);
         Tree<String> bestTree = outputChart.viterbi();
         if (bestTree != null)
             ret = String.join(" ", strI.getAlgebra().evaluate(bestTree));

@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 
+import de.up.ling.irtg.algebra.ParserException;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -24,16 +25,17 @@ public class Main implements Runnable {
 
     @Parameters  String[] inputLocation;
 
+    MinecraftRealizer mcr;
+
     public void run() {
         try {
 
-            MinecraftRealizer mcr = MinecraftRealizer.createRealizer(tirtgFile, modelFile);
+            mcr = MinecraftRealizer.createRealizer(tirtgFile, modelFile);
             if (continuous) {
                 BufferedReader is =  new BufferedReader(new InputStreamReader(System.in));
                 String input = is.readLine();
                 while (input != null) {
-                    String ret = mcr.generateStatement(input.trim());
-                    System.out.println(ret);
+                    System.out.println(processInput(input));
                     input = is.readLine();
                 }
             } else {
@@ -41,11 +43,17 @@ public class Main implements Runnable {
                     System.err.println("You need to either run in continuous mode or provide a single location via positional argument!");
                     System.exit(1);
                 }
-                System.out.println(mcr.generateStatement(inputLocation[0]));
+                System.out.println(processInput(inputLocation[0]));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    private String processInput(String input) throws ParserException {
+        input = input.trim();
+        String[] action_location = input.split(":");
+        return mcr.generateStatement(action_location[0], action_location[1]);
     }
 
     public static void main(String[] args) {
