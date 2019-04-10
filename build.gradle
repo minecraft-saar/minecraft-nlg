@@ -19,8 +19,13 @@ repositories {
 
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
-    implementation 'org.codehaus.groovy:groovy-all:2.4.15'
-    compile group: "com.github.akoehn", name:"alto", version:"908a0155d1"
+	testCompile 'org.codehaus.groovy:groovy-all:2.4.15'
+	// TODO I have *no* clue why this project needs to
+	// depend on antlr as it does not use antlr
+	// but for some reason otherwise the tests fail.
+	// this should be satisfied by alto linking to antlr.
+	implementation 'org.antlr:antlr4:4.7.2'
+    compile group: "com.github.coli-saar", name:"alto", version:"33a02f38"
     compile 'info.picocli:picocli:3.9.3'
 }
 
