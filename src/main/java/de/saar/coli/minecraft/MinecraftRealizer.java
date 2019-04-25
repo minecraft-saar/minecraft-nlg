@@ -1,11 +1,5 @@
 package de.saar.coli.minecraft;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.util.List;
-import java.util.Set;
-
 import de.saar.basic.Pair;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
@@ -16,50 +10,59 @@ import de.up.ling.irtg.codec.IrtgInputCodec;
 import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.Tree;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStreamReader;
+import java.util.List;
+import java.util.Set;
+
+
 public class MinecraftRealizer {
 
-    private final InterpretedTreeAutomaton irtg;
-    private final Interpretation<List<String>> strI;
-    private final Interpretation<Set<List<String>>> refI;
-    private final SetAlgebra refA;
+  private final InterpretedTreeAutomaton irtg;
+  private final Interpretation<List<String>> strI;
+  private final Interpretation<Set<List<String>>> refI;
+  private final SetAlgebra refA;
 
-    public static MinecraftRealizer createRealizer(File tirtgFile, File modelFile) throws Exception {
-        try (
-                FileInputStream tirtgin = new FileInputStream(tirtgFile);
-                FileInputStream modelin = new FileInputStream(modelFile);
-        ) {
-            FirstOrderModel mcModel = FirstOrderModel.read(new InputStreamReader(modelin));
-            InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(tirtgin);
+  public static MinecraftRealizer createRealizer(File tirtgFile, File modelFile) throws Exception {
+    try (
+        FileInputStream tirtgin = new FileInputStream(tirtgFile);
+        FileInputStream modelin = new FileInputStream(modelFile);
+    ) {
+      FirstOrderModel mcModel = FirstOrderModel.read(new InputStreamReader(modelin));
+      InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(tirtgin);
 
-            return new MinecraftRealizer(irtg, mcModel);
-        }
+      return new MinecraftRealizer(irtg, mcModel);
+    }
+  }
+
+  public MinecraftRealizer(InterpretedTreeAutomaton irtg, FirstOrderModel mcModel)
+      throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+    this.irtg = irtg;
+    refI = (Interpretation<Set<List<String>>>) irtg.getInterpretation("ref");
+    refA = (SetAlgebra) refI.getAlgebra();
+    // Interpretation<Set<List<String>>> refI = irtg.getInterpretation("ref");
+    // put inputs here
+    strI = (Interpretation<List<String>>) irtg.getInterpretation("string");
+    refA.setModel(mcModel);
+  }
+
+  public String generateStatement(String action, String location) throws ParserException {
+    String ret = "**NONE**";
+    Set<List<String>> refInput = refA.parseString("{" + location + "}");
+    TreeAutomaton<Pair<String, Set<List<String>>>> ta = irtg.parseSimple(refI, refInput);
+    Tree<String> bestTree = ta.viterbi();
+    // TODO: Ask alexander what this was supposed to do and why it resulted in different
+    // outputs than the line above together with building the stringTree below.
+    // TreeAutomaton<List<String>> outputChart = irtg.decodeToAutomaton(strI, ta);
+    // Tree<String> bestTree = outputChart.viterbi();
+    if (bestTree != null) {
+      Tree<String> stringTree = strI.getHomomorphism().apply(bestTree);
+      ret = String.join(" ", strI.getAlgebra().evaluate(stringTree));
     }
 
-    public MinecraftRealizer(InterpretedTreeAutomaton irtg, FirstOrderModel mcModel) throws InstantiationException, IllegalAccessException, ClassNotFoundException {
-        this.irtg = irtg;
-        refI = (Interpretation<Set<List<String>>>) irtg.getInterpretation("ref");
-        refA = (SetAlgebra)refI.getAlgebra();
-        // Interpretation<Set<List<String>>> refI = irtg.getInterpretation("ref");
-        // put inputs here
-        strI = (Interpretation<List<String>>) irtg.getInterpretation("string");
-        refA.setModel(mcModel);
-    }
-
-    public String generateStatement(String action, String location) throws ParserException {
-        String ret = "**NONE**";
-        Set<List<String>> refInput = refA.parseString("{"+location+"}");
-        TreeAutomaton<Pair<String, Set<List<String>>>> ta = irtg.parseSimple(refI, refInput);
-        Tree<String> bestTree = ta.viterbi();
-        // TODO: Ask alexander what this was supposed to do and why it resulted in different
-        // outputs than the line above together with building the stringTree below.
-        // TreeAutomaton<List<String>> outputChart = irtg.decodeToAutomaton(strI, ta);
-        // Tree<String> bestTree = outputChart.viterbi();
-        if (bestTree != null) {
-            Tree<String> stringTree = strI.getHomomorphism().apply(bestTree);
-            ret = String.join(" ", strI.getAlgebra().evaluate(stringTree));
-        }
-        return action +" " + ret;
-    }
+    return action + " " + ret;
+  }
     /*
     TemplateInterpretedTreeAutomaton tirtg = new TemplateIrtgInputCodec().read(MCTIRTG)
     FirstOrderModel mcModel = FirstOrderModel.read(new StringReader(TESTJSON))
