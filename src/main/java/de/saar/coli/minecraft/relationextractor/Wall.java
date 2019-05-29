@@ -4,7 +4,10 @@ package de.saar.coli.minecraft.relationextractor;
 
 public class Wall extends BigBlock {
 
-  public enum WallDirection {ALONGX, ALONGY}
+  public enum WallDirection {
+    ALONGX,
+    ALONGY
+  }
 
   // public final int x1, y1, z1, x2, y2, z2;
   // direction of the normal vector

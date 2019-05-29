@@ -1,8 +1,9 @@
+/*
 package de.saar.coli.minecraft.relationextractor.relations;
 
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
 
-public class SameShape implements Relation {
+public class SameShape extends Relation {
 
   public final MinecraftObject obj1, obj2;
 
@@ -11,3 +12,4 @@ public class SameShape implements Relation {
     this.obj2 = obj2;
   }
 }
+ */

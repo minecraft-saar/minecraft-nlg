@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
+import org.eclipse.collections.api.set.ImmutableSet;
+import org.eclipse.collections.api.set.MutableSet;
 
 public abstract class MinecraftObject {
   protected Set<MinecraftObject> children;
@@ -65,7 +67,7 @@ public abstract class MinecraftObject {
    * @param possibleReferents objects which may be used for the description
    * @return set of relations, transitively describing this all all other objects needed.
    */
-  public Set<Relation> describe(Set<MinecraftObject> possibleReferents) {
+  public Set<Relation> describe(ImmutableSet<MinecraftObject> possibleReferents) {
     Set<Relation> result = new HashSet<>();
 
     EnumSet<Aspects> aspectsNeeded = EnumSet.copyOf(aspects);
@@ -73,14 +75,12 @@ public abstract class MinecraftObject {
     loop:
     for (MinecraftObject other: possibleReferents) {
       Set<Relation> relationCandidates = this.generateRelationsTo(other);
-      relationCandidates.addAll(other.generateRelationsTo(this));
+      // relationCandidates.addAll(other.generateRelationsTo(this));
       for (Relation rel: relationCandidates) {
         if (intersects(aspectsNeeded, rel.fixes)) {
           for (MinecraftObject obj: rel.otherobj) {
-            Set<MinecraftObject> prefNew = new HashSet<>();
-            prefNew.addAll(possibleReferents);
-            prefNew.remove(obj);
-            result.addAll(obj.describe(possibleReferents));
+            ImmutableSet<MinecraftObject> prefNew = possibleReferents.newWithout(obj);
+            result.addAll(obj.describe(prefNew));
           }
           result.add(rel);
           aspectsFixed.addAll(rel.fixes);
@@ -94,5 +94,5 @@ public abstract class MinecraftObject {
     return result;
   }
 
-  public abstract Set<Relation> generateRelationsTo(MinecraftObject other);
+  public abstract MutableSet<Relation> generateRelationsTo(MinecraftObject other);
 }

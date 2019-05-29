@@ -1,0 +1,27 @@
+{
+	"indeffrom": [["wall1", "loc25"]],
+	"indefto": [["wall1", "loc25"]],
+	"indefwall": [["wall1"]],
+	"orange": [
+		[
+			"b7"
+		]
+	],
+	"at": [
+		[
+			"b7",
+			"loc25"
+		]
+	],
+	"block": [
+		[
+			"b7"
+		]
+	],
+	"location": [
+		[
+			"loc25"
+		]
+	],
+	"none": [[]]
+}

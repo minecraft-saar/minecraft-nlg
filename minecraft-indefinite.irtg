@@ -1,0 +1,96 @@
+interpretation string: de.up.ling.irtg.algebra.StringAlgebra
+interpretation ref: de.up.ling.irtg.algebra.SetAlgebra
+interpretation sem: de.up.ling.irtg.algebra.SubsetAlgebra
+
+// a referent is always the location the current subtree refers to
+// Terminalsymbole dürfen nur in einer einzigen Regel auftreten
+
+// Refers to the wall if all indefPPs also refer to the indefinite
+// wall and nothing else.
+// (size_1(?1)) -> all PPs refer to the same thing
+// intersect_1 -> this thing is the indefwall
+
+s! -> s(IndefPP) [0.9]
+  [string] *("a wall", ?1)
+  [ref] intersect_1(size_1(?1), indefwall)
+  [sem] ?1
+
+IndefPP -> indefFrom(RefBlock, IndefPP) [0.9]
+  [string] *(*("from", ?1), ?2)
+  [ref] intersect( project_1(intersect_2(indeffrom,?1)), ?2)
+  [sem] dunion(dunion(X1+Z1, ?2), ?1)
+
+IndefPP -> indefTo(RefBlock, IndefPP) [0.9]
+  [string] *(*("to", ?1), ?2)
+  [ref] union( project_1(intersect_2(indefto,?1)), ?2)
+  [sem] dunion(dunion(X2+Z2, ?2), ?1)
+
+IndefPP -> indefEmpty [0.9]
+  [string] ""
+  [ref] T
+  [sem] EMPTYSET
+
+RefBlock -> blockloc(RefLoc) [0.9]
+  [string] *("the block", ?1)
+  [ref] ?1
+  [sem] EMPTYSET
+
+// RefLoc - refers to a position which may or may not contain a block
+ 
+// refer to above of before
+// foreach { l1, obj, l2 | top-of(l1,l2) and location(l1) and location(l2) and at(obj,l2)}:
+RefLoc -> top(RefBlock) [0.9]
+  [string] *("on top of", ?1)
+  [ref] project_1(intersect_2(top-of,?1))
+  [sem] EMPTYSET
+
+
+RefLoc -> below(RefBlock) [0.9]
+  [string] *("below of", ?1)
+  [ref] project_2(intersect_1(top-of,?1))
+  [sem] EMPTYSET
+  
+RefLoc -> left(RefBlock) [0.9]
+  [string] *("to the left of", ?1)
+  [ref] project_1(intersect_2(left-of,?1))
+  [sem] EMPTYSET
+  
+RefLoc -> right(RefBlock) [0.9]
+  [string] *("to the right of", ?1)
+  [ref] project_2(intersect_1(left-of,?1))
+  [sem] EMPTYSET
+  
+RefLoc -> front(RefBlock) [0.9]
+  [string] *("infront of", ?1)
+  [ref] project_1(intersect_2(in-front-of,?1))
+  [sem] EMPTYSET
+  
+RefLoc -> behind(RefBlock) [0.9]
+  [string] *("behind", ?1)
+  [ref] project_2(intersect_1(in-front-of,?1))
+  [sem] EMPTYSET
+
+RefBlock -> uniqblockdesc(AdjBlock) [0.9]
+  [string] *("the", ?1)
+  [ref] project_2(intersect_1(at, size_1(?1)))
+  [sem] EMPTYSET
+
+AdjBlock -> orangeblock [0.9]
+  [string] "orange block"
+  [ref] orange
+  [sem] EMPTYSET
+ 
+AdjBlock -> yellowblock [0.9]
+  [string] "yellow block"
+  [ref] yellow
+  [sem] EMPTYSET
+
+AdjBlock -> blueblock [0.9]
+  [string] "blue block"
+  [ref] blue
+  [sem] EMPTYSET
+
+AdjBlock -> prevblock [0.9]
+  [string] "previous block"
+  [ref] it
+  [sem] EMPTYSET

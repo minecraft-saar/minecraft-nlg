@@ -1,7 +1,9 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.relationextractor.relations.Relation;
 import java.util.HashSet;
 import java.util.Set;
+import org.eclipse.collections.api.set.MutableSet;
 
 public class BigBlock extends MinecraftObject {
 
@@ -52,5 +54,11 @@ public class BigBlock extends MinecraftObject {
       return false;
     }
     return true;
+  }
+
+  @Override
+  public MutableSet<Relation> generateRelationsTo(MinecraftObject other) {
+    // TODO
+    return null;
   }
 }

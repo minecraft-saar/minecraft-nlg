@@ -1,10 +1,11 @@
 package de.saar.coli.minecraft;
 
+import de.up.ling.irtg.algebra.ParserException;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 
-import de.up.ling.irtg.algebra.ParserException;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -29,6 +30,9 @@ public class Main implements Runnable {
 
   MinecraftRealizer mcr;
 
+  /**
+   * Run the main loop of the minecraft realizer.
+   */
   public void run() {
     try {
 
@@ -43,7 +47,8 @@ public class Main implements Runnable {
       } else {
         if (inputLocation == null || inputLocation.length != 1) {
           System.err.println(
-              "You need to either run in continuous mode or provide a single location via positional argument!");
+              "You need to either run in continuous mode or provide"
+                  + " a single location via positional argument!");
           System.exit(1);
         }
         System.out.println(processInput(inputLocation[0]));
@@ -55,8 +60,12 @@ public class Main implements Runnable {
 
   private String processInput(String input) throws ParserException {
     input = input.trim();
-    String[] action_location = input.split(":");
-    return mcr.generateStatement(action_location[0], action_location[1]);
+    String[] actionObjectAspects = input.split(":");
+    String aspects = "";
+    if (actionObjectAspects.length == 3) {
+      aspects = actionObjectAspects[2];
+    }
+    return mcr.generateStatement(actionObjectAspects[0], actionObjectAspects[1], aspects);
   }
 
   public static void main(String[] args) {

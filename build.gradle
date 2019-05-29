@@ -2,16 +2,26 @@
 plugins {
     id 'java'
     id 'application'
-	id 'com.github.johnrengelman.shadow' version '4.0.4'
+	id 'com.github.johnrengelman.shadow' version '5.0.0'
     id 'checkstyle'
+    id 'pl.allegro.tech.build.axion-release' version '1.10.1'
+
 }
 group 'com.github.minecraft-saar'
 description 'minecraft-nlg'
-version '0.1-SNAPSHOT'
+
+scmVersion {
+    tag {
+        prefix = 'release-'
+    }
+}
+
+version = scmVersion.version
 
 sourceCompatibility = 1.8
 
 repositories {
+    mavenLocal()
     mavenCentral()
     maven {url 'http://www.ling.uni-potsdam.de/tcl/maven2/external'}
     maven {url 'http://www.ling.uni-potsdam.de/tcl/maven2/releases'}
@@ -21,8 +31,11 @@ repositories {
 dependencies {
     testCompile group: 'junit', name: 'junit', version: '4.12'
 //	testCompile 'org.codehaus.groovy:groovy-all:2.4.15'
-    compile group: "com.github.coli-saar", name:"alto", version:"2.3.0"
+    compile group: "com.github.coli-saar", name:"alto", version:"2.3.5-SNAPSHOT"
     compile 'info.picocli:picocli:3.9.3'
+    implementation 'com.google.code.gson:gson:2.8.5'
+    compile 'org.eclipse.collections:eclipse-collections-api:9.2.0'
+    compile 'org.eclipse.collections:eclipse-collections:9.2.0'
 }
 
 checkstyle {
