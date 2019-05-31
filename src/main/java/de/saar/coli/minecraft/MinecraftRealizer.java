@@ -79,7 +79,6 @@ public class MinecraftRealizer {
       throws ParserException {
     String ret = "**NONE**";
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
-    //BitSet semInput = semA.parseString("X1+Z1+X2+Z2");
     BitSet semInput = semA.parseString(aspects);
 
     TreeAutomaton<String> automaton = irtg.getAutomaton();

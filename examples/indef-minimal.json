@@ -1,26 +1,39 @@
 {
 	"indeffrom": [["wall1", "loc25"]],
-	"indefto": [["wall1", "loc25"]],
+	"indefto": [["wall1", "loc26"]],
 	"indefwall": [["wall1"]],
 	"orange": [
 		[
 			"b7"
 		]
 	],
+	"blue": [
+		[
+			"b8"
+		]
+	],
+
 	"at": [
 		[
 			"b7",
 			"loc25"
+		],
+		[
+			"b8",
+			"loc26"
 		]
+
 	],
 	"block": [
 		[
-			"b7"
+			"b7",
+			"b8"
 		]
 	],
 	"location": [
 		[
-			"loc25"
+			"loc25",
+			"loc26"
 		]
 	],
 	"none": [[]]

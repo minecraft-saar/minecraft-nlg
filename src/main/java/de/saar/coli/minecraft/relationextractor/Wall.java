@@ -42,8 +42,9 @@ public class Wall extends BigBlock {
   }
 
   public WallDirection direction() {
-    if (y1 == y2)
+    if (y1 == y2) {
       return WallDirection.ALONGX;
+    }
     return WallDirection.ALONGY;
   }
 

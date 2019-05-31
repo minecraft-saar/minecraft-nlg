@@ -12,7 +12,8 @@ interpretation sem: de.up.ling.irtg.algebra.SubsetAlgebra
 
 s! -> s(IndefPP) [0.9]
   [string] *("a wall", ?1)
-  [ref] intersect_1(size_1(?1), indefwall)
+//  [ref] intersect_1(size_1(?1), indefwall)
+  [ref] intersect_1(?1, indefwall)
   [sem] ?1
 
 IndefPP -> indefFrom(RefBlock, IndefPP) [0.9]
@@ -22,7 +23,7 @@ IndefPP -> indefFrom(RefBlock, IndefPP) [0.9]
 
 IndefPP -> indefTo(RefBlock, IndefPP) [0.9]
   [string] *(*("to", ?1), ?2)
-  [ref] union( project_1(intersect_2(indefto,?1)), ?2)
+  [ref] intersect( project_1(intersect_2(indeffrom,?1)), ?2)
   [sem] dunion(dunion(X2+Z2, ?2), ?1)
 
 IndefPP -> indefEmpty [0.9]
