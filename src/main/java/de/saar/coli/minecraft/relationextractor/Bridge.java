@@ -14,11 +14,16 @@ public class Bridge extends MinecraftObject {
     ALONGY
   }
 
-  public final Railing railing1, railing2;
+  public final Railing railing1;
+  public final Railing railing2;
   public final Floor floor;
   public final String name;
   public final BridgeDirection dir;
-  int x1, x2, z1, z2, y;
+  private int x1pos;
+  private int x2pos;
+  private int z1pos;
+  private int z2pos;
+  private int ypos;
 
   private Set<Block> blocks;
 
@@ -37,11 +42,11 @@ public class Bridge extends MinecraftObject {
         Aspects.X1, Aspects.Z1,
         Aspects.X2, Aspects.Z2,
         Aspects.Y1);
-    this.x1 = x1;
-    this.x2 = x2;
-    this.z1 = z1;
-    this.z2 = z2;
-    this.y = y;
+    this.x1pos = x1;
+    this.x2pos = x2;
+    this.z1pos = z1;
+    this.z2pos = z2;
+    this.ypos = y;
     this.name = name;
     this.dir = dir;
     floor = new Floor("floor-" + name, x1, z1, x2, z2, y);
@@ -71,9 +76,9 @@ public class Bridge extends MinecraftObject {
     }
     Bridge ob = (Bridge) other;
     if (dir == ob.dir) {
-      return (x1 - x2 == ob.x1 - ob.x2 && z1 - z2 == ob.z1 - ob.z2);
+      return (x1pos - x2pos == ob.x1pos - ob.x2pos && z1pos - z2pos == ob.z1pos - ob.z2pos);
     }
-    return (x1 - x2 == ob.z1 - ob.z2 && z1 - z2 == ob.x1 - ob.x2);
+    return (x1pos - x2pos == ob.z1pos - ob.z2pos && z1pos - z2pos == ob.x1pos - ob.x2pos);
   }
 
   @Override
@@ -81,12 +86,12 @@ public class Bridge extends MinecraftObject {
     MutableSet<Relation> result = Sets.mutable.empty();
     if ((other instanceof Block)) {
       Block ob = (Block) other;
-      if (ob.x == this.x1 && ob.y == this.y && ob.z == this.z1) {
+      if (ob.xpos == this.x1pos && ob.ypos == this.ypos && ob.zpos == this.z1pos) {
         result.add(new Relation("from",
             EnumSet.of(Aspects.X1, Aspects.Y1, Aspects.Z1),
             this, Lists.immutable.of(ob)));
       }
-      if (ob.x == this.x2 && ob.y == this.y && ob.z == this.z2) {
+      if (ob.xpos == this.x2pos && ob.ypos == this.ypos && ob.zpos == this.z2pos) {
         result.add(new Relation("to",
             EnumSet.of(Aspects.X2, Aspects.Y1, Aspects.Z2),
             this, Lists.immutable.of(ob)));

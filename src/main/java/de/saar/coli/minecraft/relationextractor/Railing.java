@@ -22,7 +22,7 @@ public class Railing extends MinecraftObject {
    */
   public Railing(String name, int x1, int z1, int x2, int z2, int y) {
     if (x1 != x2 && z1 != z2) {
-      throw new RuntimeException("Railing must be along x or z axis!");
+      throw new RuntimeException("Railing must be along xpos or zpos axis!");
     }
     block1 = new Block(x1, y, z1);
     block2 = new Block(x2, y, z2);

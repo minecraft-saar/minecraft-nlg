@@ -7,11 +7,21 @@ import org.eclipse.collections.api.set.MutableSet;
 
 public class BigBlock extends MinecraftObject {
 
-  public final int x1, y1, z1, x2, y2, z2;
+  public final int x1;
+  public final int y1;
+  public final int z1;
+  public final int x2;
+  public final int y2;
+  public final int z2;
   String name;
 
   // direction of the normal vector
   // public final Direction n;
+
+  /**
+   * A cuboid consisting of several blocks.
+   * x1, y1, z1 are the minimal coordinates, x2, y2, z2 are the maximal ones.
+   */
   public BigBlock(String name, int x1, int y1, int z1, int x2, int y2, int z2) {
     this.name = name;
 

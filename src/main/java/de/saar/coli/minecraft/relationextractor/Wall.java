@@ -1,7 +1,5 @@
 package de.saar.coli.minecraft.relationextractor;
 
-
-
 public class Wall extends BigBlock {
 
   public enum WallDirection {
@@ -9,9 +7,9 @@ public class Wall extends BigBlock {
     ALONGY
   }
 
-  // public final int x1, y1, z1, x2, y2, z2;
-  // direction of the normal vector
-  // public final Direction n;
+  /**
+   * A wall is a special cuboid with thickness == 1, standing upright.
+   */
   public Wall(String name, int x1, int y1, int z1, int x2, int y2, int z2) {
     super(name, x1, y1, z1, x2, y2, z2);
 
@@ -34,6 +32,9 @@ public class Wall extends BigBlock {
     return y2 - y1;
   }
 
+  /**
+   * returns the width along the X axis or the Y axis, whichever the wall is built along.
+   */
   public int width() {
     if (x1 == x2) {
       return z2 - z1;
@@ -41,6 +42,9 @@ public class Wall extends BigBlock {
     return x2 - x1;
   }
 
+  /**
+   * Computes whether this wall is built along the X or Y axis.
+   */
   public WallDirection direction() {
     if (y1 == y2) {
       return WallDirection.ALONGX;

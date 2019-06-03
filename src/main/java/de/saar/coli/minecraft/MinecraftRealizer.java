@@ -25,6 +25,8 @@ import java.util.Set;
 
 public class MinecraftRealizer {
 
+  private static final String ASPECTS = "X1+Z1+X2+Z2";
+
   private final InterpretedTreeAutomaton irtg;
   private final Interpretation<List<String>> strI;
   private final Interpretation<Set<List<String>>> refI;
@@ -65,7 +67,7 @@ public class MinecraftRealizer {
     strI = (Interpretation<List<String>>) irtg.getInterpretation("string");
     refA.setModel(mcModel);
     try {
-      semA.readOptions(new StringReader("X1+Z1+X2+Z2"));
+      semA.readOptions(new StringReader(ASPECTS));
     } catch (Exception e) {
       e.printStackTrace();
     }

@@ -10,20 +10,22 @@ import org.eclipse.collections.impl.factory.Sets;
 
 public class Block extends MinecraftObject {
 
-  public final int x, y, z;
+  public final int xpos;
+  public final int ypos;
+  public final int zpos;
 
   /**
    * A block is the basic building block (hah) of the Minecraft domain.
-   * @param x It's x coordinate
-   * @param y It's y coordinate
-   * @param z It's z coordinate
+   * @param x It's xpos coordinate
+   * @param y It's ypos coordinate
+   * @param z It's zpos coordinate
    */
   public Block(int x, int y, int z) {
     aspects = EnumSet.of(Aspects.X1, Aspects.Y1, Aspects.Z1);
     children = new HashSet<>();
-    this.x = x;
-    this.y = y;
-    this.z = z;
+    this.xpos = x;
+    this.ypos = y;
+    this.zpos = z;
   }
 
   @Override
@@ -45,7 +47,7 @@ public class Block extends MinecraftObject {
     MutableSet<Relation> result = Sets.mutable.empty();
     if (other instanceof Block) {
       Block ob = (Block) other;
-      if (ob.x == x && ob.z == z && ob.y == y - 1) {
+      if (ob.xpos == xpos && ob.zpos == zpos && ob.ypos == ypos - 1) {
 
         result.add(new Relation("top-of",
             EnumSet.of(Aspects.X1, Aspects.Y1, Aspects.Z1), this, Lists.immutable.of(other)));
@@ -56,6 +58,6 @@ public class Block extends MinecraftObject {
 
   @Override
   public String toString() {
-    return "Block(" + x + ", " + y + ", " + z + ")";
+    return "Block(" + xpos + ", " + ypos + ", " + zpos + ")";
   }
 }
