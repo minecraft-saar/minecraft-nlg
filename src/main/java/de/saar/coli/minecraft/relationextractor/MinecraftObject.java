@@ -2,12 +2,13 @@ package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.relationextractor.relations.Relation;
 
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.factory.Sets;
 
 public abstract class MinecraftObject {
   protected Set<MinecraftObject> children;
@@ -95,4 +96,14 @@ public abstract class MinecraftObject {
   }
 
   public abstract MutableSet<Relation> generateRelationsTo(MinecraftObject other);
+  public MutableSet<Relation> generateRelationsTo(List<MinecraftObject> other) {
+    MutableSet<Relation> result = Sets.mutable.empty();
+    for (MinecraftObject o: other) {
+      if (this.equals(o)) {
+        continue;
+      }
+      result.addAll(generateRelationsTo(o));
+    }
+    return result;
+  }
 }

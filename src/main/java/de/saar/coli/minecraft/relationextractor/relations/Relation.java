@@ -2,10 +2,13 @@ package de.saar.coli.minecraft.relationextractor.relations;
 
 import de.saar.coli.minecraft.relationextractor.Aspects;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import org.eclipse.collections.api.list.ImmutableList;
-import org.eclipse.collections.api.list.ListIterable;
 
 public class Relation {
   public final String relationString;
@@ -31,5 +34,17 @@ public class Relation {
   @Override
   public String toString() {
     return relationString + "(" + obj.toString() + "," + otherobj.makeString(", ") + ")";
+  }
+
+  public void addToModel(Map<String, Set<List<String>>> fom) {
+    if (! fom.containsKey(relationString)) {
+      fom.put(relationString, new HashSet<>());
+    }
+    List<String> args = new ArrayList<>();
+    args.add(obj.toString());
+    for (MinecraftObject o: otherobj) {
+      args.add(o.toString());
+    }
+    fom.get(relationString).add(args);
   }
 }

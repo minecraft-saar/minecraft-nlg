@@ -4,6 +4,7 @@ import de.saar.coli.minecraft.relationextractor.relations.Relation;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.factory.Sets;
 
 public class BigBlock extends MinecraftObject {
 
@@ -68,7 +69,6 @@ public class BigBlock extends MinecraftObject {
 
   @Override
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other) {
-    // TODO
-    return null;
+    return Sets.mutable.empty();
   }
 }

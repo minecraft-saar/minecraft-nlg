@@ -1,11 +1,18 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.MinecraftRealizer;
 import de.saar.coli.minecraft.relationextractor.Bridge.BridgeDirection;
 import de.saar.coli.minecraft.relationextractor.relations.Relation;
 import it.unimi.dsi.fastutil.Hash;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import org.eclipse.collections.api.set.ImmutableSet;
+import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Sets;
 
 public class RelationGenerator {
@@ -14,7 +21,7 @@ public class RelationGenerator {
    * A proof of concept main method running
    * the relation generator not in use anymore.
    */
-  public static void main(String[] args) {
+  public static void main(String[] args) throws Exception {
     /* need to keep track which aspect is defined by a relation
      implement the following scenario:
 
@@ -29,16 +36,38 @@ public class RelationGenerator {
     Railing: one block on each side, row on top connecting those blocks
     */
 
-    final UniqueBlock ub = new UniqueBlock("blue-block", 1,1,1);
-    final UniqueBlock ub2 = new UniqueBlock("green-block", 4,1,5);
-    System.out.println("Trying to build a block at 1,2,1:");
+    List<MinecraftObject> objects = new ArrayList<>();
+    final UniqueBlock ub = new UniqueBlock("blue", 1,1,1);
+    final UniqueBlock ub2 = new UniqueBlock("orange", 4,1,5);
+    final UniqueBlock ub3 = new UniqueBlock("yellow", 4,3,5);
+
+    objects.add(ub);
+    objects.add(ub2);
+    Bridge bridge = new Bridge("b", 1, 1, 4, 5, 1, BridgeDirection.ALONGX);
+    objects.add(bridge);
+
+    List<Relation> relations = generateAllRelationsBetweeen(objects);
+    relations.add(new Relation("indefbridge",
+        EnumSet.noneOf(Aspects.class),
+        bridge, Lists.immutable.empty()));
+
+    MinecraftRealizer mcr = MinecraftRealizer.createRealizer(new File("minecraft-indefinite.irtg"));
+
+    mcr.setRelations(relations);
+
+    System.out.println(mcr.generateStatement("build", "b", "X1+Z1+X2+Z2"));
+
+
+
+    // TODO make sure to use uni-directional relations for elements that still need to be built
+    /*System.out.println("Trying to build a block at 1,2,1:");
     Block newBlock = new Block(1,2,1);
     ImmutableSet<MinecraftObject> possibleReferents = Sets.immutable.of(ub);
     Set<Relation> result = newBlock.describe(possibleReferents);
     result.forEach((Relation x) -> System.out.println(x.toString()));
 
 
-    Bridge bridge = new Bridge("b", 1, 1, 4, 5, 1, BridgeDirection.ALONGX);
+    // Bridge bridge = new Bridge("b", 1, 1, 4, 5, 1, BridgeDirection.ALONGX);
     System.out.println("Trying to build a bridge:");
     Set<Relation> bridgeDesc = bridge.describe(Sets.immutable.of(ub, ub2));
     bridgeDesc.forEach((Relation r) -> System.out.println(r.toString()));
@@ -49,6 +78,16 @@ public class RelationGenerator {
     //alreadyBuilt.add(blueblock);
     //alreadyBuilt.add(greenblock);
     // describe(bridge.floor, alreadyBuilt);
+
+     */
+  }
+
+  public static List<Relation> generateAllRelationsBetweeen(List<MinecraftObject> mcobjects) {
+    List<Relation> result = new ArrayList<>();
+    for (MinecraftObject obj: mcobjects) {
+      result.addAll(obj.generateRelationsTo(mcobjects));
+    }
+    return result;
   }
 
 

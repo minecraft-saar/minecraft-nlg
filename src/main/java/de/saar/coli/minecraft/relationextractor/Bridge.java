@@ -103,4 +103,9 @@ public class Bridge extends MinecraftObject {
         this, Lists.immutable.empty()));
     return result;
   }
+
+  @Override
+  public String toString() {
+    return name;
+  }
 }

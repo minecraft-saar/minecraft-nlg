@@ -2,6 +2,7 @@ package de.saar.coli.minecraft;
 
 import de.saar.basic.Pair;
 
+import de.saar.coli.minecraft.relationextractor.relations.Relation;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
@@ -19,20 +20,23 @@ import java.io.InputStreamReader;
 import java.io.StringReader;
 
 import java.util.BitSet;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
 
 
 public class MinecraftRealizer {
 
-  private static final String ASPECTS = "X1+Z1+X2+Z2";
+  private static final String ASPECTS = "X1+Z1+X2+Z2+Y1+Y2+SHAPE+HEIGHT";
 
   private final InterpretedTreeAutomaton irtg;
   private final Interpretation<List<String>> strI;
   private final Interpretation<Set<List<String>>> refI;
   private final Interpretation<BitSet> semI;
   private final SetAlgebra refA;
-  private final SubsetAlgebra semA;
+  private SubsetAlgebra semA;
 
   /**
    * Builds a realizer from given model and grammar files.
@@ -40,37 +44,69 @@ public class MinecraftRealizer {
    * @throws Exception if something goes wrong
    */
   public static MinecraftRealizer createRealizer(File tirtgFile, File modelFile) throws Exception {
+    MinecraftRealizer mcr = createRealizer(tirtgFile);
     try (
-        FileInputStream tirtgin = new FileInputStream(tirtgFile);
         FileInputStream modelin = new FileInputStream(modelFile);
     ) {
       FirstOrderModel mcModel = FirstOrderModel.read(new InputStreamReader(modelin));
-      InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(tirtgin);
-
-      return new MinecraftRealizer(irtg, mcModel);
+      mcr.setModel(mcModel);
+      return mcr;
     }
   }
+
+
+  /**
+   * Builds a realizer from given model and grammar files.
+   * This essentially handles reading the model and grammar for you.
+   * @throws Exception if something goes wrong
+   */
+  public static MinecraftRealizer createRealizer(File tirtgFile) throws Exception {
+    try (
+        FileInputStream tirtgin = new FileInputStream(tirtgFile);
+    ) {
+      InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(tirtgin);
+      return new MinecraftRealizer(irtg);
+    }
+  }
+
 
   /**
    * Builds a realizer from an irtg and a model.
    */
-  public MinecraftRealizer(InterpretedTreeAutomaton irtg, FirstOrderModel mcModel)
-      throws InstantiationException, IllegalAccessException, ClassNotFoundException {
+  public MinecraftRealizer(InterpretedTreeAutomaton irtg, FirstOrderModel mcModel) {
+    this(irtg);
+    refA.setModel(mcModel);
+  }
+
+  public MinecraftRealizer(InterpretedTreeAutomaton irtg) {
     this.irtg = irtg;
     refI = (Interpretation<Set<List<String>>>) irtg.getInterpretation("ref");
     refA = (SetAlgebra) refI.getAlgebra();
     semI = (Interpretation<BitSet>) irtg.getInterpretation("sem");
-    semA = (SubsetAlgebra) semI.getAlgebra();
-
-    // Interpretation<Set<List<String>>> refI = irtg.getInterpretation("ref");
-    // put inputs here
-    strI = (Interpretation<List<String>>) irtg.getInterpretation("string");
-    refA.setModel(mcModel);
-    try {
-      semA.readOptions(new StringReader(ASPECTS));
-    } catch (Exception e) {
-      e.printStackTrace();
+    if (semI != null) {
+      semA = (SubsetAlgebra) semI.getAlgebra();
+      try {
+        semA.readOptions(new StringReader(ASPECTS));
+      } catch (Exception e) {
+        e.printStackTrace();
+      }
     }
+    strI = (Interpretation<List<String>>) irtg.getInterpretation("string");
+  }
+
+  private void setModel(FirstOrderModel model) {
+    refA.setModel(model);
+  }
+
+  public void setRelations(List<Relation> rels) {
+    if (refA.getModel() == null) {
+      refA.setModel(new FirstOrderModel());
+    }
+    Map<String, Set<List<String>>> fom = new HashMap<>();
+    for (Relation rel: rels) {
+      rel.addToModel(fom);
+    }
+    this.refA.setAtomicInterpretations(fom);
   }
 
   /**
@@ -81,15 +117,26 @@ public class MinecraftRealizer {
       throws ParserException {
     String ret = "**NONE**";
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
-    BitSet semInput = semA.parseString(aspects);
+    Intersectable<BitSet> semO = null;
+    if (semI != null) {
+      BitSet semInput = semA.parseString(aspects);
+      semO = semI.parse(semInput);
+    }
 
     TreeAutomaton<String> automaton = irtg.getAutomaton();
     Intersectable<Set<List<String>>> refO = refI.parse(refInput);
-    Intersectable<BitSet> semO = semI.parse(semInput);
-    TreeAutomaton<Pair<Pair<String, Set<List<String>>>, BitSet>> ta =
-        automaton.intersect(refO).intersect(semO);
 
-    Tree<String> bestTree = ta.viterbi();
+    Tree<String> bestTree;
+
+    if (semO != null) {
+      TreeAutomaton<Pair<Pair<String, Set<List<String>>>, BitSet>> ta =
+          automaton.intersect(refO).intersect(semO);
+      bestTree = ta.viterbi();
+    } else {
+      TreeAutomaton<Pair<String, Set<List<String>>>> ta =
+          automaton.intersect(refO);
+      bestTree = ta.viterbi();
+    }
     // TODO: Ask alexander what this was supposed to do and why it resulted in different
     // outputs than the line above together with building the stringTree below.
     // TreeAutomaton<List<String>> outputChart = irtg.decodeToAutomaton(strI, ta);
