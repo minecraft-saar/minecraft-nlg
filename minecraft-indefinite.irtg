@@ -10,21 +10,80 @@ interpretation sem: de.up.ling.irtg.algebra.SubsetAlgebra
 // (size_1(?1)) -> all PPs refer to the same thing
 // intersect_1 -> this thing is the indefwall
 
-s! -> s(IndefPP) [0.9]
-  [string] *("a wall", ?1)
-//  [ref] intersect_1(size_1(?1), indefwall)
-  [ref] intersect_1(?1, indefwall)
+s! -> sbridge(IndefPP) [0.9]
+  [string] *("a bridge", ?1)
+  [ref] intersect_1(size_1(?1), indefbridge)
+//  [ref] intersect_1(?1, indefwall)
   [sem] ?1
 
+s! -> swall(IndefPP) [0.9]
+  [string] *("a wall", ?1)
+  [ref] intersect_1(size_1(?1), indefwall)
+//  [ref] intersect_1(?1, indefwall)
+  [sem] ?1
+
+s! -> srailing(IndefPP) [0.9]
+  [string] *("a railing", ?1)
+  [ref] intersect_1(size_1(?1), indefrailing)
+  [sem] ?1
+
+s! -> sfloor(IndefPP) [0.9]
+  [string] *("a floor", ?1)
+  [ref] intersect_1(size_1(?1), indeffloor)
+  [sem] ?1
+
+// // mit union
+// IndefPP -> indefFrom(RefBlock, IndefPP) [0.9]
+//   [string] *(*("from", ?1), ?2)
+//   [ref] union(project_1(intersect_2(indeffrom,?1)), ?2)
+//   [sem] dunion(dunion(X1+Z1, ?2), ?1)
+
+// IndefPP -> indefTo(RefBlock, IndefPP) [0.9]
+//   [string] *(*("to", ?1), ?2)
+//   [ref] union(project_1(intersect_2(indeffrom,?1)), ?2)
+//   [sem] dunion(dunion(X2+Z2, ?2), ?1)
+
+// IndefPP -> indefEmpty [0.9]
+//   [string] ""
+//   [ref] none
+//   [sem] EMPTYSET
+
+// mit intersect
 IndefPP -> indefFrom(RefBlock, IndefPP) [0.9]
   [string] *(*("from", ?1), ?2)
-  [ref] intersect( project_1(intersect_2(indeffrom,?1)), ?2)
+  [ref] intersect(project_1(intersect_2(from, ?1)), ?2)
   [sem] dunion(dunion(X1+Z1, ?2), ?1)
 
 IndefPP -> indefTo(RefBlock, IndefPP) [0.9]
   [string] *(*("to", ?1), ?2)
-  [ref] intersect( project_1(intersect_2(indeffrom,?1)), ?2)
+//  [ref] intersect(project_1(intersect_2(to, project_1(intersect_2(at, ?1)), ?2)
+  [ref] intersect(project_1(intersect_2(to,?1)), ?2)
   [sem] dunion(dunion(X2+Z2, ?2), ?1)
+
+IndefPP -> indefHeight(IndefPP) [0.9]
+  [string] *("of height three", ?1)
+  [ref] intersect(heightthree, ?1)
+  [sem] dunion(HEIGHT, ?1)
+
+IndefPP -> widthThree(IndefPP) [0.9]
+  [string] *("of length three", ?1)
+  [ref] intersect(widththree, ?1)
+  [sem] dunion(WIDTH, ?1)
+
+IndefPP -> depthThree(IndefPP) [0.9]
+  [string] *("of length three", ?1)
+  [ref] intersect(depththree, ?1)
+  [sem] dunion(DEPTH, ?1)
+
+IndefPP -> indefOtherSide [0.9]
+  [string] "on the other side"
+  [ref] size_1(project_1(intersect_3(otherside, it)))
+  [sem] X1+Z1+Y1+X2+Y2+Z2
+
+IndefPP -> indefSameShapeIt(IndefPP) [0.9]
+  [string] *("of the same shape as the previous one", ?1)
+  [ref] intersect(project_1(intersect_2(sameshape, it)), ?1)
+  [sem] dunion(SHAPE, ?1)
 
 IndefPP -> indefEmpty [0.9]
   [string] ""
@@ -33,7 +92,9 @@ IndefPP -> indefEmpty [0.9]
 
 RefBlock -> blockloc(RefLoc) [0.9]
   [string] *("the block", ?1)
-  [ref] ?1
+  // only refer to a block if there is an at relation for this
+  // location.
+  [ref] project_2(intersect_2(at, ?1))
   [sem] EMPTYSET
 
 // RefLoc - refers to a position which may or may not contain a block
@@ -44,7 +105,6 @@ RefLoc -> top(RefBlock) [0.9]
   [string] *("on top of", ?1)
   [ref] project_1(intersect_2(top-of,?1))
   [sem] EMPTYSET
-
 
 RefLoc -> below(RefBlock) [0.9]
   [string] *("below of", ?1)
@@ -72,26 +132,26 @@ RefLoc -> behind(RefBlock) [0.9]
   [sem] EMPTYSET
 
 RefBlock -> uniqblockdesc(AdjBlock) [0.9]
-  [string] *("the", ?1)
-  [ref] project_2(intersect_1(at, size_1(?1)))
+  [string] *(*("the", ?1), "block")
+  [ref] size_1(?1)
   [sem] EMPTYSET
 
-AdjBlock -> orangeblock [0.9]
-  [string] "orange block"
+AdjBlock -> orange [0.9]
+  [string] "orange"
   [ref] orange
   [sem] EMPTYSET
  
-AdjBlock -> yellowblock [0.9]
-  [string] "yellow block"
+AdjBlock -> yellow [0.9]
+  [string] "yellow"
   [ref] yellow
   [sem] EMPTYSET
 
-AdjBlock -> blueblock [0.9]
-  [string] "blue block"
+AdjBlock -> blue [0.9]
+  [string] "blue"
   [ref] blue
   [sem] EMPTYSET
 
-AdjBlock -> prevblock [0.9]
-  [string] "previous block"
+AdjBlock -> prev [0.9]
+  [string] "previous"
   [ref] it
   [sem] EMPTYSET

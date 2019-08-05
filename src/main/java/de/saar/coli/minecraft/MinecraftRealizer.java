@@ -16,6 +16,7 @@ import de.up.ling.tree.Tree;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
@@ -24,12 +25,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import org.eclipse.collections.impl.bimap.mutable.HashBiMap;
 
 
 public class MinecraftRealizer {
 
-  private static final String ASPECTS = "X1+Z1+X2+Z2+Y1+Y2+SHAPE+HEIGHT";
+  private static final String ASPECTS =
+      "corner1+corner2+corner3+corner4+type+color+X1+Z1+X2+Z2+Y1+Y2+SHAPE+HEIGHT";
 
   private final InterpretedTreeAutomaton irtg;
   private final Interpretation<List<String>> strI;
@@ -71,6 +72,17 @@ public class MinecraftRealizer {
 
 
   /**
+   * Builds a realizer from given model as InputStream.
+   * This essentially handles reading the model and grammar for you.
+   * @throws Exception if something goes wrong
+   */
+  public static MinecraftRealizer createRealizer(InputStream irtgStream) throws Exception {
+    InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(irtgStream);
+    return new MinecraftRealizer(irtg);
+  }
+
+
+  /**
    * Builds a realizer from an irtg and a model.
    */
   public MinecraftRealizer(InterpretedTreeAutomaton irtg, FirstOrderModel mcModel) {
@@ -78,6 +90,10 @@ public class MinecraftRealizer {
     refA.setModel(mcModel);
   }
 
+
+  /**
+   * Build a realizer with only an irtg, the model has to be set later on.
+   */
   public MinecraftRealizer(InterpretedTreeAutomaton irtg) {
     this.irtg = irtg;
     refI = (Interpretation<Set<List<String>>>) irtg.getInterpretation("ref");
@@ -94,10 +110,16 @@ public class MinecraftRealizer {
     strI = (Interpretation<List<String>>) irtg.getInterpretation("string");
   }
 
+
   private void setModel(FirstOrderModel model) {
     refA.setModel(model);
   }
 
+
+  /**
+   * Sets the first order model of the referential interpretation
+   * to the given relations.
+   */
   public void setRelations(List<Relation> rels) {
     if (refA.getModel() == null) {
       refA.setModel(new FirstOrderModel());
@@ -109,12 +131,14 @@ public class MinecraftRealizer {
     this.refA.setAtomicInterpretations(fom);
   }
 
+
   /**
    * Builds a statement that represents building objName using the action.
    * The aspects define how objName should be described.
    */
   public String generateStatement(String action, String objName, String aspects)
       throws ParserException {
+    System.err.println(refA.getModel().toString());
     String ret = "**NONE**";
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
     Intersectable<BitSet> semO = null;

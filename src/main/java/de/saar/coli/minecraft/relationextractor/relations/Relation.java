@@ -31,11 +31,23 @@ public class Relation {
     this.otherobj = otherob;
   }
 
+  /**
+   * Constructs a relation with an empty set of aspects it fixes.
+   */
+  public Relation(String relationString, MinecraftObject obj,
+                  ImmutableList<MinecraftObject> otherob) {
+    this(relationString, EnumSet.noneOf(Aspects.class), obj, otherob);
+  }
+
   @Override
   public String toString() {
     return relationString + "(" + obj.toString() + "," + otherobj.makeString(", ") + ")";
   }
 
+  /**
+   * Adds this relation to an alto model.
+   * @param fom the first order model to add this relation to
+   */
   public void addToModel(Map<String, Set<List<String>>> fom) {
     if (! fom.containsKey(relationString)) {
       fom.put(relationString, new HashSet<>());

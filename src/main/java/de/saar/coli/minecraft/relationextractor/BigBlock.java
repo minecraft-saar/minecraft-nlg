@@ -1,9 +1,11 @@
 package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.relationextractor.relations.Relation;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Sets;
 
 public class BigBlock extends MinecraftObject {
@@ -69,6 +71,58 @@ public class BigBlock extends MinecraftObject {
 
   @Override
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other) {
-    return Sets.mutable.empty();
+    MutableSet<Relation> result = Sets.mutable.empty();
+    if ((other instanceof Block)) {
+      Block ob = (Block) other;
+      if (ob.xpos == this.x1 && ob.ypos == this.y1 && ob.zpos == this.z1) {
+        result.add(new Relation("from",
+            EnumSet.of(Aspects.X1, Aspects.Y1, Aspects.Z1),
+            this, Lists.immutable.of(ob)));
+      }
+      if (ob.xpos == this.x2 && ob.ypos == this.y2 && ob.zpos == this.z2) {
+        result.add(new Relation("to",
+            EnumSet.of(Aspects.X2, Aspects.Y2, Aspects.Z2),
+            this, Lists.immutable.of(ob)));
+      }
+    }
+    return result;
   }
+
+  @Override
+  public MutableSet<Relation> generateRelationsTo(MinecraftObject other, MinecraftObject other2) {
+    MutableSet<Relation> result = Sets.mutable.empty();
+    // make an otherside relation if this is on the other side of other from other2
+    // and other2 has the same shape as other2
+    if (other instanceof BigBlock && other2 instanceof BigBlock) {
+      BigBlock oblock = (BigBlock) other2;
+      BigBlock ofbloc = (BigBlock) other;
+      // check whether this and oblock have the same dimensions
+      // and the same orientation
+      if (this.x1 - this.x2 == oblock.x1 - oblock.x2
+          && this.y1 - this.y2 == oblock.y1 - oblock.y2
+          && this.z1 - this.z2 == oblock.z1 - oblock.z2
+      ) {
+        if (this.x1 == ofbloc.x1
+            && this.x2 == ofbloc.x1
+            && this.z1 == ofbloc.z1
+            && this.z2 == ofbloc.z2
+            && oblock.x1 == ofbloc.x2
+            && oblock.x2 == ofbloc.x2
+            && oblock.z1 == ofbloc.z1
+            && oblock.z2 == ofbloc.z2) {
+          result.add(new Relation("otherside",
+              EnumSet.allOf(Aspects.class),
+              this,
+              Lists.immutable.of(ofbloc, oblock)));
+        }
+      }
+    }
+    return result;
+  }
+
+  @Override
+  public String toString() {
+    return name;
+  }
+
 }

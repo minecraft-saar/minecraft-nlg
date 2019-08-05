@@ -96,6 +96,16 @@ public abstract class MinecraftObject {
   }
 
   public abstract MutableSet<Relation> generateRelationsTo(MinecraftObject other);
+
+  public MutableSet<Relation> generateRelationsTo(MinecraftObject other,
+      MinecraftObject other2) {
+    MutableSet<Relation> result = Sets.mutable.empty();
+    return result;
+  }
+
+  /**
+   * Generates and returns all relations from this object to the objects in other.
+   */
   public MutableSet<Relation> generateRelationsTo(List<MinecraftObject> other) {
     MutableSet<Relation> result = Sets.mutable.empty();
     for (MinecraftObject o: other) {
@@ -103,6 +113,12 @@ public abstract class MinecraftObject {
         continue;
       }
       result.addAll(generateRelationsTo(o));
+      for (MinecraftObject o2: other) {
+        if (this.equals(o2) || o.equals(o2)) {
+          continue;
+        }
+        result.addAll(generateRelationsTo(o,o2));
+      }
     }
     return result;
   }
