@@ -1,0 +1,46 @@
+interpretation string: de.up.ling.irtg.algebra.StringAlgebra
+interpretation ref: de.up.ling.irtg.algebra.SetAlgebra
+
+
+// NPs
+////////////////////////////////////////////////////////////////////////
+
+DefNP! -> dnp(N)
+  [string] *("the", ?1)
+  [ref] size_1(?1)
+
+// objects
+////////////////////////////////////////////////////////////////////////
+N -> bridge
+  [string] "bridge"
+  [ref] bridge
+
+N -> wall
+  [string] "wall"
+  [ref] wall
+
+N -> railing
+  [string] "railing"
+  [ref] railing
+
+N -> block
+  [string] "block"
+  [ref] block
+
+// adjectives
+////////////////////////////////////////////////////////////////////////
+N -> orange(N) [0.9]
+  [string] *( "orange", ?1)
+  [ref] orange
+
+N -> yellow(N) [0.9]
+  [string] *( "yellow", ?1)
+  [ref] yellow
+
+N -> blue(N) [0.9]
+  [string] *( "blue", ?1)
+  [ref] blue
+
+N -> prev(N) [0.9]
+  [string] *( "previous", ?1)
+  [ref] it
