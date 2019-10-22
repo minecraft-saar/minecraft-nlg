@@ -5,20 +5,20 @@ plugins {
 	id 'com.github.johnrengelman.shadow' version '5.0.0'
     id 'checkstyle'
     id 'pl.allegro.tech.build.axion-release' version '1.10.1'
-
+	id 'maven'
 }
 group 'com.github.minecraft-saar'
 description 'minecraft-nlg'
 
 scmVersion {
     tag {
-        prefix = 'release-'
+        prefix = ''
     }
 }
 
 version = scmVersion.version
 
-sourceCompatibility = 1.8
+sourceCompatibility = 1.11
 
 repositories {
     mavenLocal()

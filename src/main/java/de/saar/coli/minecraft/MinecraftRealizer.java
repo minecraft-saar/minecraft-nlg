@@ -30,7 +30,7 @@ import java.util.Set;
 public class MinecraftRealizer {
 
   private static final String ASPECTS =
-      "corner1+corner2+corner3+corner4+type+color+X1+Z1+X2+Z2+Y1+Y2+SHAPE+HEIGHT";
+      "corner1+corner2+corner3+corner4+type+color+X1+Z1+X2+Z2+Y1+Y2+SHAPE+HEIGHT+WIDTH+DEPTH";
 
   private final InterpretedTreeAutomaton irtg;
   private final Interpretation<List<String>> strI;
