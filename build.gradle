@@ -12,7 +12,7 @@ description 'minecraft-nlg'
 
 scmVersion {
     tag {
-        prefix = ''
+        prefix = 'release-'
     }
 }
 
