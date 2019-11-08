@@ -1,7 +1,5 @@
 package de.saar.coli.minecraft.relationextractor;
 
-import de.saar.coli.minecraft.relationextractor.relations.Relation;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
@@ -76,13 +74,10 @@ public class BigBlock extends MinecraftObject {
       Block ob = (Block) other;
       if (ob.xpos == this.x1 && ob.ypos == this.y1 && ob.zpos == this.z1) {
         result.add(new Relation("from",
-            EnumSet.of(Aspects.X1, Aspects.Y1, Aspects.Z1),
             this, Lists.immutable.of(ob)));
       }
       if (ob.xpos == this.x2 && ob.ypos == this.y2 && ob.zpos == this.z2) {
-        result.add(new Relation("to",
-            EnumSet.of(Aspects.X2, Aspects.Y2, Aspects.Z2),
-            this, Lists.immutable.of(ob)));
+        result.add(new Relation("to", this, Lists.immutable.of(ob)));
       }
     }
     return result;
@@ -111,7 +106,6 @@ public class BigBlock extends MinecraftObject {
             && oblock.z1 == ofbloc.z1
             && oblock.z2 == ofbloc.z2) {
           result.add(new Relation("otherside",
-              EnumSet.allOf(Aspects.class),
               this,
               Lists.immutable.of(ofbloc, oblock)));
         }

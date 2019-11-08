@@ -1,6 +1,5 @@
 package de.saar.coli.minecraft.relationextractor;
 
-import de.saar.coli.minecraft.relationextractor.relations.Relation;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;

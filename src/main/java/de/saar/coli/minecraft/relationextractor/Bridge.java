@@ -1,6 +1,5 @@
 package de.saar.coli.minecraft.relationextractor;
 
-import de.saar.coli.minecraft.relationextractor.relations.Relation;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -88,18 +87,15 @@ public class Bridge extends MinecraftObject {
       Block ob = (Block) other;
       if (ob.xpos == this.x1pos && ob.ypos == this.ypos && ob.zpos == this.z1pos) {
         result.add(new Relation("from",
-            EnumSet.of(Aspects.X1, Aspects.Y1, Aspects.Z1),
             this, Lists.immutable.of(ob)));
       }
       if (ob.xpos == this.x2pos && ob.ypos == this.ypos && ob.zpos == this.z2pos) {
         result.add(new Relation("to",
-            EnumSet.of(Aspects.X2, Aspects.Y1, Aspects.Z2),
             this, Lists.immutable.of(ob)));
       }
     }
     String orientation = this.dir == BridgeDirection.ALONGX ? "along_x_axis" : "along_z_axis";
     result.add(new Relation(orientation,
-        EnumSet.of(Aspects.ORIENTATION),
         this, Lists.immutable.empty()));
     return result;
   }

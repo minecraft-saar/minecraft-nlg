@@ -2,7 +2,6 @@ package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.MinecraftRealizer;
 import de.saar.coli.minecraft.relationextractor.Bridge.BridgeDirection;
-import de.saar.coli.minecraft.relationextractor.relations.Relation;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -43,7 +42,6 @@ public class RelationGenerator {
 
     List<Relation> relations = generateAllRelationsBetweeen(objects);
     relations.add(new Relation("indefbridge",
-        EnumSet.noneOf(Aspects.class),
         bridge, Lists.immutable.empty()));
 
     MinecraftRealizer mcr = MinecraftRealizer.createRealizer(new File("minecraft-indefinite.irtg"));
@@ -96,7 +94,6 @@ public class RelationGenerator {
 
     List<Relation> relations = generateAllRelationsBetweeen(objects);
     relations.add(new Relation("indeffloor",
-        EnumSet.noneOf(Aspects.class),
         floor, Lists.immutable.empty()));
 
     MinecraftRealizer mcr = MinecraftRealizer.createRealizer(new File("minecraft-indefinite.irtg"));
@@ -127,10 +124,8 @@ public class RelationGenerator {
     MutableSet<Relation> foo = rail1.generateRelationsTo(floor, rail2);
     List<Relation> relations = generateAllRelationsBetweeen(objects);
     relations.add(new Relation("indefrailing",
-        EnumSet.noneOf(Aspects.class),
         rail2, Lists.immutable.empty()));
     relations.add(new Relation("it",
-        EnumSet.noneOf(Aspects.class),
         rail1,
         Lists.immutable.empty()));
 

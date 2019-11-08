@@ -1,16 +1,12 @@
 package de.saar.coli.minecraft.experiments;
 
 import de.saar.coli.minecraft.MinecraftRealizer;
-import de.saar.coli.minecraft.relationextractor.Aspects;
 import de.saar.coli.minecraft.relationextractor.BigBlock;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
 import de.saar.coli.minecraft.relationextractor.UniqueBlock;
-import de.saar.coli.minecraft.relationextractor.relations.Relation;
-import java.io.File;
+import de.saar.coli.minecraft.relationextractor.Relation;
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
-import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Lists;
 
 public class Inlg2019 {

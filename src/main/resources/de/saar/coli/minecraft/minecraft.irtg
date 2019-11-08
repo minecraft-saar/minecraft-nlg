@@ -1,0 +1,178 @@
+interpretation string: de.up.ling.irtg.algebra.StringAlgebra
+interpretation ref: de.up.ling.irtg.algebra.SetAlgebra
+interpretation sem: de.up.ling.irtg.algebra.SubsetAlgebra
+
+// a referent is always the location the current subtree refers to
+// Terminalsymbole dürfen nur in einer einzigen Regel auftreten
+
+// Refers to the wall if all indefPPs also refer to the indefinite
+// wall and nothing else.
+// (size_1(?1)) -> all PPs refer to the same thing
+// intersect_1 -> this thing is the indefwall
+
+
+// NPs
+////////////////////////////////////////////////////////////////////////
+IndefNP! -> np(N)
+  [string] *("a", ?1)
+  [ref] ?1
+  [sem] ?1
+
+DefNP -> dnp(N)
+  [string] *("the", ?1)
+  [ref] size_1(?1)
+  [sem] ?1
+
+
+// objects
+////////////////////////////////////////////////////////////////////////
+N -> obj(Obj)
+  [string] ?1
+  [ref] ?1
+  [sem] ?1
+
+
+Obj -> bridge
+  [string] "bridge"
+  [ref] bridge
+  [sem] type
+
+Obj -> wall
+  [string] "wall"
+  [ref] wall
+  [sem] type
+
+Obj -> railing
+  [string] "railing"
+  [ref] railing
+  [sem] type
+
+Obj -> block
+  [string] "block"
+  [ref] block
+  [sem] type
+
+
+// locations
+////////////////////////////////////////////////////////////////////////
+LocP -> top(DefNP) [0.9]
+  [string] *("on top of", ?1)
+  [ref] project_1(intersect_2(top-of,?1))
+  [sem] corner1
+
+LocP -> below(DefNP) [0.9]
+  [string] *("below of", ?1)
+  [ref] project_2(intersect_1(top-of,?1))
+  [sem] corner1
+  
+LocP -> left(DefNP) [0.9]
+  [string] *("to the left of", ?1)
+  [ref] project_1(intersect_2(left-of,?1))
+  [sem] corner1
+  
+LocP -> right(DefNP) [0.9]
+  [string] *("to the right of", ?1)
+  [ref] project_2(intersect_1(left-of,?1))
+  [sem] corner1
+  
+LocP -> front(DefNP) [0.9]
+  [string] *("infront of", ?1)
+  [ref] project_1(intersect_2(in-front-of,?1))
+  [sem] corner1
+  
+LocP -> behind(DefNP) [0.9]
+  [string] *("behind", ?1)
+  [ref] project_2(intersect_1(in-front-of,?1))
+  [sem] corner1
+
+
+// relations
+////////////////////////////////////////////////////////////////////////
+
+N -> from(N, DefNP) [0.9]
+  [string] *(?1, *("from", ?2))
+  [ref] intersect(project_1(intersect_2(from, ?2)), ?1)
+  [sem] union(?1, corner1)
+
+N -> to(N, DefNP) [0.9]
+  [string] *(?1, *("to", ?2))
+  [ref] intersect(project_1(intersect_2(to,?2)), ?1)
+  [sem] union(?1, corner3)
+
+// on the other side of the bridge
+N -> othersideof(N, DefNP) [0.9]
+  [string] *(?1, *("on the other side of", ?2))
+  [ref] intersect(?1, project_1(intersect_3(intersect_2(otherside, ?2), it)))
+  [sem] union(?1, corner1+corner3)
+
+N -> otherside(N) [0.9]
+  [string] *(?1, "on the other side")
+  [ref] size_1(project_1(intersect_3(otherside, it)))
+  [sem] union(?1, corner1+corner3)
+
+// Use a location as additional description
+N -> loc(N,LocP)
+  [string] *(?1, ?2)
+  [ref] intersect(?1,?2)
+  [sem] union(?1, ?2)
+
+
+// adjectives
+////////////////////////////////////////////////////////////////////////
+Obj -> orange(Obj) [0.9]
+  [string] *("orange", ?1)
+  [ref] intersect(orange, ?1)
+  [sem] dunion(color, ?1)
+
+Obj -> yellow(Obj) [0.9]
+  [string] *("yellow", ?1)
+  [ref] intersect(yellow, ?1)
+  [sem] dunion(color, ?1)
+
+Obj -> blue(Obj) [0.9]
+  [string] *("blue", ?1)
+  [ref] intersect(blue, ?1)
+  [sem] dunion(color, ?1)
+
+Obj -> red(Obj) [0.9]
+  [string] *("red", ?1)
+  [ref] intersect(red, ?1)
+  [sem] dunion(color, ?1)
+
+
+// TODO: what is the sem interpretation for this??
+// probably not important because this rule can only be used
+// to describe definite objects and the sem does not propagate to
+// indefinite descriptions
+Obj -> prev(Obj) [0.9]
+  [string] "previous"
+  [ref] intersect(it, ?1)
+  [sem] dunion(corner1+color, ?1)
+
+/*
+IndefPP -> indefHeight(IndefPP) [0.9]
+  [string] *("of height three", ?1)
+  [ref] intersect(heightthree, ?1)
+  [sem] union(HEIGHT, ?1)
+
+IndefPP -> widthThree(IndefPP) [0.9]
+  [string] *("of length three", ?1)
+  [ref] intersect(widththree, ?1)
+  [sem] union(WIDTH, ?1)
+
+IndefPP -> depthThree(IndefPP) [0.9]
+  [string] *("of length three", ?1)
+  [ref] intersect(depththree, ?1)
+  [sem] union(DEPTH, ?1)
+
+
+IndefPP -> indefSameShapeIt(IndefPP) [0.9]
+  [string] *("of the same shape as the previous one", ?1)
+  [ref] intersect(project_1(intersect_2(sameshape, it)), ?1)
+  [sem] union(SHAPE, ?1)
+*/
+
+// RefLoc - refers to a position which may or may not contain a block
+ 
+// refer to above of before
+// foreach { l1, obj, l2 | top-of(l1,l2) and location(l1) and location(l2) and at(obj,l2)}:

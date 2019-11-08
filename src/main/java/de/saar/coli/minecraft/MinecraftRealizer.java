@@ -2,7 +2,7 @@ package de.saar.coli.minecraft;
 
 import de.saar.basic.Pair;
 
-import de.saar.coli.minecraft.relationextractor.relations.Relation;
+import de.saar.coli.minecraft.relationextractor.Relation;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
@@ -78,6 +78,16 @@ public class MinecraftRealizer {
    */
   public static MinecraftRealizer createRealizer(InputStream irtgStream) throws Exception {
     InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(irtgStream);
+    return new MinecraftRealizer(irtg);
+  }
+
+  /**
+   * Builds a realizer using the default IRTG.
+   * @throws Exception if something goes wrong
+   */
+  public static MinecraftRealizer createRealizer() throws Exception {
+    var irtg = new IrtgInputCodec().read(
+        MinecraftRealizer.class.getResourceAsStream("minecraft.irtg"));
     return new MinecraftRealizer(irtg);
   }
 
@@ -160,6 +170,7 @@ public class MinecraftRealizer {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);
       bestTree = ta.viterbi();
+      System.out.println(bestTree);
     }
     // TODO: Ask alexander what this was supposed to do and why it resulted in different
     // outputs than the line above together with building the stringTree below.

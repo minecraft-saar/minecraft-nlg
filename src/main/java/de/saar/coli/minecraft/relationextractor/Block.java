@@ -1,7 +1,5 @@
 package de.saar.coli.minecraft.relationextractor;
 
-import de.saar.coli.minecraft.relationextractor.relations.Relation;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
@@ -21,7 +19,6 @@ public class Block extends MinecraftObject {
    * @param z It's zpos coordinate
    */
   public Block(int x, int y, int z) {
-    aspects = EnumSet.of(Aspects.X1, Aspects.Y1, Aspects.Z1);
     children = new HashSet<>();
     this.xpos = x;
     this.ypos = y;
@@ -50,7 +47,7 @@ public class Block extends MinecraftObject {
       if (ob.xpos == xpos && ob.zpos == zpos && ob.ypos == ypos - 1) {
 
         result.add(new Relation("top-of",
-            EnumSet.of(Aspects.X1, Aspects.Y1, Aspects.Z1), this, Lists.immutable.of(other)));
+            this, Lists.immutable.of(other)));
       }
     }
     return result;

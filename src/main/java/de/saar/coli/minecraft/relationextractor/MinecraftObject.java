@@ -1,7 +1,5 @@
 package de.saar.coli.minecraft.relationextractor;
 
-import de.saar.coli.minecraft.relationextractor.relations.Relation;
-
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.List;
@@ -59,40 +57,6 @@ public abstract class MinecraftObject {
       }
     }
     return false;
-  }
-
-  /**
-   * Generate set of relations uniqely describing this objects.
-   * Relations are both to this object as well as to all others
-   * needed for description.
-   * @param possibleReferents objects which may be used for the description
-   * @return set of relations, transitively describing this all all other objects needed.
-   */
-  public Set<Relation> describe(ImmutableSet<MinecraftObject> possibleReferents) {
-    Set<Relation> result = new HashSet<>();
-
-    EnumSet<Aspects> aspectsNeeded = EnumSet.copyOf(aspects);
-    EnumSet<Aspects> aspectsFixed = EnumSet.noneOf(Aspects.class);
-    loop:
-    for (MinecraftObject other: possibleReferents) {
-      Set<Relation> relationCandidates = this.generateRelationsTo(other);
-      // relationCandidates.addAll(other.generateRelationsTo(this));
-      for (Relation rel: relationCandidates) {
-        if (intersects(aspectsNeeded, rel.fixes)) {
-          for (MinecraftObject obj: rel.otherobj) {
-            ImmutableSet<MinecraftObject> prefNew = possibleReferents.newWithout(obj);
-            result.addAll(obj.describe(prefNew));
-          }
-          result.add(rel);
-          aspectsFixed.addAll(rel.fixes);
-          aspectsNeeded.removeAll(rel.fixes);
-          if (aspectsNeeded.isEmpty()) {
-            break loop;
-          }
-        }
-      }
-    }
-    return result;
   }
 
   public abstract MutableSet<Relation> generateRelationsTo(MinecraftObject other);

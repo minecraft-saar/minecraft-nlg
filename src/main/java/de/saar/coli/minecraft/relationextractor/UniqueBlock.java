@@ -1,7 +1,5 @@
 package de.saar.coli.minecraft.relationextractor;
 
-import de.saar.coli.minecraft.relationextractor.relations.Relation;
-import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.ImmutableSet;
@@ -19,18 +17,7 @@ public class UniqueBlock extends Block {
   @Override
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other) {
     MutableSet result = super.generateRelationsTo(other);
-    result.add(new Relation(name, EnumSet.noneOf(Aspects.class), this, Lists.immutable.empty()));
-    return result;
-  }
-
-
-  @Override
-  public Set<Relation> describe(ImmutableSet<MinecraftObject> possibleReferents) {
-    Set<Relation> result = new HashSet<>();
-    result.add(new Relation(name,
-        EnumSet.of(Aspects.X1, Aspects.Y1, Aspects.Z1),
-        this, Lists.immutable.empty()
-        ));
+    result.add(new Relation(name, this, Lists.immutable.empty()));
     return result;
   }
 }
