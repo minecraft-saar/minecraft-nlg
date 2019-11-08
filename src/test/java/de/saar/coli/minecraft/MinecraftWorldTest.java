@@ -20,7 +20,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import org.eclipse.collections.impl.factory.Lists;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 /**
  * A simple tes using pre-generated irtg and world.

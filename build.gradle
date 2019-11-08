@@ -40,6 +40,13 @@ dependencies {
     compile 'org.eclipse.collections:eclipse-collections:9.2.0'
 }
 
+test {
+    useJUnitPlatform()
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+}
+
 // checkstyle {
 //     toolVersion "8.19"
 // }
