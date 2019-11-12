@@ -58,6 +58,7 @@ public class Relation {
   public static List<Relation> generateAllRelationsBetweeen(Iterable<MinecraftObject> mcobjects) {
     List<Relation> result = new ArrayList<>();
     for (MinecraftObject obj: mcobjects) {
+      result.addAll(obj.generateUnaryRelations());
       result.addAll(obj.generateRelationsTo(mcobjects));
     }
     return result;

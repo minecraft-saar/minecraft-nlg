@@ -40,6 +40,11 @@ public class Block extends MinecraftObject {
   }
 
   @Override
+  public MutableSet<Relation> generateUnaryRelations() {
+    return Sets.mutable.of(new Relation("block", this));
+  }
+
+  @Override
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other) {
     MutableSet<Relation> result = Sets.mutable.empty();
     if (other instanceof Block) {

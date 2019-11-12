@@ -59,6 +59,14 @@ public abstract class MinecraftObject {
     return false;
   }
 
+  /**
+   * Generates all relations describing only this object.
+   * TODO: make abstract
+   */
+  public MutableSet<Relation> generateUnaryRelations() {
+    return Sets.mutable.empty();
+  }
+
   public abstract MutableSet<Relation> generateRelationsTo(MinecraftObject other);
 
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other,
