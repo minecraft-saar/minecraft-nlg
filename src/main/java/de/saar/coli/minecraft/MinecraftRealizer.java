@@ -3,6 +3,7 @@ package de.saar.coli.minecraft;
 import de.saar.basic.Pair;
 
 import de.saar.coli.minecraft.relationextractor.Relation;
+import de.saar.coli.minecraft.relationextractor.MinecraftObject;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
@@ -85,10 +86,14 @@ public class MinecraftRealizer {
    * Builds a realizer using the default IRTG.
    * @throws Exception if something goes wrong
    */
-  public static MinecraftRealizer createRealizer() throws Exception {
-    var irtg = new IrtgInputCodec().read(
-        MinecraftRealizer.class.getResourceAsStream("minecraft.irtg"));
-    return new MinecraftRealizer(irtg);
+  public static MinecraftRealizer createRealizer() {
+    try {
+      var irtg = new IrtgInputCodec().read(
+          MinecraftRealizer.class.getResourceAsStream("minecraft.irtg"));
+      return new MinecraftRealizer(irtg);
+    } catch (Exception e) {
+      throw new RuntimeException("could not read included minecraft irtg");
+    }
   }
 
 
@@ -141,6 +146,15 @@ public class MinecraftRealizer {
     this.refA.setAtomicInterpretations(fom);
   }
 
+
+  /**
+   * Builds a statement that represents building objName using the action.
+   * The aspects define how objName should be described.
+   */
+  public String generateStatement(String action, MinecraftObject obj, String aspects)
+      throws ParserException {
+    return generateStatement(action, obj.toString(), aspects);
+  }
 
   /**
    * Builds a statement that represents building objName using the action.

@@ -43,9 +43,9 @@ public class Inlg2019 {
     objects.add(bridge);
     // relations that will be re-used
     List<Relation> unaryRelations = new ArrayList<>();
-    unaryRelations.add(new Relation("bridge", bridge, Lists.immutable.empty()));
-    unaryRelations.add(new Relation("block", ub, Lists.immutable.empty()));
-    unaryRelations.add(new Relation("block", ub2, Lists.immutable.empty()));
+    unaryRelations.add(new Relation("bridge", bridge));
+    unaryRelations.add(new Relation("block", ub));
+    unaryRelations.add(new Relation("block", ub2));
     
     List<Relation> relations = generateAllRelationsBetweeen(objects);
     relations.addAll(unaryRelations);

@@ -45,8 +45,13 @@ public class Block extends MinecraftObject {
     if (other instanceof Block) {
       Block ob = (Block) other;
       if (ob.xpos == xpos && ob.zpos == zpos && ob.ypos == ypos - 1) {
-
         result.add(new Relation("top-of",
+            this, Lists.immutable.of(other)));
+      } else if (ob.xpos == xpos + 1 && ob.zpos == zpos && ob.ypos == ypos) {
+        result.add(new Relation("left-of",
+            this, Lists.immutable.of(other)));
+      } else if (ob.xpos == xpos && ob.zpos == zpos - 1 && ob.ypos == ypos) {
+        result.add(new Relation("in-front-of",
             this, Lists.immutable.of(other)));
       }
     }
@@ -55,6 +60,6 @@ public class Block extends MinecraftObject {
 
   @Override
   public String toString() {
-    return "Block(" + xpos + ", " + ypos + ", " + zpos + ")";
+    return "Block-" + xpos + "-" + ypos + "-" + zpos + "-";
   }
 }

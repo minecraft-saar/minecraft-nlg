@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import org.eclipse.collections.api.list.ImmutableList;
+import org.eclipse.collections.impl.factory.Lists;
 
 public class Relation {
   public final String relationString;
@@ -25,6 +26,12 @@ public class Relation {
     this.otherobj = otherob;
   }
 
+  public Relation(String relationString,
+      MinecraftObject obj) {
+    this.relationString = relationString;
+    this.obj = obj;
+    this.otherobj = Lists.immutable.empty();
+  }
 
   @Override
   public String toString() {
@@ -48,7 +55,7 @@ public class Relation {
     fom.get(relationString).add(args);
   }
 
-  public static List<Relation> generateAllRelationsBetweeen(List<MinecraftObject> mcobjects) {
+  public static List<Relation> generateAllRelationsBetweeen(Iterable<MinecraftObject> mcobjects) {
     List<Relation> result = new ArrayList<>();
     for (MinecraftObject obj: mcobjects) {
       result.addAll(obj.generateRelationsTo(mcobjects));
