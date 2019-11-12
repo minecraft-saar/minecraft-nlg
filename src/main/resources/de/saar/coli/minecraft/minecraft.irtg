@@ -145,7 +145,7 @@ Obj -> red(Obj) [0.9]
 // to describe definite objects and the sem does not propagate to
 // indefinite descriptions
 Obj -> prev(Obj) [0.9]
-  [string] "previous"
+  [string] *("previous", ?1)
   [ref] intersect(it, ?1)
   [sem] dunion(corner1+color, ?1)
 
