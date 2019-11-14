@@ -61,6 +61,10 @@ task sourcesJar(type: Jar, dependsOn: classes) {
     from sourceSets.main.allSource
 }
 
+javadoc {
+	failOnError = false
+}
+
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
@@ -87,3 +91,8 @@ publishing {
         }
     }
 }
+
+// Local Variables:
+// groovy-indent-offset: 4
+// indent-tabs-mode: nil
+// End:
