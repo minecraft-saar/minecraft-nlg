@@ -1,9 +1,7 @@
-name: publish
+name: build
 
 on:
   push:
-    tags:
-     - 'release-*'
 
 jobs:
   build:
@@ -14,8 +12,5 @@ jobs:
       uses: actions/setup-java@v1
       with:
         java-version: 1.11
-    - name: publish a release
-      env:
-        GPR_USER: x-access-token
-        GPR_API_KEY: ${{ secrets.GITHUB_TOKEN }}
-      run: ./gradlew publish
+    - name: build
+      run: ./gradlew build
