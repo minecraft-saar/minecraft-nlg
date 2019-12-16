@@ -27,8 +27,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 
 public class MinecraftRealizer {
+
+  private static Logger logger = LogManager.getLogger(MinecraftRealizer.class);
 
   private static final String ASPECTS =
       "corner1+corner2+corner3+corner4+type+color+X1+Z1+X2+Z2+Y1+Y2+SHAPE+HEIGHT+WIDTH+DEPTH";
@@ -162,7 +167,7 @@ public class MinecraftRealizer {
    */
   public String generateStatement(String action, String objName, String aspects)
       throws ParserException {
-    System.err.println(refA.getModel().toString());
+    logger.debug("generating a statement for this model: " + (refA.getModel().toString()));
     String ret = "**NONE**";
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
     Intersectable<BitSet> semO = null;
@@ -184,7 +189,7 @@ public class MinecraftRealizer {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);
       bestTree = ta.viterbi();
-      System.out.println(bestTree);
+      logger.debug("best tree: " + bestTree);
     }
     // TODO: Ask alexander what this was supposed to do and why it resulted in different
     // outputs than the line above together with building the stringTree below.

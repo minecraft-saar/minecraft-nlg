@@ -134,6 +134,11 @@ Obj -> blue(Obj) [0.9]
   [ref] intersect(blue, ?1)
   [sem] dunion(color, ?1)
 
+Obj -> green(Obj) [0.9]
+  [string] *("green", ?1)
+  [ref] intersect(green, ?1)
+  [sem] dunion(color, ?1)
+
 Obj -> red(Obj) [0.9]
   [string] *("red", ?1)
   [ref] intersect(red, ?1)
