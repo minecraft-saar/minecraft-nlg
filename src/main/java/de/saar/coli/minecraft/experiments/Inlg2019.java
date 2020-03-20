@@ -3,6 +3,7 @@ package de.saar.coli.minecraft.experiments;
 import de.saar.coli.minecraft.MinecraftRealizer;
 import de.saar.coli.minecraft.relationextractor.BigBlock;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import de.saar.coli.minecraft.relationextractor.UniqueBlock;
 import de.saar.coli.minecraft.relationextractor.Relation;
 import java.util.ArrayList;
@@ -77,7 +78,7 @@ public class Inlg2019 {
   private static List<Relation> generateAllRelationsBetweeen(List<MinecraftObject> mcobjects) {
     List<Relation> result = new ArrayList<>();
     for (MinecraftObject obj: mcobjects) {
-      result.addAll(obj.generateRelationsTo(mcobjects));
+      result.addAll(obj.generateRelationsTo(mcobjects, Orientation.ZPLUS));
     }
     return result;
   }

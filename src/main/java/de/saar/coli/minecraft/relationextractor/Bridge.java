@@ -1,5 +1,6 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -81,7 +82,7 @@ public class Bridge extends MinecraftObject {
   }
 
   @Override
-  public MutableSet<Relation> generateRelationsTo(MinecraftObject other) {
+  public MutableSet<Relation> generateRelationsTo(MinecraftObject other, Orientation o) {
     MutableSet<Relation> result = Sets.mutable.empty();
     if ((other instanceof Block)) {
       Block ob = (Block) other;

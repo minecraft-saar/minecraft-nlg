@@ -4,6 +4,7 @@ import de.saar.basic.Pair;
 import de.saar.coli.minecraft.relationextractor.BigBlock;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
 import de.saar.coli.minecraft.relationextractor.Relation;
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import de.saar.coli.minecraft.relationextractor.UniqueBlock;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
@@ -77,7 +78,7 @@ public class MinecraftWorldTest {
     unaryRelations.add(new Relation("block", ub, Lists.immutable.empty()));
     unaryRelations.add(new Relation("block", ub2, Lists.immutable.empty()));
 
-    List<Relation> relations = Relation.generateAllRelationsBetweeen(objects);
+    List<Relation> relations = Relation.generateAllRelationsBetweeen(objects, Orientation.ZPLUS);
     relations.addAll(unaryRelations);
 
     mcr.setRelations(relations);
@@ -96,7 +97,7 @@ public class MinecraftWorldTest {
     // the new railing to be built
     unaryRelations.add(new Relation("railing", railing2, Lists.immutable.empty()));
 
-    relations = Relation.generateAllRelationsBetweeen(objects);
+    relations = Relation.generateAllRelationsBetweeen(objects, Orientation.ZPLUS);
     relations.addAll(unaryRelations);
     mcr.setRelations(relations);
 

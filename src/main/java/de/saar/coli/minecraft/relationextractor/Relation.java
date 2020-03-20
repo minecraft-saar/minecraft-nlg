@@ -14,6 +14,12 @@ public class Relation {
   public final MinecraftObject obj;
 
   /**
+   * Orientation is defined along the axes: if the player
+   * primarily looks along the X axis into increasing values of X, it is XPLUS etc.
+   */
+  public enum Orientation{XPLUS, XMINUS, ZPLUS, ZMINUS}
+
+  /**
    * A relation between one main object and some other objects.
    * @param relationString The name of the relation
    * @param obj the main object
@@ -55,11 +61,12 @@ public class Relation {
     fom.get(relationString).add(args);
   }
 
-  public static List<Relation> generateAllRelationsBetweeen(Iterable<MinecraftObject> mcobjects) {
+  public static List<Relation> generateAllRelationsBetweeen(Iterable<MinecraftObject> mcobjects,
+                                                            Orientation orientation) {
     List<Relation> result = new ArrayList<>();
     for (MinecraftObject obj: mcobjects) {
       result.addAll(obj.generateUnaryRelations());
-      result.addAll(obj.generateRelationsTo(mcobjects));
+      result.addAll(obj.generateRelationsTo(mcobjects, orientation));
     }
     return result;
   }

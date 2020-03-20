@@ -2,6 +2,7 @@ package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.MinecraftRealizer;
 import de.saar.coli.minecraft.relationextractor.Bridge.BridgeDirection;
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumSet;
@@ -121,7 +122,7 @@ public class RelationGenerator {
     objects.add(rail1);
     objects.add(rail2);
 
-    MutableSet<Relation> foo = rail1.generateRelationsTo(floor, rail2);
+    MutableSet<Relation> foo = rail1.generateRelationsTo(floor, rail2, Orientation.ZPLUS);
     List<Relation> relations = generateAllRelationsBetweeen(objects);
     relations.add(new Relation("indefrailing",
         rail2, Lists.immutable.empty()));
@@ -143,7 +144,7 @@ public class RelationGenerator {
   public static List<Relation> generateAllRelationsBetweeen(List<MinecraftObject> mcobjects) {
     List<Relation> result = new ArrayList<>();
     for (MinecraftObject obj: mcobjects) {
-      result.addAll(obj.generateRelationsTo(mcobjects));
+      result.addAll(obj.generateRelationsTo(mcobjects, Orientation.ZPLUS));
     }
     return result;
   }

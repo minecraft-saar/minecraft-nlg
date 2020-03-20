@@ -1,5 +1,6 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
@@ -51,7 +52,7 @@ public class Railing extends MinecraftObject {
   }
 
   @Override
-  public MutableSet<Relation> generateRelationsTo(MinecraftObject other) {
+  public MutableSet<Relation> generateRelationsTo(MinecraftObject other, Orientation orientation) {
     // TODO
     return null;
   }

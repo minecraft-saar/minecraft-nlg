@@ -1,10 +1,9 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
-import org.eclipse.collections.api.set.ImmutableSet;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Sets;
 
@@ -67,10 +66,12 @@ public abstract class MinecraftObject {
     return Sets.mutable.empty();
   }
 
-  public abstract MutableSet<Relation> generateRelationsTo(MinecraftObject other);
+  public abstract MutableSet<Relation> generateRelationsTo(MinecraftObject other,
+      Orientation orientation);
 
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other,
-      MinecraftObject other2) {
+      MinecraftObject other2,
+      Orientation orientation) {
     MutableSet<Relation> result = Sets.mutable.empty();
     return result;
   }
@@ -78,18 +79,19 @@ public abstract class MinecraftObject {
   /**
    * Generates and returns all relations from this object to the objects in other.
    */
-  public MutableSet<Relation> generateRelationsTo(Iterable<MinecraftObject> other) {
+  public MutableSet<Relation> generateRelationsTo(Iterable<MinecraftObject> other,
+      Orientation orientation) {
     MutableSet<Relation> result = Sets.mutable.empty();
     for (MinecraftObject o: other) {
       if (this.equals(o)) {
         continue;
       }
-      result.addAll(generateRelationsTo(o));
+      result.addAll(generateRelationsTo(o, orientation));
       for (MinecraftObject o2: other) {
         if (this.equals(o2) || o.equals(o2)) {
           continue;
         }
-        result.addAll(generateRelationsTo(o,o2));
+        result.addAll(generateRelationsTo(o,o2, orientation));
       }
     }
     return result;

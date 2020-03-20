@@ -1,5 +1,6 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
@@ -68,7 +69,8 @@ public class BigBlock extends MinecraftObject {
   }
 
   @Override
-  public MutableSet<Relation> generateRelationsTo(MinecraftObject other) {
+  public MutableSet<Relation> generateRelationsTo(MinecraftObject other, Orientation orientation) {
+    // TODO handle orientation
     MutableSet<Relation> result = Sets.mutable.empty();
     if ((other instanceof Block)) {
       Block ob = (Block) other;
@@ -84,7 +86,10 @@ public class BigBlock extends MinecraftObject {
   }
 
   @Override
-  public MutableSet<Relation> generateRelationsTo(MinecraftObject other, MinecraftObject other2) {
+  public MutableSet<Relation> generateRelationsTo(MinecraftObject other,
+      MinecraftObject other2,
+      Orientation orientation) {
+    // TODO handle orientation
     MutableSet<Relation> result = Sets.mutable.empty();
     // make an otherside relation if this is on the other side of other from other2
     // and other2 has the same shape as other2

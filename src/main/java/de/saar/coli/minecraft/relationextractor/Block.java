@@ -1,5 +1,6 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
@@ -45,17 +46,49 @@ public class Block extends MinecraftObject {
   }
 
   @Override
-  public MutableSet<Relation> generateRelationsTo(MinecraftObject other) {
+  public MutableSet<Relation> generateRelationsTo(MinecraftObject other, Orientation orientation) {
     MutableSet<Relation> result = Sets.mutable.empty();
     if (other instanceof Block) {
       Block ob = (Block) other;
+
+      // First we compute the X and Z axis offsets that are currently seen as "left" and "infront"
+      // by the user
+
+      int left_x_offset = 0;
+      int left_z_offset = 0;
+      int front_x_offset = 0;
+      int front_z_offset = 0;
+      switch (orientation) {
+        case XPLUS:
+          left_z_offset = -11;
+          front_x_offset = 1;
+          break;
+        case XMINUS:
+          left_z_offset = 1;
+          front_x_offset = -1;
+          break;
+        case ZPLUS:
+          left_x_offset = 1;
+          front_z_offset = 1;
+          break;
+        case ZMINUS:
+          left_x_offset = -1;
+          front_z_offset = -1;
+      }
+
+
+      // Top-of (always Y axis)
       if (ob.xpos == xpos && ob.zpos == zpos && ob.ypos == ypos - 1) {
         result.add(new Relation("top-of",
             this, Lists.immutable.of(other)));
-      } else if (ob.xpos == xpos + 1 && ob.zpos == zpos && ob.ypos == ypos) {
+      } else if (ob.xpos == xpos + left_x_offset
+          && ob.zpos == zpos + left_z_offset
+          && ob.ypos == ypos) {
         result.add(new Relation("left-of",
             this, Lists.immutable.of(other)));
-      } else if (ob.xpos == xpos && ob.zpos == zpos - 1 && ob.ypos == ypos) {
+      } else if (ob.xpos == xpos + front_x_offset
+          && ob.zpos == zpos + front_z_offset
+          && ob.ypos == ypos) {
         result.add(new Relation("in-front-of",
             this, Lists.immutable.of(other)));
       }
