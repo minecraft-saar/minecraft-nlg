@@ -60,19 +60,19 @@ public class Block extends MinecraftObject {
       int front_z_offset = 0;
       switch (orientation) {
         case XPLUS:
-          left_z_offset = -1;
+          left_z_offset = 1;
           front_x_offset = 1;
           break;
         case XMINUS:
-          left_z_offset = 1;
+          left_z_offset = -1;
           front_x_offset = -1;
           break;
         case ZPLUS:
-          left_x_offset = 1;
+          left_x_offset = -1;
           front_z_offset = 1;
           break;
         case ZMINUS:
-          left_x_offset = -1;
+          left_x_offset = 1;
           front_z_offset = -1;
       }
 
