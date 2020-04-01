@@ -2,6 +2,7 @@ package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Lists;
@@ -43,6 +44,25 @@ public class Block extends MinecraftObject {
   @Override
   public MutableSet<Relation> generateUnaryRelations() {
     return Sets.mutable.of(new Relation("block", this));
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Block block = (Block) o;
+    return xpos == block.xpos &&
+        ypos == block.ypos &&
+        zpos == block.zpos;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(xpos, ypos, zpos);
   }
 
   @Override
