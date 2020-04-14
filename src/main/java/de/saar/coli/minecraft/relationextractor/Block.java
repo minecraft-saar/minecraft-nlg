@@ -28,6 +28,11 @@ public class Block extends MinecraftObject {
   }
 
   @Override
+  public String getVerb() {
+    return "put";
+  }
+
+  @Override
   public Set<Block> getBlocks() {
     Set<Block> res = new HashSet<>();
     res.add(this);

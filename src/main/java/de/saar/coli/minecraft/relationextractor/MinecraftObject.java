@@ -1,19 +1,52 @@
 package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.stream.Collectors;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Sets;
 
 public abstract class MinecraftObject {
   protected Set<MinecraftObject> children;
 
-  protected EnumSet<Aspects> aspects;
+
+  private static final Set<EnumSet<Features>> features = Set.of(EnumSet.of(Features.TYPE,
+                                                               Features.X1,
+                                                               Features.Y1,
+                                                               Features.Z1));
 
   public abstract Set<Block> getBlocks();
 
+  /**
+   * Returns the features that uniquely describe this type of object.
+   */
+  public Set<EnumSet<Features>> getFeatures() {
+    return features;
+  }
+
+  /**
+   * Returns the features that uniquely describe this type of object as a String for alto.
+   */
+  public Set<String> getFeaturesStrings() {
+    return getFeatures()
+        .stream()
+        .map((set) ->
+            set.stream()
+                .map((elem) -> elem.name().toLowerCase())
+                .collect(Collectors.joining("+"))
+        )
+        .collect(Collectors.toSet());
+  }
+
+  /**
+   * returns a verb appropriate for instructing to build this object.
+   */
+  public String getVerb() {
+    return "build";
+  }
 
   public Set<MinecraftObject> getChildren() {
     return children;

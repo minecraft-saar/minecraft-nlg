@@ -8,6 +8,7 @@ import de.saar.coli.minecraft.relationextractor.UniqueBlock;
 import de.saar.coli.minecraft.relationextractor.Relation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.eclipse.collections.impl.factory.Lists;
 
 public class Inlg2019 {
@@ -53,7 +54,7 @@ public class Inlg2019 {
     
     mcr.setRelations(relations);
 
-    System.out.println(mcr.generateStatement("build", "bridge", "type+corner1+corner3"));
+    System.out.println(mcr.generateStatement("build", "bridge", Set.of("type+corner1+corner3")));
 
     // right and left railing
     BigBlock railing1 = new BigBlock("railing1", 4, 2, 1, 4, 2, 5);
@@ -71,7 +72,7 @@ public class Inlg2019 {
     relations.addAll(unaryRelations);
     mcr.setRelations(relations);
 
-    System.out.println(mcr.generateStatement("build", "railing2", "type+corner1+corner3"));
+    System.out.println(mcr.generateStatement("build", "railing2", Set.of("type+corner1+corner3")));
   }
 
 

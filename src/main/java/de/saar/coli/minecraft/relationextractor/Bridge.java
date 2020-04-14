@@ -38,10 +38,6 @@ public class Bridge extends MinecraftObject {
    * @param dir The orientation of the bridge (along X axis or Y axis)
    */
   public Bridge(String name, int x1, int z1, int x2, int z2, int y, BridgeDirection dir) {
-    this.aspects = EnumSet.of(Aspects.ORIENTATION,
-        Aspects.X1, Aspects.Z1,
-        Aspects.X2, Aspects.Z2,
-        Aspects.Y1);
     this.x1pos = x1;
     this.x2pos = x2;
     this.z1pos = z1;
@@ -62,6 +58,14 @@ public class Bridge extends MinecraftObject {
     blocks.addAll(floor.getBlocks());
     blocks.addAll(railing1.getBlocks());
     blocks.addAll(railing2.getBlocks());
+  }
+
+  @Override
+  public Set<EnumSet<Features>> getFeatures() {
+    return Set.of(EnumSet.of(Features.ORIENTATION,
+        Features.X1, Features.Z1,
+        Features.X2, Features.Z2,
+        Features.Y1));
   }
 
   @Override

@@ -6,6 +6,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
 
+import java.util.Set;
 import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
@@ -65,7 +66,7 @@ public class Main implements Runnable {
     if (actionObjectAspects.length == 3) {
       aspects = actionObjectAspects[2];
     }
-    return mcr.generateStatement(actionObjectAspects[0], actionObjectAspects[1], aspects);
+    return mcr.generateStatement(actionObjectAspects[0], actionObjectAspects[1], Set.of(aspects));
   }
 
   public static void main(String[] args) {

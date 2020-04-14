@@ -1,6 +1,7 @@
 package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
@@ -38,6 +39,32 @@ public class BigBlock extends MinecraftObject {
     for (Block i: getBlocks()) {
       children.add(i);
     }
+  }
+
+  private static final Set<EnumSet<Features>> features = Set.of(
+      EnumSet.of(Features.TYPE,
+          Features.X1,
+          Features.Y1,
+          Features.Z1,
+          Features.X2,
+          Features.Y2,
+          Features.Z2),
+      EnumSet.of(Features.TYPE,
+          Features.X1,
+          Features.Y1,
+          Features.Z1,
+          Features.X2,
+          Features.HEIGHT,
+          Features.Z2)
+
+
+  );
+
+  /**
+   * Returns the features that uniquely describe this type of object.
+   */
+  public Set<EnumSet<Features>> getFeatures() {
+    return features;
   }
 
   @Override
@@ -80,6 +107,9 @@ public class BigBlock extends MinecraftObject {
       }
       if (ob.xpos == this.x2 && ob.ypos == this.y2 && ob.zpos == this.z2) {
         result.add(new Relation("to", this, Lists.immutable.of(ob)));
+      }
+      if (ob.xpos == this.x2 && ob.ypos == this.y1 && ob.zpos == this.z2) {
+        result.add(new Relation("tobottom", this, Lists.immutable.of(ob)));
       }
     }
     return result;

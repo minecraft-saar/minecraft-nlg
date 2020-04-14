@@ -83,7 +83,7 @@ public class MinecraftWorldTest {
 
     mcr.setRelations(relations);
 
-    System.out.println(mcr.generateStatement("build", "bridge", "type+corner1+corner3"));
+    System.out.println(mcr.generateStatement("build", "bridge", Set.of("type+corner1+corner3")));
 
     // right and left railing
     BigBlock railing1 = new BigBlock("railing1", 4, 2, 1, 4, 2, 5);
@@ -101,7 +101,7 @@ public class MinecraftWorldTest {
     relations.addAll(unaryRelations);
     mcr.setRelations(relations);
 
-    System.out.println(mcr.generateStatement("build", "railing2", "type+corner1+corner3"));
+    System.out.println(mcr.generateStatement("build", "railing2", Set.of("type+corner1+corner3")));
   }
 }
 

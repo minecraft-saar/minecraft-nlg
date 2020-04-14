@@ -1,9 +1,12 @@
 package de.saar.coli.minecraft;
 
+import com.google.common.collect.Iterables;
 import de.saar.basic.Pair;
 
+import de.saar.coli.minecraft.relationextractor.Features;
 import de.saar.coli.minecraft.relationextractor.Relation;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
@@ -21,12 +24,15 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 
+import java.util.Arrays;
 import java.util.BitSet;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -35,8 +41,10 @@ public class MinecraftRealizer {
 
   private static Logger logger = LogManager.getLogger(MinecraftRealizer.class);
 
-  private static final String ASPECTS =
-      "corner1+corner2+corner3+corner4+type+color+X1+Z1+X2+Z2+Y1+Y2+SHAPE+HEIGHT+WIDTH+DEPTH";
+  private static final String FEATURES = Arrays.stream(Features.values())
+      .map(Features::toString)
+      .map(String::toLowerCase)
+      .collect(Collectors.joining("+"));
 
   private final InterpretedTreeAutomaton irtg;
   private final Interpretation<List<String>> strI;
@@ -122,7 +130,7 @@ public class MinecraftRealizer {
     if (semI != null) {
       semA = (SubsetAlgebra) semI.getAlgebra();
       try {
-        semA.readOptions(new StringReader(ASPECTS));
+        semA.readOptions(new StringReader(FEATURES));
       } catch (Exception e) {
         e.printStackTrace();
       }
@@ -154,26 +162,65 @@ public class MinecraftRealizer {
 
   /**
    * Builds a statement that represents building objName using the action.
-   * The aspects define how objName should be described.
+   * The features define how objName should be described.
    */
-  public String generateStatement(String action, MinecraftObject obj, String aspects)
+  public String generateStatement(String action, MinecraftObject obj, Collection<String> features)
       throws ParserException {
-    return generateStatement(action, obj.toString(), aspects);
+    return generateStatement(action, obj.toString(), features);
+  }
+
+  /**
+   * Builds an instuction for the target object in the given world.
+   * @param world A set of objects already in the world.
+   * @param target The object (not yet part of the world) that should be created by the user
+   * @param it Every object of the world that could be described by "it"
+   * @param lastOrientation The last observed orientation of the user.
+   * @return A string that correctly instructs the user.
+   */
+  public String generateInstruction(Set<MinecraftObject> world,
+      MinecraftObject target,
+      Set<MinecraftObject> it,
+      Orientation lastOrientation) {
+    var relations = Relation.generateAllRelationsBetweeen(
+        Iterables.concat(world,
+            org.eclipse.collections.impl.factory.Iterables.iList(target)
+        ),
+        lastOrientation
+    );
+    for (var elem : it) {
+      relations.add(new Relation("it", elem));
+    }
+    var response = "";
+    try {
+      setRelations(relations);
+      response = generateStatement(target.getVerb(), target, target.getFeaturesStrings());
+    } catch (ParserException e) {
+      e.printStackTrace();
+    }
+    return response;
   }
 
   /**
    * Builds a statement that represents building objName using the action.
-   * The aspects define how objName should be described.
+   * The features define how objName should be described.
    */
-  public String generateStatement(String action, String objName, String aspects)
+  public String generateStatement(String action, String objName, Collection<String> features)
       throws ParserException {
     logger.debug("generating a statement for this model: " + (refA.getModel().toString()));
     String ret = "**NONE**";
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
     Intersectable<BitSet> semO = null;
     if (semI != null) {
-      BitSet semInput = semA.parseString(aspects);
-      semO = semI.parse(semInput);
+      Set<BitSet> semInputs = features.stream().map((x) -> {
+        try {
+          return semA.parseString(x);
+        } catch (ParserException e) {
+          // convert checked to unchecked exception to make map work
+          throw new RuntimeException(e);
+        }
+      }).collect(Collectors.toSet());
+      var ta = semA.decompose(semInputs);
+      semO = semI.invhom(ta);
     }
 
     TreeAutomaton<String> automaton = irtg.getAutomaton();

@@ -1,5 +1,9 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
+import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.factory.Sets;
+
 public class Wall extends BigBlock {
 
   public enum WallDirection {
@@ -29,7 +33,7 @@ public class Wall extends BigBlock {
   }
 
   public int height() {
-    return y2 - y1;
+    return y2 - y1 + 1;
   }
 
   /**
@@ -62,5 +66,13 @@ public class Wall extends BigBlock {
       return false;
     }
     return true;
+  }
+
+  @Override
+  public MutableSet<Relation> generateUnaryRelations() {
+    return Sets.mutable.of(
+        new Relation("wall", this),
+        new Relation("height" + height(), this)
+    );
   }
 }

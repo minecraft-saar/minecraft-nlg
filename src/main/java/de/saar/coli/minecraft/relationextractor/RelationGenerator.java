@@ -7,6 +7,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Lists;
 
@@ -49,7 +50,7 @@ public class RelationGenerator {
 
     mcr.setRelations(relations);
 
-    System.out.println(mcr.generateStatement("build", "b", "X1+Z1+X2+Z2"));
+    System.out.println(mcr.generateStatement("build", "b", Set.of("X1+Z1+X2+Z2")));
 
 
 
@@ -101,7 +102,7 @@ public class RelationGenerator {
 
     mcr.setRelations(relations);
 
-    System.out.println(mcr.generateStatement("build", "floor", "X1+Z1+X2+Z2"));
+    System.out.println(mcr.generateStatement("build", "floor", Set.of("X1+Z1+X2+Z2")));
 
   }
 
@@ -134,7 +135,7 @@ public class RelationGenerator {
 
     mcr.setRelations(relations);
 
-    System.out.println(mcr.generateStatement("build", "rail2", "X1+Z1+X2+Z2"));
+    System.out.println(mcr.generateStatement("build", "rail2", Set.of("X1+Z1+X2+Z2")));
 
   }
 
