@@ -56,4 +56,9 @@ public class Railing extends MinecraftObject {
     // TODO
     return null;
   }
+
+  @Override
+  public String toString() {
+    return "Railing-" + block1 + '-' + block2;
+  }
 }

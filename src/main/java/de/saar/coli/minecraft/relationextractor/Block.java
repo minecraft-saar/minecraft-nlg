@@ -123,6 +123,6 @@ public class Block extends MinecraftObject {
 
   @Override
   public String toString() {
-    return "Block-" + xpos + "-" + ypos + "-" + zpos + "-";
+    return "Block-" + xpos + "-" + ypos + "-" + zpos;
   }
 }

@@ -1,7 +1,7 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import com.google.gson.Gson;
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
-import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -128,5 +128,19 @@ public abstract class MinecraftObject {
       }
     }
     return result;
+  }
+
+  @Override
+  public abstract String toString();
+
+  /**
+   * Generate a json String representing this object.
+   */
+  public String asJson() {
+    var json = new Gson()
+        .toJsonTree(this)
+        .getAsJsonObject();
+    json.addProperty("type", this.getClass().getSimpleName());
+    return json.toString();
   }
 }

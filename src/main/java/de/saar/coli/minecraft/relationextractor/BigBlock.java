@@ -1,5 +1,7 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -151,7 +153,6 @@ public class BigBlock extends MinecraftObject {
 
   @Override
   public String toString() {
-    return name;
+    return name + x1 + '-' + y1 + '-' + z1 + '-' + x2+ '-' + y2+ '-' + z2;
   }
-
 }
