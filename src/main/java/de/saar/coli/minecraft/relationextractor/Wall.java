@@ -69,10 +69,12 @@ public class Wall extends BigBlock {
   }
 
   @Override
-  public MutableSet<Relation> generateUnaryRelations() {
+  public MutableSet<Relation> generateUnaryRelations(Orientation o) {
     return Sets.mutable.of(
         new Relation("wall", this),
         new Relation("height" + height(), this)
     );
   }
+
+
 }

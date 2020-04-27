@@ -95,7 +95,7 @@ public abstract class MinecraftObject {
    * Generates all relations describing only this object.
    * TODO: make abstract
    */
-  public MutableSet<Relation> generateUnaryRelations() {
+  public MutableSet<Relation> generateUnaryRelations(Orientation orientation) {
     return Sets.mutable.empty();
   }
 

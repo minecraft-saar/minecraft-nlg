@@ -13,5 +13,5 @@ public enum Features {
   Y2,
   Z1,
   Z2,
-  HEIGHT, WIDTH, ORIENTATION
+  HEIGHT, WIDTH, LENGTH, ORIENTATION
 }

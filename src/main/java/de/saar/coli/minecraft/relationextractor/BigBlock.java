@@ -1,7 +1,5 @@
 package de.saar.coli.minecraft.relationextractor;
 
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -19,6 +17,92 @@ public class BigBlock extends MinecraftObject {
   public final int y2;
   public final int z2;
   String name;
+
+  public static class CoordinatesTuple {
+
+    public final int x1;
+    public final int y1;
+    public final int z1;
+    public final int x2;
+    public final int y2;
+    public final int z2;
+
+    public CoordinatesTuple(int x1, int y1, int z1, int x2, int y2, int z2, Orientation o) {
+      this.y1 = y1;
+      this.y2 = y2;
+
+      switch (o) {
+        case ZPLUS:
+          this.x1 = x1;
+          this.z1 = z1;
+          this.x2 = x2;
+          this.z2 = z2;
+          break;
+        case ZMINUS:
+          this.x1 = -x1;
+          this.z1 = -z1;
+          this.x2 = -x2;
+          this.z2 = -z2;
+          break;
+        case XPLUS:
+          this.x1 = -z1;
+          this.x2 = -z2;
+          this.z1 = x1;
+          this.z2 = x2;
+          break;
+        case XMINUS:
+          this.x1 = z1;
+          this.x2 = z2;
+          this.z1 = -x1;
+          this.z2 = -x2;
+          break;
+        default:
+          // to make the static code analyzer happy as the values are final.
+          this.x1 = x1;
+          this.x2 = x2;
+          this.z1 = z1;
+          this.z2 = z2;
+          throw new IllegalStateException("Unexpected value: " + o);
+      }
+    }
+
+    public int getMinX() {
+      if (x1 < x2) {
+        return x1;
+      }
+      return x2;
+    }
+    public int getMaxX() {
+      if (x1 > x2) {
+        return x1;
+      }
+      return x2;
+    }
+    public int getMinY() {
+      if (y1 < y2) {
+        return y1;
+      }
+      return y2;
+    }
+    public int getMaxY() {
+      if (y1 > y2) {
+        return y1;
+      }
+      return y2;
+    }
+    public int getMinZ() {
+      if (z1 < z2) {
+        return z1;
+      }
+      return z2;
+    }
+    public int getMaxZ() {
+      if (z1 > z2) {
+        return z1;
+      }
+      return z2;
+    }
+  }
 
   // direction of the normal vector
   // public final Direction n;
@@ -58,8 +142,6 @@ public class BigBlock extends MinecraftObject {
           Features.X2,
           Features.HEIGHT,
           Features.Z2)
-
-
   );
 
   /**
@@ -97,21 +179,33 @@ public class BigBlock extends MinecraftObject {
     return true;
   }
 
+  public CoordinatesTuple getRotatedCoords(Orientation orientation) {
+    return new CoordinatesTuple(x1,y1,z1,x2,y2,z2, orientation);
+  }
+
   @Override
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other, Orientation orientation) {
-    // TODO handle orientation
     MutableSet<Relation> result = Sets.mutable.empty();
+    var coord = getRotatedCoords(orientation);
     if ((other instanceof Block)) {
-      Block ob = (Block) other;
-      if (ob.xpos == this.x1 && ob.ypos == this.y1 && ob.zpos == this.z1) {
+      var oc =  ((Block) other).getRotatedCoords(orientation);
+      // from is if block is at minimal positions
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
         result.add(new Relation("from",
-            this, Lists.immutable.of(ob)));
+            this, Lists.immutable.of(other)));
       }
-      if (ob.xpos == this.x2 && ob.ypos == this.y2 && ob.zpos == this.z2) {
-        result.add(new Relation("to", this, Lists.immutable.of(ob)));
+      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
+        result.add(new Relation("to", this, Lists.immutable.of(other)));
       }
-      if (ob.xpos == this.x2 && ob.ypos == this.y1 && ob.zpos == this.z2) {
-        result.add(new Relation("tobottom", this, Lists.immutable.of(ob)));
+      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.z2) {
+        result.add(new Relation("tobottom", this, Lists.immutable.of(other)));
+      }
+      if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
+        result.add(new Relation("fromtopof",
+            this, Lists.immutable.of(other)));
+      }
+      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
+        result.add(new Relation("totopof", this, Lists.immutable.of(other)));
       }
     }
     return result;

@@ -14,6 +14,45 @@ public class Block extends MinecraftObject {
   public final int ypos;
   public final int zpos;
 
+  public static class CoordinatesTuple {
+
+    public final int x1;
+    public final int y1;
+    public final int z1;
+
+    public CoordinatesTuple(int x1, int y1, int z1, Orientation o) {
+      this.y1 = y1;
+
+      switch (o) {
+        case ZPLUS:
+          this.x1 = x1;
+          this.z1 = z1;
+          break;
+        case ZMINUS:
+          this.x1 = -x1;
+          this.z1 = -z1;
+          break;
+        case XPLUS:
+          this.x1 = -z1;
+          this.z1 = x1;
+          break;
+        case XMINUS:
+          this.x1 = z1;
+          this.z1 = -x1;
+          break;
+        default:
+          // to make the static code analyzer happy as the values are final.
+          this.x1 = x1;
+          this.z1 = z1;
+          throw new IllegalStateException("Unexpected value: " + o);
+      }
+    }
+  }
+
+  public CoordinatesTuple getRotatedCoords(Orientation orientation) {
+    return new CoordinatesTuple(xpos,ypos,zpos, orientation);
+  }
+
   /**
    * A block is the basic building block (hah) of the Minecraft domain.
    * @param x It's xpos coordinate
@@ -47,7 +86,7 @@ public class Block extends MinecraftObject {
   }
 
   @Override
-  public MutableSet<Relation> generateUnaryRelations() {
+  public MutableSet<Relation> generateUnaryRelations(Orientation o) {
     return Sets.mutable.of(new Relation("block", this));
   }
 
@@ -76,44 +115,23 @@ public class Block extends MinecraftObject {
     if (other instanceof Block) {
       Block ob = (Block) other;
 
-      // First we compute the X and Z axis offsets that are currently seen as "left" and "infront"
-      // by the user
-
-      int left_x_offset = 0;
-      int left_z_offset = 0;
-      int front_x_offset = 0;
-      int front_z_offset = 0;
-      switch (orientation) {
-        case XPLUS:
-          left_z_offset = 1;
-          front_x_offset = 1;
-          break;
-        case XMINUS:
-          left_z_offset = -1;
-          front_x_offset = -1;
-          break;
-        case ZPLUS:
-          left_x_offset = -1;
-          front_z_offset = 1;
-          break;
-        case ZMINUS:
-          left_x_offset = 1;
-          front_z_offset = -1;
-      }
-
+      var thiscoord = this.getRotatedCoords(orientation);
+      var othercoord = ob.getRotatedCoords(orientation);
 
       // Top-of (always Y axis)
-      if (ob.xpos == xpos && ob.zpos == zpos && ob.ypos == ypos - 1) {
+      if (thiscoord.x1 == othercoord.x1
+          && thiscoord.z1 == othercoord.z1
+          && thiscoord.y1 == othercoord.y1 + 1) {
         result.add(new Relation("top-of",
             this, Lists.immutable.of(other)));
-      } else if (ob.xpos == xpos + left_x_offset
-          && ob.zpos == zpos + left_z_offset
-          && ob.ypos == ypos) {
+      } else if (thiscoord.x1 == othercoord.x1 + 1
+          && thiscoord.z1 == othercoord.z1
+          && thiscoord.y1 == othercoord.y1) {
         result.add(new Relation("left-of",
             this, Lists.immutable.of(other)));
-      } else if (ob.xpos == xpos + front_x_offset
-          && ob.zpos == zpos + front_z_offset
-          && ob.ypos == ypos) {
+      } else if (thiscoord.x1 == othercoord.x1
+          && thiscoord.z1 == othercoord.z1 - 1
+          && thiscoord.y1 == othercoord.y1) {
         result.add(new Relation("in-front-of",
             this, Lists.immutable.of(other)));
       }

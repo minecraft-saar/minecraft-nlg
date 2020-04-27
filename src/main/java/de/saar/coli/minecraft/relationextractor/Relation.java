@@ -65,7 +65,7 @@ public class Relation {
                                                             Orientation orientation) {
     List<Relation> result = new ArrayList<>();
     for (MinecraftObject obj: mcobjects) {
-      result.addAll(obj.generateUnaryRelations());
+      result.addAll(obj.generateUnaryRelations(orientation));
       result.addAll(obj.generateRelationsTo(mcobjects, orientation));
     }
     return result;

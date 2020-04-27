@@ -1,5 +1,7 @@
 package de.saar.coli.minecraft;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
 import de.saar.basic.Pair;
 import de.saar.coli.minecraft.relationextractor.BigBlock;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
@@ -75,15 +77,15 @@ public class MinecraftWorldTest {
     // relations that will be re-used
     List<Relation> unaryRelations = new ArrayList<>();
     unaryRelations.add(new Relation("bridge", bridge, Lists.immutable.empty()));
-    unaryRelations.add(new Relation("block", ub, Lists.immutable.empty()));
-    unaryRelations.add(new Relation("block", ub2, Lists.immutable.empty()));
 
     List<Relation> relations = Relation.generateAllRelationsBetweeen(objects, Orientation.ZPLUS);
     relations.addAll(unaryRelations);
 
     mcr.setRelations(relations);
 
-    System.out.println(mcr.generateStatement("build", "bridge", Set.of("type+corner1+corner3")));
+    var instr = mcr.generateStatement("build", bridge.toString(),
+        Set.of("type+x1+y1+z1+x2+z2"));
+    assertEquals("build a bridge to the red block from the blue block", instr);
 
     // right and left railing
     BigBlock railing1 = new BigBlock("railing1", 4, 2, 1, 4, 2, 5);
@@ -101,7 +103,11 @@ public class MinecraftWorldTest {
     relations.addAll(unaryRelations);
     mcr.setRelations(relations);
 
-    System.out.println(mcr.generateStatement("build", "railing2", Set.of("type+corner1+corner3")));
+    instr = mcr.generateStatement(
+        "build",
+        railing2.toString(),
+        Set.of("type+x1+y1+z1+x2+z2"));
+    assertEquals("build a railing on the other side", instr);
   }
 }
 

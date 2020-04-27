@@ -1,5 +1,6 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Sets;
@@ -13,9 +14,10 @@ public class UniqueBlock extends Block {
   }
 
   @Override
-  public MutableSet<Relation> generateUnaryRelations() {
-    return Sets.mutable.of(new Relation("block", this),
-                           new Relation(name, this, Lists.immutable.empty()));
+  public MutableSet<Relation> generateUnaryRelations(Orientation o) {
+    var result = super.generateUnaryRelations(o);
+    result.add(new Relation(name, this));
+    return result;
   }
 
   @Override

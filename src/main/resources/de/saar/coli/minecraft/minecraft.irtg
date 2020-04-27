@@ -42,6 +42,11 @@ Obj -> wall [0.9]
   [ref] wall
   [sem] type
 
+Obj -> row [0.9]
+  [string] "row"
+  [ref] row
+  [sem] type
+
 Obj -> railing [0.9]
   [string] "railing"
   [ref] railing
@@ -50,6 +55,11 @@ Obj -> railing [0.9]
 Obj -> block [0.9]
   [string] "block"
   [ref] block
+  [sem] type
+
+Obj -> floor [0.9]
+  [string] "floor"
+  [ref] floor
   [sem] type
 
 
@@ -94,9 +104,19 @@ N -> from(N, DefNP) [0.9]
   [ref] intersect(project_1(intersect_2(from, ?2)), ?1)
   [sem] union(?1, x1+y1+z1)
 
+N -> fromtopof(N, DefNP) [0.9]
+  [string] *(?1, *("from the top of", ?2))
+  [ref] intersect(project_1(intersect_2(fromtopof, ?2)), ?1)
+  [sem] union(?1, x1+y1+z1)
+
 N -> to(N, DefNP) [0.9]
   [string] *(?1, *("to", ?2))
   [ref] intersect(project_1(intersect_2(to,?2)), ?1)
+  [sem] union(?1, x2+y2+z2)
+
+N -> totopof(N, DefNP) [0.9]
+  [string] *(?1, *("to the top of", ?2))
+  [ref] intersect(project_1(intersect_2(totopof,?2)), ?1)
   [sem] union(?1, x2+y2+z2)
 
 N -> tobottom(N, DefNP) [0.9]
@@ -112,7 +132,7 @@ N -> othersideof(N, DefNP) [0.9]
 
 N -> otherside(N) [0.9]
   [string] *(?1, "on the other side")
-  [ref] size_1(project_1(intersect_3(otherside, it)))
+  [ref] intersect(?1, size_1(project_1(intersect_3(otherside, it))))
   [sem] union(?1, x1+y1+z1+x2+y2+z2)
 
 // Use a location as additional description
@@ -135,6 +155,31 @@ N -> height4(N) [0.9]
   [string] *(?1, "of height four")
   [ref] intersect(height4, ?1)
   [sem] union(height, ?1)
+
+N -> length2(N) [0.9]
+  [string] *(?1, "of length two")
+  [ref] intersect(length2, ?1)
+  [sem] union(length, ?1)
+
+N -> length3(N) [0.9]
+  [string] *(?1, "of length three")
+  [ref] intersect(length3, ?1)
+  [sem] union(length, ?1)
+
+N -> length4(N) [0.9]
+  [string] *(?1, "of length four")
+  [ref] intersect(length4, ?1)
+  [sem] union(length, ?1)
+
+N -> toright(N) [0.9]
+  [string] *(?1, "to the right")
+  [ref] intersect(orientleftright, ?1)
+  [sem] union(orientation, ?1)
+
+N -> orientaway(N) [0.9]
+  [string] *(?1, "away from you")
+  [ref] intersect(orientaway, ?1)
+  [sem] union(orientation, ?1)
 
 // adjectives
 ////////////////////////////////////////////////////////////////////////
