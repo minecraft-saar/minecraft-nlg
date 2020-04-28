@@ -190,21 +190,21 @@ public class BigBlock extends MinecraftObject {
     if ((other instanceof Block)) {
       var oc =  ((Block) other).getRotatedCoords(orientation);
       // from is if block is at minimal positions
-      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
+      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
         result.add(new Relation("from",
             this, Lists.immutable.of(other)));
       }
-      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
         result.add(new Relation("to", this, Lists.immutable.of(other)));
       }
-      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.z2) {
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.z2) {
         result.add(new Relation("tobottom", this, Lists.immutable.of(other)));
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
+      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
         result.add(new Relation("fromtopof",
             this, Lists.immutable.of(other)));
       }
-      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
+      if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
         result.add(new Relation("totopof", this, Lists.immutable.of(other)));
       }
     }
