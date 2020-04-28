@@ -67,9 +67,9 @@ public class MinecraftWorldTest {
     var mcr = MinecraftRealizer.createRealizer();
     List<MinecraftObject> objects = new ArrayList<>();
     // anchors
-    final UniqueBlock ub = new UniqueBlock("blue", 1, 1, 1);
+    final UniqueBlock ub = new UniqueBlock("blue", 4, 1, 1);
     objects.add(ub);
-    final UniqueBlock ub2 = new UniqueBlock("red", 4,1,5);
+    final UniqueBlock ub2 = new UniqueBlock("red", 1,1,5);
     objects.add(ub2);
     // the bridge
     BigBlock bridge = new BigBlock("bridge", 1, 1, 1, 4, 1, 5);
