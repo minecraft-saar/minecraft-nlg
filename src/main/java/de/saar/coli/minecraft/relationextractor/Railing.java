@@ -1,9 +1,12 @@
 package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.factory.Lists;
+import org.eclipse.collections.impl.factory.Sets;
 
 public class Railing extends MinecraftObject {
   public Block block1;
