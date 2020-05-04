@@ -1,6 +1,7 @@
 package de.saar.coli.minecraft;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.saar.basic.Pair;
 import de.saar.coli.minecraft.relationextractor.BigBlock;
@@ -85,7 +86,9 @@ public class MinecraftWorldTest {
 
     var instr = mcr.generateStatement("build", bridge.toString(),
         Set.of("type+x1+y1+z1+x2+z2"));
-    assertEquals("build a bridge to the red block from the blue block", instr);
+    boolean corr = "build a bridge to the red block from the blue block".equals(instr)
+        || "build a bridge from the blue block to the red block".equals(instr);
+    assertTrue(corr, "Did not expect: " + instr);
 
     // right and left railing
     BigBlock railing1 = new BigBlock("railing1", 4, 2, 1, 4, 2, 5);

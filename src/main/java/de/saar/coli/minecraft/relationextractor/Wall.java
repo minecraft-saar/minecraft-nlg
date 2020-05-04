@@ -41,19 +41,9 @@ public class Wall extends BigBlock {
    */
   public int width() {
     if (x1 == x2) {
-      return z2 - z1;
+      return z2 - z1 + 1;
     }
-    return x2 - x1;
-  }
-
-  /**
-   * Computes whether this wall is built along the X or Y axis.
-   */
-  public WallDirection direction() {
-    if (y1 == y2) {
-      return WallDirection.ALONGX;
-    }
-    return WallDirection.ALONGY;
+    return x2 - x1 + 1;
   }
 
   @Override
@@ -72,7 +62,8 @@ public class Wall extends BigBlock {
   public MutableSet<Relation> generateUnaryRelations(Orientation o) {
     return Sets.mutable.of(
         new Relation("wall", this),
-        new Relation("height" + height(), this)
+        new Relation("height" + height(), this),
+        new Relation("length" + width(), this)
     );
   }
 

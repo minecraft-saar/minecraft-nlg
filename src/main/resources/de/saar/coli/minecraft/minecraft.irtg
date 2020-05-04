@@ -228,6 +228,11 @@ Obj -> blackw(Obj) [0.9]
   [ref] intersect(black_wool, ?1)
   [sem] dunion(color, ?1)
 
+Obj -> orangew(Obj) [0.9]
+  [string] *("orange", ?1)
+  [ref] intersect(orange_wool, ?1)
+  [sem] dunion(color, ?1)
+
 
 // TODO: what is the sem interpretation for this??
 // probably not important because this rule can only be used

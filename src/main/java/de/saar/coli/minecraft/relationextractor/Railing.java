@@ -51,10 +51,78 @@ public class Railing extends MinecraftObject {
     return or.row.sameShapeAs(this.row);
   }
 
+
+  private static final Set<EnumSet<Features>> features = Set.of(
+      EnumSet.of(Features.TYPE,
+          Features.X1,
+          Features.Y1,
+          Features.Z1,
+          Features.X2,
+          Features.Y2,
+          Features.Z2),
+      EnumSet.of(Features.TYPE,
+          Features.X1,
+          Features.Y1,
+          Features.Z1,
+          Features.X2,
+          Features.HEIGHT,
+          Features.Z2)
+  );
+
+  /**
+   * Returns the features that uniquely describe this type of object.
+   */
+  public Set<EnumSet<Features>> getFeatures() {
+    return features;
+  }
+
+
   @Override
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other, Orientation orientation) {
-    // TODO
-    return null;
+    MutableSet<Relation> result = Sets.mutable.empty();
+    var coord = new BigBlock.CoordinatesTuple(block1.xpos, block1.ypos, block1.zpos,
+        block2.xpos, block2.ypos+1, block2.zpos, orientation);
+    if (other instanceof Block) {
+      var oc = ((Block) other).getRotatedCoords(orientation);
+      // from is if block is at minimal positions
+      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
+        result.add(new Relation("from",
+            this, Lists.immutable.of(other)));
+      }
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
+        result.add(new Relation("to", this, Lists.immutable.of(other)));
+      }
+      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
+        result.add(new Relation("fromaway",
+            this, Lists.immutable.of(other)));
+      }
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
+        result.add(new Relation("tohere", this, Lists.immutable.of(other)));
+      }
+      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
+        result.add(new Relation("fromtopof",
+            this, Lists.immutable.of(other)));
+      }
+      if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
+        result.add(new Relation("totopof", this, Lists.immutable.of(other)));
+      }
+    }
+    return result;
+  }
+
+  public int length() {
+    if (block1.xpos == block2.xpos) {
+      return block2.zpos - block1.zpos + 1;
+    }
+    return block2.xpos - block1.xpos + 1;
+  }
+
+  @Override
+  public MutableSet<Relation> generateUnaryRelations(Orientation o) {
+    return Sets.mutable.of(
+        new Relation("railing", this),
+        new Relation("length" + length(), this)
+    );
   }
 
   @Override
