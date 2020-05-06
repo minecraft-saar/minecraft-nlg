@@ -110,7 +110,7 @@ public class MinecraftWorldTest {
         "build",
         railing2.toString(),
         Set.of("type+x1+y1+z1+x2+z2"));
-    assertEquals("build a railing on the other side", instr);
+    assertEquals("build a railing on the other side of the bridge", instr);
   }
 }
 

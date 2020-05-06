@@ -61,15 +61,21 @@ public class Railing extends MinecraftObject {
           Features.Y1,
           Features.Z1,
           Features.X2,
-          Features.Y2,
           Features.Z2),
       EnumSet.of(Features.TYPE,
           Features.X1,
           Features.Y1,
           Features.Z1,
           Features.X2,
-          Features.HEIGHT,
-          Features.Z2)
+          Features.LENGTH,
+          Features.ORIENTATION),
+      EnumSet.of(Features.TYPE,
+          Features.X1,
+          Features.Y1,
+          Features.Z1,
+          Features.Z2,
+          Features.LENGTH,
+          Features.ORIENTATION)
   );
 
   /**
@@ -77,6 +83,54 @@ public class Railing extends MinecraftObject {
    */
   public Set<EnumSet<Features>> getFeatures() {
     return features;
+  }
+
+  @Override
+  public MutableSet<Relation> generateRelationsTo(MinecraftObject other,
+      MinecraftObject other2,
+      Orientation orientation) {
+    MutableSet<Relation> result = Sets.mutable.empty();
+    // make an otherside relation if this is on the other side of other from other2
+    // and other2 has the same shape as other2
+    if (other instanceof BigBlock && other2 instanceof Railing) {
+      Railing orailing = (Railing) other2;
+      BigBlock obloc = (BigBlock) other;
+      var ocoords = orailing.row.getRotatedCoords(orientation);
+      var thiscoords = this.row.getRotatedCoords(orientation);
+      var blockcoords = obloc.getRotatedCoords(orientation);
+      if (//0: on same height
+          (ocoords.getMinY() == thiscoords.getMinY())
+	  &&
+	  (// 1. case: same, only shifted on z axis
+	   (ocoords.getMaxX() == thiscoords.getMaxX()
+	    && ocoords.getMinX() == thiscoords.getMinX()
+	    && ocoords.getMinX() != ocoords.getMaxX()
+	    && ocoords.getMinX() != ocoords.getMaxX()
+	    )
+	   ||
+	   (// 2. case: same, only shifted on x axis
+	    ocoords.getMaxZ() == thiscoords.getMaxZ()
+	    && ocoords.getMinZ() == thiscoords.getMinZ()
+	    && ocoords.getMinZ() != ocoords.getMaxZ()
+	    && ocoords.getMinZ() != ocoords.getMaxZ()
+	    )
+	   )
+	  &&
+	  // they are mirrored across block
+	  (thiscoords.getMinX() - blockcoords.getMinX() == blockcoords.getMaxX() - ocoords.getMaxX()
+	   ||
+	   thiscoords.getMinZ() - blockcoords.getMinZ() == blockcoords.getMaxZ() - ocoords.getMaxZ()
+	   )
+	  &&
+	  // is on an edge
+	  (thiscoords.getMinZ() == blockcoords.getMinZ() || thiscoords.getMinX() == blockcoords.getMinX())
+	  ) {
+          result.add(new Relation("otherside",
+              this,
+              Lists.immutable.of(obloc, orailing)));
+        }
+      }
+    return result;
   }
 
 
@@ -102,11 +156,11 @@ public class Railing extends MinecraftObject {
       if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
         result.add(new Relation("tohere", this, Lists.immutable.of(other)));
       }
-      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
+      if (oc.x1 == coord.getMaxX() && oc.y1 + 1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
         result.add(new Relation("fromtopof",
             this, Lists.immutable.of(other)));
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
+      if (oc.x1 == coord.getMinX() && oc.y1 + 1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
         result.add(new Relation("totopof", this, Lists.immutable.of(other)));
       }
     }
