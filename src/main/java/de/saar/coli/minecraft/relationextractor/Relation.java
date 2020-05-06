@@ -33,6 +33,13 @@ public class Relation {
   }
 
   public Relation(String relationString,
+      MinecraftObject obj, MinecraftObject otherobj) {
+    this.relationString = relationString;
+    this.obj = obj;
+    this.otherobj = Lists.immutable.of(otherobj);
+  }
+
+  public Relation(String relationString,
       MinecraftObject obj) {
     this.relationString = relationString;
     this.obj = obj;

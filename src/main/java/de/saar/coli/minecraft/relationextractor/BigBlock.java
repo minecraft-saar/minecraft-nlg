@@ -192,27 +192,51 @@ public class BigBlock extends MinecraftObject {
       // from is if block is at minimal positions
       if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
         result.add(new Relation("from",
-            this, Lists.immutable.of(other)));
+            this, other));
       }
       if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
         result.add(new Relation("fromaway",
-            this, Lists.immutable.of(other)));
+            this, other));
       }
       if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
-        result.add(new Relation("to", this, Lists.immutable.of(other)));
+        result.add(new Relation("to", this, other));
       }
       if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
-        result.add(new Relation("tohere", this, Lists.immutable.of(other)));
+        result.add(new Relation("tohere", this, other));
       }
       if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.z2) {
-        result.add(new Relation("tobottom", this, Lists.immutable.of(other)));
+        result.add(new Relation("tobottom", this, other));
       }
       if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
         result.add(new Relation("fromtopof",
             this, Lists.immutable.of(other)));
       }
       if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
-        result.add(new Relation("totopof", this, Lists.immutable.of(other)));
+        result.add(new Relation("totopof", this, other));
+      }
+    } // end other==Block
+    else if (other instanceof BigBlock) {
+      var oblock =(BigBlock) other;
+      var ocoords = oblock.getRotatedCoords(orientation);
+      if (this.sameShapeAs(oblock)) {
+        if (coord.getMinX() == ocoords.getMinX() + 1
+            && coord.getMinY() == ocoords.getMinY()
+            && coord.getMinZ() == ocoords.getMinZ()
+        ) {
+          result.add(new Relation("left-of", this, other));
+        }
+        if (coord.getMinX() == ocoords.getMinX()
+            && coord.getMinY() == ocoords.getMinY() + 1
+            && coord.getMinZ() == ocoords.getMinZ()
+        ) {
+          result.add(new Relation("top-of", this, other));
+        }
+        if (coord.getMinX() == ocoords.getMinX()
+            && coord.getMinY() == ocoords.getMinY()
+            && coord.getMinZ() == ocoords.getMinZ() - 1
+        ) {
+          result.add(new Relation("in-front-of", this, other));
+        }
       }
     }
     return result;
