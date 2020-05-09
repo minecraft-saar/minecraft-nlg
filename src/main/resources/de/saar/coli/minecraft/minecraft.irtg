@@ -119,10 +119,14 @@ N -> to(N, DefNP) [0.9]
   [ref] intersect(project_1(intersect_2(to,?2)), ?1)
   [sem] union(?1, x2+y2+z2)
 
-N -> totopof(N, DefNP) [0.9]
-  [string] *(?1, *("to the top of", ?2))
-  [ref] intersect(project_1(intersect_2(totopof,?2)), ?1)
-  [sem] union(?1, x2+y2+z2)
+// This rule is valid but might be confusing in some cases
+// e.g. "build a wall from the blue block to the top of the
+// black block" -- make the score a bit worse to disprefer
+// it against slightly longer other options
+N -> totopof(N, DefNP) [0.7]
+   [string] *(?1, *("to the top of", ?2))
+   [ref] intersect(project_1(intersect_2(totopof,?2)), ?1)
+   [sem] union(?1, x2+y2+z2)
 
 N -> tobottom(N, DefNP) [0.9]
   [string] *(?1, *("to", ?2))

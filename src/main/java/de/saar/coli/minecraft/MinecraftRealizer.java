@@ -129,7 +129,6 @@ public class MinecraftRealizer {
     semI = (Interpretation<BitSet>) irtg.getInterpretation("sem");
     if (semI != null) {
       semA = (SubsetAlgebra) semI.getAlgebra();
-      semA.setEmptyStatesAllowed(false);
       try {
         semA.readOptions(new StringReader(FEATURES));
       } catch (Exception e) {
