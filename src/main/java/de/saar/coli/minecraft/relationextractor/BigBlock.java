@@ -194,17 +194,19 @@ public class BigBlock extends MinecraftObject {
         result.add(new Relation("from",
             this, other));
       }
-      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
+      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()
+          && coord.getMaxZ() != coord.getMinZ()) {
         result.add(new Relation("fromaway",
             this, other));
       }
       if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
         result.add(new Relation("to", this, other));
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMinZ()
+          && coord.getMinZ() != coord.getMaxZ()) {
         result.add(new Relation("tohere", this, other));
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.z2) {
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
         result.add(new Relation("tobottom", this, other));
       }
       if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
