@@ -190,6 +190,7 @@ public class MinecraftRealizer {
     for (var elem : it) {
       relations.add(new Relation("it", elem));
     }
+    relations.add(new Relation("target", target));
     var response = "";
     try {
       setRelations(relations);

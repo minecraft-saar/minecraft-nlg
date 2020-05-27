@@ -31,7 +31,6 @@ N -> obj(Obj) [0.9]
   [ref] ?1
   [sem] ?1
 
-
 Obj -> bridge [0.9]
   [string] "bridge"
   [ref] bridge
@@ -93,6 +92,34 @@ LocP -> front(DefNP) [0.9]
 LocP -> behind(DefNP) [0.9]
   [string] *("behind", ?1)
   [ref] project_2(intersect_1(in-front-of,?1))
+  [sem] x1+y1+z1+x2+y2+z2
+
+
+// Single addressable blocks of larger objects
+
+// diff(?1, target): We cannot explain the location of a block
+// using the target object we want to describe because the user
+// does not know the shape of the target object yet.
+// therefore, we remove the target object.
+
+N -> frontleftcorner(DefNP) [0.9]
+  [string] *("front left corner of", ?1)
+  [ref] intersect(block, project_2(intersect_1(from, diff(?1, target))))
+  [sem] x1+y1+z1+x2+y2+z2
+
+N -> backtleftcorner(DefNP) [0.9]
+  [string] *("back left corner of", ?1)
+  [ref] intersect(block, project_2(intersect_1(fromaway, diff(?1, target))))
+  [sem] x1+y1+z1+x2+y2+z2
+
+N -> frontrightcorner(DefNP) [0.9]
+  [string] *("front right corner of", ?1)
+  [ref] intersect(block, project_2(intersect_1(tohere, diff(?1, target))))
+  [sem] x1+y1+z1+x2+y2+z2
+
+N -> backrightcorner(DefNP) [0.9]
+  [string] *("back right corner of", ?1)
+  [ref] intersect(block, project_2(intersect_1(to, diff(?1, target))))
   [sem] x1+y1+z1+x2+y2+z2
 
 
@@ -160,7 +187,7 @@ N -> height2(N) [0.9]
   [string] *(?1, "of height two")
   [ref] intersect(height2, ?1)
   [sem] union(height, ?1)
-
+/* see https://github.com/coli-saar/alto/issues/62
 N -> height3(N) [0.9]
   [string] *(?1, "of height three")
   [ref] intersect(height3, ?1)
@@ -170,7 +197,7 @@ N -> height4(N) [0.9]
   [string] *(?1, "of height four")
   [ref] intersect(height4, ?1)
   [sem] union(height, ?1)
-
+*/
 N -> length2(N) [0.9]
   [string] *(?1, "of length two")
   [ref] intersect(length2, ?1)
