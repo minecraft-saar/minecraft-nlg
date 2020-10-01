@@ -39,9 +39,35 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZPLUS);
     assertEquals("put a block behind the blue block", res);
+    // checking left-of
+    res = mcr.generateInstruction(world,
+        new Block(2,0,3),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    String var1 = "put a block to the right of the red block";
+    String var2 = "put a block two blocks left of the yellow block";
+
+    boolean correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "wall instruction incorrect, was " + res);
+    System.out.println(res);
   }
 
   @Test
+  public void testTwoLeftOf(){
+    var world = createWorld();
+    var res = mcr.generateInstruction(world, new Block(5, 0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    assertEquals("put a block two blocks left of the black block", res);
+    System.out.println(res);
+    res = mcr.generateInstruction(world, new Block(-2, 0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    assertEquals("put a block two blocks right of the blue block", res);
+    System.out.println(res);
+  }
+
+    @Test
   public void testHLOInstruction() {
     var world = createWorld();
     var res = mcr.generateInstruction(world,
