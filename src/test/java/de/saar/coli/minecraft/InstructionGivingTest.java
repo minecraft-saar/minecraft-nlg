@@ -65,6 +65,16 @@ public class InstructionGivingTest {
         Orientation.ZPLUS);
     assertEquals("put a block two blocks right of the blue block", res);
     System.out.println(res);
+    res = mcr.generateInstruction(world, new Block(0, 0,-2),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    assertEquals("put a block two blocks in front of the blue block", res);
+    System.out.println(res);
+    res = mcr.generateInstruction(world, new Block(0, 0,-2),
+        new HashSet<>(),
+        Orientation.ZMINUS);
+    assertEquals("put a block two blocks behind the blue block", res);
+    System.out.println(res);
   }
 
     @Test

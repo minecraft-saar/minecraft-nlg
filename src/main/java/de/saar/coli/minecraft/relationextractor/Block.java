@@ -139,6 +139,11 @@ public class Block extends MinecraftObject {
           && thiscoord.y1 == othercoord.y1) {
         result.add(new Relation("two-left-of",
             this, Lists.immutable.of(other)));
+      } else if (thiscoord.x1 == othercoord.x1
+          && thiscoord.z1 == othercoord.z1 - 2
+          && thiscoord.y1 == othercoord.y1) {
+        result.add(new Relation("two-in-front-of",
+            this, Lists.immutable.of(other)));
       }
     }
     return result;
