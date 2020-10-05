@@ -115,6 +115,11 @@ LocP -> twobehind(DefNP) [0.9]
   [ref] project_2(intersect_1(two-in-front-of,?1))
   [sem] x1+y1+z1+x2+y2+z2
 
+LocP -> twoabove(DefNP) [0.9]
+  [string] *("two blocks above", ?1)
+  [ref] project_1(intersect_2(two-above,?1))
+  [sem] x1+y1+z1+x2+y2+z2
+
 // Single addressable blocks of larger objects
 
 // diff(?1, target): We cannot explain the location of a block

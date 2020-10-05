@@ -33,22 +33,33 @@ public class InstructionGivingTest {
         new Block(0,0,1),
         new HashSet<>(),
         Orientation.ZMINUS);
-    assertEquals("put a block in front of the blue block", res);
+    // now have two alternatives to reference to block at (x:0,y:0,z:1)
+    String var1 = "put a block in front of the blue block";
+    String var2 = "put a block two blocks behind the yellow block";
+
+    boolean correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was " + res);
+    System.out.println(res);
     res = mcr.generateInstruction(world,
         new Block(0,0,1),
         new HashSet<>(),
         Orientation.ZPLUS);
-    assertEquals("put a block behind the blue block", res);
+    var1 = "put a block behind the blue block";
+    var2 = "put a block two blocks in front of the yellow block";
+
+    correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was " + res);
+    System.out.println(res);
     // checking left-of
     res = mcr.generateInstruction(world,
         new Block(2,0,3),
         new HashSet<>(),
         Orientation.ZPLUS);
-    String var1 = "put a block to the right of the red block";
-    String var2 = "put a block two blocks left of the yellow block";
+    var1 = "put a block to the right of the red block";
+    var2 = "put a block two blocks left of the yellow block";
 
-    boolean correct = res.equals(var1) || res.equals(var2);
-    assertTrue(correct, "wall instruction incorrect, was " + res);
+    correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was " + res);
     System.out.println(res);
   }
 
@@ -74,6 +85,11 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZMINUS);
     assertEquals("put a block two blocks behind the blue block", res);
+    System.out.println(res);
+    res = mcr.generateInstruction(world, new Block(3, 2,3),
+        new HashSet<>(),
+        Orientation.ZMINUS);
+    assertEquals("put a block two blocks above the red block", res);
     System.out.println(res);
   }
 
@@ -196,6 +212,7 @@ public class InstructionGivingTest {
     res.add(new UniqueBlock("red_wool", 3,0,3));
     res.add(new UniqueBlock("yellow_wool", 0,0,3));
     res.add(new Block(3,1,0));
+    res.add(new Block(3,1,3));
     res.add(new Wall("wall1",0,0,0, 3,3,0));
     return res;
   }
