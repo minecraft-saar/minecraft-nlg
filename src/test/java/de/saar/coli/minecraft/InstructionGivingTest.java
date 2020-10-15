@@ -93,6 +93,34 @@ public class InstructionGivingTest {
     System.out.println(res);
   }
 
+  @Test
+  public void testBetween(){
+    var world = createWorldBetween();
+    var res = mcr.generateInstruction(world, new Block(1, 0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    String var1 = "put a block between the black block and the blue block";
+    String var2 = "put a block between the blue block and the black block";
+    String var3 = "put a block to the left of the blue block";
+    String var4 = "put a block to the right of the black block";
+
+    boolean correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4);
+    assertTrue(correct, "instruction incorrect, was " + res);
+    System.out.println("between: "+res);
+    //testing between front-behind
+    res = mcr.generateInstruction(world, new Block(0, 0,1),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    var1 = "put a block between the blue block and the yellow block";
+    var2 = "put a block between the yellow block and the blue block";
+    var3 = "put a block behind the blue block";
+    var4 = "put a block in front of the yellow block";
+
+    correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4);
+    assertTrue(correct, "instruction incorrect, was " + res);
+    System.out.println("between: "+res);
+  }
+
     @Test
   public void testHLOInstruction() {
     var world = createWorld();
@@ -214,6 +242,18 @@ public class InstructionGivingTest {
     res.add(new Block(3,1,0));
     res.add(new Block(3,1,3));
     res.add(new Wall("wall1",0,0,0, 3,3,0));
+    return res;
+  }
+
+  private Set<MinecraftObject> createWorldBetween(){
+    var res = new HashSet<MinecraftObject>();
+    res.add(new Block(1,1,1));
+    // Remember: Minecraft uses right-handed coordinate system
+    // blue is front-right
+    res.add(new UniqueBlock("blue_wool", 0,0,0));
+    // black is front-left
+    res.add(new UniqueBlock("black_wool", 2,0,0));
+    res.add(new UniqueBlock("yellow_wool", 0,0,2));
     return res;
   }
 

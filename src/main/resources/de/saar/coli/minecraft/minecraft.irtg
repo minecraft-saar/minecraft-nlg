@@ -94,7 +94,8 @@ LocP -> behind(DefNP) [0.9]
   [ref] project_2(intersect_1(in-front-of,?1))
   [sem] x1+y1+z1+x2+y2+z2
 
-// add "two blocks left/right/in front of"
+// add "two blocks" - distance relations
+
 LocP -> twoleft(DefNP) [0.9]
   [string] *("two blocks left of", ?1)
   [ref] project_1(intersect_2(two-left-of,?1))
@@ -118,6 +119,33 @@ LocP -> twobehind(DefNP) [0.9]
 LocP -> twoabove(DefNP) [0.9]
   [string] *("two blocks above", ?1)
   [ref] project_1(intersect_2(two-above,?1))
+  [sem] x1+y1+z1+x2+y2+z2
+
+// between
+
+// 4 rules for between are needed. First, we need to differentiate between blocks that are in a
+// front-behind relationship and blocks that are in left-right relationship. Second, it shouldn't
+// matter whether we say "between A and B" or "between B and A" therefore we need betweenlr and
+// betweenrl.
+
+LocP -> betweenlr(DefNP, DefNP) [0.9]
+  [string] *("between", *(?1, *("and", ?2)))
+  [ref] intersect_1(project_2(intersect_1(left-of,?1)),project_1(intersect_2(left-of,?2)))
+  [sem] x1+y1+z1+x2+y2+z2
+
+LocP -> betweenfb(DefNP, DefNP) [0.9]
+  [string] *("between", *(?1, *("and", ?2)))
+  [ref] intersect_1(project_2(intersect_1(in-front-of,?1)),project_1(intersect_2(in-front-of,?2)))
+  [sem] x1+y1+z1+x2+y2+z2
+
+LocP -> betweenrl(DefNP, DefNP) [0.9]
+  [string] *("between", *(?1, *("and", ?2)))
+  [ref] intersect_1(project_2(intersect_1(left-of,?2)),project_1(intersect_2(left-of,?1)))
+  [sem] x1+y1+z1+x2+y2+z2
+
+LocP -> betweenbf(DefNP, DefNP) [0.9]
+  [string] *("between", *(?1, *("and", ?2)))
+  [ref] intersect_1(project_2(intersect_1(in-front-of,?2)),project_1(intersect_2(in-front-of,?1)))
   [sem] x1+y1+z1+x2+y2+z2
 
 // Single addressable blocks of larger objects
