@@ -6,6 +6,7 @@ import de.saar.coli.minecraft.relationextractor.Block;
 import de.saar.coli.minecraft.relationextractor.Floor;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
 import de.saar.coli.minecraft.relationextractor.Railing;
+import de.saar.coli.minecraft.relationextractor.Relation;
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import de.saar.coli.minecraft.relationextractor.Row;
 import de.saar.coli.minecraft.relationextractor.UniqueBlock;
@@ -131,6 +132,29 @@ public class InstructionGivingTest {
         );
     String var1 = "build a wall to the blue block from the black block of height two";
     String var2 = "build a wall from the black block to the blue block of height two";
+
+    boolean correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "wall instruction incorrect, was " + res);
+    System.out.println(res);
+  }
+
+  @Test
+  public void testWallCorner(){
+    var Wall = new Wall("wall0", 0,0,3,3,3,3);
+    var otherWall = new Wall("wall1",0,0,0,3,3,0);
+    var blueBlock = new UniqueBlock("blue_wool", 0,0,0);
+    var redBlock = new UniqueBlock("red_wool", 3,0,0);
+    var block1 = new Block(0, 3,0);
+    Set<MinecraftObject> world = Set.of(
+        otherWall, blueBlock, redBlock, block1, Wall
+    );
+
+    var res = mcr.generateInstruction(world, new Block(0,4, 0),
+        Set.of(otherWall),
+        Orientation.ZPLUS
+    );
+    String var1 = "put a block on top of the upper right corner of the previous wall";
+    String var2 = "put a block on top of the back right corner of the previous wall";
 
     boolean correct = res.equals(var1) || res.equals(var2);
     assertTrue(correct, "wall instruction incorrect, was " + res);

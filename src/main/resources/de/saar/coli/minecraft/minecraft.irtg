@@ -170,11 +170,20 @@ N -> frontrightcorner(DefNP) [0.9]
   [ref] intersect(block, project_2(intersect_1(tohere, diff(?1, target))))
   [sem] x1+y1+z1+x2+y2+z2
 
-N -> backrightcorner(DefNP) [0.9]
+N -> backrightcorner(DefNP) [0.5]
   [string] *("back right corner of", ?1)
   [ref] intersect(block, project_2(intersect_1(to, diff(?1, target))))
   [sem] x1+y1+z1+x2+y2+z2
 
+N -> upperrightcorner(DefNP) [0.9]
+  [string] *("upper right corner of", ?1)
+  [ref] intersect(block, project_2(intersect_1(to, intersect(wall, diff(?1, target)))))
+  [sem] x1+y1+z1+x2+y2+z2
+
+N -> upperleftcorner(DefNP) [0.9]
+  [string] *("upper left corner of", ?1)
+  [ref] intersect(block, project_2(intersect_1(fromaway, intersect(wall, diff(?1, target)))))
+  [sem] x1+y1+z1+x2+y2+z2
 
 // relations
 ////////////////////////////////////////////////////////////////////////
