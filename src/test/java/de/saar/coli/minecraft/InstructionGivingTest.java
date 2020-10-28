@@ -1,5 +1,6 @@
 package de.saar.coli.minecraft;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.saar.coli.minecraft.relationextractor.Block;
@@ -10,6 +11,16 @@ import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import de.saar.coli.minecraft.relationextractor.Row;
 import de.saar.coli.minecraft.relationextractor.UniqueBlock;
 import de.saar.coli.minecraft.relationextractor.Wall;
+import de.up.ling.irtg.Interpretation;
+import de.up.ling.irtg.InterpretedTreeAutomaton;
+import de.up.ling.irtg.algebra.SubsetAlgebra;
+import de.up.ling.irtg.semiring.LogDoubleArithmeticSemiring;
+import de.up.ling.tree.ParseException;
+import de.up.ling.tree.Tree;
+import de.up.ling.tree.TreeParser;
+import java.io.InputStreamReader;
+import java.lang.reflect.Field;
+import java.util.BitSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,8 +34,14 @@ public class InstructionGivingTest {
   @BeforeEach
   public void setup() {
     mcr = MinecraftRealizer.createRealizer();
+    // enabling this line changes the optimal trees and the tests are expected to fail in that case.
+    // modifiyWeights();
   }
 
+  public void modifiyWeights() {
+    mcr.readExpectedDurationsFromStream(
+        new InputStreamReader(InstructionGivingTest.class.getResourceAsStream("/weights.txt")),true);
+  }
 
   @Test
   public void testBlockInstruction(){
@@ -33,12 +50,31 @@ public class InstructionGivingTest {
         new Block(0,0,1),
         new HashSet<>(),
         Orientation.ZMINUS);
+    assertTrue(mcr.isDerivable(List.of("a", "block", "in front of", "the", "blue", "block")));
+    List<String> incorr = List.of("a", "block", "in front of", "the", "blue", "blue", "block");
+    assertTrue(mcr.isDerivable(incorr));
+    System.out.println(mcr.getTreeForInstruction(incorr));
     assertEquals("put a block in front of the blue block", res);
     res = mcr.generateInstruction(world,
         new Block(0,0,1),
         new HashSet<>(),
         Orientation.ZPLUS);
     assertEquals("put a block behind the blue block", res);
+  }
+
+  @Test
+  public void testDisjointUnion()
+      throws NoSuchFieldException, IllegalAccessException, ParseException {
+    Field f = MinecraftRealizer.class.getDeclaredField("irtg");
+    f.setAccessible(true);
+    InterpretedTreeAutomaton irtg = (InterpretedTreeAutomaton) f.get(mcr);
+    Interpretation<BitSet> interpetation = (Interpretation<BitSet>) irtg.getInterpretation("sem");
+    SubsetAlgebra algebra = (SubsetAlgebra) interpetation.getAlgebra();
+    String testTree = "dnp(obj(blue(blue(block))))";
+    String weirdTree = "np(loc(obj(block),front(dnp(obj(blue(blue(block)))))))";
+    Tree<String> semTree = interpetation.getHomomorphism().apply(TreeParser.parse(testTree));
+    System.out.println(semTree);
+    System.out.println(algebra.evaluate(semTree));
   }
 
   @Test
@@ -49,12 +85,11 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZPLUS
         );
-    String var1 = "build a wall to the blue block from the black block of height two";
-    String var2 = "build a wall from the black block to the blue block of height two";
-
-    boolean correct = res.equals(var1) || res.equals(var2);
-    assertTrue(correct, "wall instruction incorrect, was " + res);
-    System.out.println(res);
+    String correctOption = "build a wall to the blue block from the black block of height two";
+    assertEquals(correctOption.length(), res.length());
+    assertTrue(res.contains("a wall"));
+    assertTrue(res.contains("to the blue block"));
+    assertTrue(res.contains("from the black block"));
   }
 
   @Test
@@ -65,12 +100,12 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZPLUS
     );
-    String var1 = "build a row of length three to the right to the top of the red block";
-    String var2 = "build a row of length three to the top of the red block to the right";
-    String var3 = "build a row to the right to the top of the red block of length three";
-    assertTrue(res.equals(var1) || res.equals(var2) || res.equals(var3),
-        "Test row incorrectly was: " + res);
-    System.out.println(res);
+    String exampleInstruction = "build a row of length three to the right to the top of the red block";
+    assertEquals(exampleInstruction.length(), res.length(), "Incorrect instruction:" + res);
+    assertTrue(res.contains("build a row"));
+    assertTrue(res.contains("of length three"));
+    assertTrue(res.contains("to the right"));
+    assertTrue(res.contains("to the top of the red block"));
   }
 
   @Test
@@ -83,6 +118,11 @@ public class InstructionGivingTest {
     );
     String var1 = "build a floor to the top of the yellow block from the top of the black block";
     String var2 = "build a floor from the top of the black block to the top of the yellow block";
+    
+    List<String> expected = List.of("a", "floor", "from the top of", "the", "black", "block", "to the top of", "the", "yellow", "block");
+    assertTrue(mcr.isDerivable(expected));
+    mcr.getTreeForInstruction(expected);
+
     boolean correct = res.equals(var1) || res.equals(var2);
     assertTrue(correct, "floor instruction incorrect, was: " + res);
   }
@@ -116,7 +156,7 @@ public class InstructionGivingTest {
   }
 
   @Test
-  public void testRailingOtherSide() {
+  public void testRailingOtherSide() throws NoSuchFieldException, IllegalAccessException {
     var otherRailing = new Railing("railing1", 0,3,3,3,1);
     Set<MinecraftObject> world = Set.of(
         new Floor("floor", 0,0,3,3,0),
@@ -128,6 +168,17 @@ public class InstructionGivingTest {
         Orientation.XPLUS);
     String var1 = "build a railing on the other side";
     String var2 = "build a railing on the other side of the floor";
+    List<String> goldInstruction = List.of("a", "railing", "on the other side of", "the", "floor");
+    List<String> realInstruction = List.of("a", "railing", "on the other side of", "the", "floor", "of length four");
+    assertTrue(mcr.isDerivable(goldInstruction));
+    var tree = mcr.getTreeForInstruction(goldInstruction);
+    Field tafield = MinecraftRealizer.class.getDeclaredField("irtg");
+    tafield.setAccessible(true);
+    InterpretedTreeAutomaton irtg = (InterpretedTreeAutomaton) tafield.get(mcr);
+    System.out.println(irtg.getAutomaton().getWeight(mcr.getTreeForInstruction(goldInstruction),
+        LogDoubleArithmeticSemiring.INSTANCE));
+    System.out.println(irtg.getAutomaton().getWeight(mcr.getTreeForInstruction(realInstruction),
+        LogDoubleArithmeticSemiring.INSTANCE));
     boolean correct = res.equals(var1) || res.equals(var2);
     assertTrue(correct, "railing instruction incorrect, was: " + res);
   }
@@ -144,9 +195,7 @@ public class InstructionGivingTest {
         Orientation.ZPLUS);
 
     String var1 = "build a row in front of the previous row";
-    //assertTrue(mcr.isDerivable(List.of("a", "row",  "in front of",  "the", "previous", "row")));
-    //assertTrue(mcr.isDerivable(List.of("a", "row",  "to the right", "of length four", "in front of", "the", "previous", "row")));
-    assertEquals(var1, res);
+    assertEquals(var1, res, "Incorrect instruction:" + res);
   }
 
   private Set<MinecraftObject> createWorld(){
