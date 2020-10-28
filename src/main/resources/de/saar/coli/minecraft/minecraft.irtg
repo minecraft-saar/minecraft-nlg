@@ -285,6 +285,11 @@ N -> orientaway(N) [0.9]
   [ref] intersect(orientaway, ?1)
   [sem] union(orientation, ?1)
 
+N -> fromlefttoright(N) [0.9]
+  [string] *(?1, "from left to right")
+  [ref] intersect(orientleftright, ?1)
+  [sem] union(orientation, ?1)
+
 // adjectives
 ////////////////////////////////////////////////////////////////////////
 Obj -> orange(Obj) [0.9]
