@@ -228,16 +228,19 @@ public class BigBlock extends MinecraftObject {
           result.add(new Relation("left-of", this, other));
         }
         if (coord.getMinX() == ocoords.getMinX()
-            && coord.getMinY() == ocoords.getMinY() + 1
-            && coord.getMinZ() == ocoords.getMinZ()
-        ) {
-          result.add(new Relation("top-of", this, other));
-        }
-        if (coord.getMinX() == ocoords.getMinX()
             && coord.getMinY() == ocoords.getMinY()
             && coord.getMinZ() == ocoords.getMinZ() - 1
         ) {
           result.add(new Relation("in-front-of", this, other));
+        }
+      }
+      if (ocoords.x1 - ocoords.x2 == coord.x1 - coord.x2
+          && ocoords.z1 - ocoords.z2 == coord.z1 - coord.z2 ) {
+        if (coord.getMinX() == ocoords.getMinX()
+            && coord.getMinY() == ocoords.getMaxY() + 1
+            && coord.getMinZ() == ocoords.getMinZ()
+        ) {
+          result.add(new Relation("top-of", this, other));
         }
       }
     }
