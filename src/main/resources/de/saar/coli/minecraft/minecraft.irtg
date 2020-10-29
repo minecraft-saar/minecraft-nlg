@@ -99,27 +99,27 @@ LocP -> behind(DefNP) [-0.9]
 LocP -> twoleft(DefNP) [-0.9]
   [string] *("two blocks left of", ?1)
   [ref] project_1(intersect_2(two-left-of,?1))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> tworight(DefNP) [-0.9]
   [string] *("two blocks right of", ?1)
   [ref] project_2(intersect_1(two-left-of,?1))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> twofront(DefNP) [-0.9]
   [string] *("two blocks in front of", ?1)
   [ref] project_1(intersect_2(two-in-front-of,?1))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> twobehind(DefNP) [-0.9]
   [string] *("two blocks behind", ?1)
   [ref] project_2(intersect_1(two-in-front-of,?1))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> twoabove(DefNP) [-0.9]
   [string] *("two blocks above", ?1)
   [ref] project_1(intersect_2(two-above,?1))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 // between
 
@@ -131,22 +131,22 @@ LocP -> twoabove(DefNP) [-0.9]
 LocP -> betweenlr(DefNP, DefNP) [-0.9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(left-of,?1)),project_1(intersect_2(left-of,?2)))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> betweenfb(DefNP, DefNP) [-0.9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(in-front-of,?1)),project_1(intersect_2(in-front-of,?2)))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> betweenrl(DefNP, DefNP) [-0.9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(left-of,?2)),project_1(intersect_2(left-of,?1)))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> betweenbf(DefNP, DefNP) [-0.9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(in-front-of,?2)),project_1(intersect_2(in-front-of,?1)))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 // Single addressable blocks of larger objects
 
@@ -178,12 +178,12 @@ N -> backrightcorner(DefNP) [-0.9]
 N -> upperrightcorner(DefNP) [-0.9]
   [string] *("upper right corner of", ?1)
   [ref] intersect(block, project_2(intersect_1(to, intersect(wall, diff(?1, target)))))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 N -> upperleftcorner(DefNP) [-0.9]
   [string] *("upper left corner of", ?1)
   [ref] intersect(block, project_2(intersect_1(fromaway, intersect(wall, diff(?1, target)))))
-  [sem] x1+y1+z1+x2+y2+z2
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 // relations
 ////////////////////////////////////////////////////////////////////////
@@ -288,7 +288,7 @@ N -> orientaway(N) [-0.9]
 N -> fromlefttoright(N) [-0.9]
   [string] *(?1, "from left to right")
   [ref] intersect(orientleftright, ?1)
-  [sem] union(orientation, ?1)
+  [sem] eunion(orientation, ?1)
 
 // adjectives
 ////////////////////////////////////////////////////////////////////////
