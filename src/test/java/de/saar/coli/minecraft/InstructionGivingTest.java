@@ -253,6 +253,23 @@ public class InstructionGivingTest {
     assertEquals(var1, res);
   }
 
+  @Test
+  public void testWalltopof(){
+    var wall1 = new Wall("wall1", 0,0,0,3,3,0);
+    Set<MinecraftObject> world = Set.of(
+        wall1
+    );
+    var res = mcr.generateInstruction(world,
+        new Row("row1", 0,0,3,0,4),
+        Set.of(wall1),
+        Orientation.ZPLUS
+    );
+
+    String var1 = "build a row on top of the previous wall";
+    boolean correct = res.equals(var1);
+    assertTrue(correct);
+  }
+
   private Set<MinecraftObject> createWorld(){
     var res = new HashSet<MinecraftObject>();
     res.add(new Block(1,1,1));
