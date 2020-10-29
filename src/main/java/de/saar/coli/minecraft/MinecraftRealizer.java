@@ -15,13 +15,17 @@ import de.up.ling.irtg.algebra.SubsetAlgebra;
 import de.up.ling.irtg.automata.Intersectable;
 import de.up.ling.irtg.automata.TreeAutomaton;
 import de.up.ling.irtg.codec.IrtgInputCodec;
+import de.up.ling.irtg.semiring.AdditiveViterbiSemiring;
+import de.up.ling.irtg.semiring.LogDoubleArithmeticSemiring;
 import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.Tree;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.io.StringReader;
 
 import java.util.Arrays;
@@ -30,8 +34,10 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -136,13 +142,57 @@ public class MinecraftRealizer {
       }
     }
     strI = (Interpretation<List<String>>) irtg.getInterpretation("string");
+    if (! semI.getHomomorphism().isNonDeleting()) {
+      throw new RuntimeException("SEM interpretation is not nondeleting, aborting!");
+    }
+    if (! refI.getHomomorphism().isNonDeleting()) {
+      throw new RuntimeException("REF interpretation is not nondeleting, aborting!");
+    }
   }
-
 
   private void setModel(FirstOrderModel model) {
     refA.setModel(model);
   }
+  
+  private static final Pattern spacere =  Pattern.compile("[ \\t]+");
+  
+  public void readExpectedDurationsFromStream(Reader reader, boolean enforceCompleteUpdate) {
+    var weightMap = new HashMap<String, Double>();
+    new BufferedReader(reader).lines().forEach((x) -> {
+      var result = spacere.split(x.strip());
+      if (result.length != 2) {
+        return;
+      }
+      weightMap.put(result[0], Double.parseDouble(result[1]));
+    });
+    setExpectedDurations(weightMap, enforceCompleteUpdate);
+  }
 
+  /**
+   * Sets the weights of the IRTG to the negative expected duration (as we solve a
+   * maximization problem)
+   * @param durations A map from IRTG rule names to expected durations.
+   * @param enforceCompleteUpdate If an incomplete setting of durations should fail
+   */
+  public void setExpectedDurations(Map<String, Double> durations, boolean enforceCompleteUpdate) {
+    Map<String, Double> weights = new HashMap<>();
+    for (var entry: durations.entrySet()) {
+      weights.put(entry.getKey(), - entry.getValue());
+    }
+    irtg.getAutomaton().setWeights(weights, enforceCompleteUpdate);
+  }
+
+  public void randomizeExpectedDurations() {
+    var auto = irtg.getAutomaton();
+    var symbols = auto.getSignature().resolveSymbolIDs(auto.getAllLabels());
+    var rand = new Random();
+    Map<String, Double> durations = new HashMap<>();
+    for (String symbol: symbols) {
+      durations.put(symbol,  rand.nextDouble() * 5 + 1);
+    }
+    setExpectedDurations(durations, true);
+  }
+  
 
   /**
    * Sets the first order model of the referential interpretation
@@ -170,7 +220,7 @@ public class MinecraftRealizer {
   }
 
   /**
-   * Builds an instuction for the target object in the given world.
+   * Builds an instruction for the target object in the given world.
    * @param world A set of objects already in the world.
    * @param target The object (not yet part of the world) that should be created by the user
    * @param it Every object of the world that could be described by "it"
@@ -207,8 +257,27 @@ public class MinecraftRealizer {
    */
   public String generateStatement(String action, String objName, Collection<String> features)
       throws ParserException {
-    logger.debug("generating a statement for this model: " + (refA.getModel().toString()));
+    var bestTree = generateStatementTree(objName, features);
     String ret = "**NONE**";
+    if (bestTree != null) {
+      ret = treeToInstruction(bestTree);
+    }
+    return action + " " + ret;
+  }
+
+  public String treeToInstruction(Tree<String> tree) {
+    Tree<String> stringTree = strI.getHomomorphism().apply(tree);
+    return String.join(" ", strI.getAlgebra().evaluate(stringTree));
+  }
+  
+  /**
+   * Produces a derivation tree that encodes an indefinite referential expression
+   * to the object objName, describing features of objName.
+   */
+  public Tree<String> generateStatementTree(String objName, Collection<String> features)
+      throws ParserException {
+    
+    logger.debug("generating a statement for this model: " + (refA.getModel().toString()));
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
     Intersectable<BitSet> semO = null;
     if (semI != null) {
@@ -232,22 +301,60 @@ public class MinecraftRealizer {
     if (semO != null) {
       TreeAutomaton<Pair<Pair<String, Set<List<String>>>, BitSet>> ta =
           automaton.intersect(refO).intersect(semO);
-      bestTree = ta.viterbi();
+      ta = ta.asConcreteTreeAutomaton();
+      bestTree = ta.viterbi(AdditiveViterbiSemiring.INSTANCE);
     } else {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);
-      bestTree = ta.viterbi();
-      logger.debug("best tree: " + bestTree);
+      ta = ta.asConcreteTreeAutomaton();
+      // bestTree = ta.viterbi(AdditiveMinCostViterbiSemiring.INSTANCE);
+      bestTree = ta.viterbi(AdditiveViterbiSemiring.INSTANCE);
     }
     // TODO: Ask alexander what this was supposed to do and why it resulted in different
     // outputs than the line above together with building the stringTree below.
     // TreeAutomaton<List<String>> outputChart = irtg.decodeToAutomaton(strI, ta);
     // Tree<String> bestTree = outputChart.viterbi();
-    if (bestTree != null) {
-      Tree<String> stringTree = strI.getHomomorphism().apply(bestTree);
-      ret = String.join(" ", strI.getAlgebra().evaluate(stringTree));
-    }
+    return bestTree;
+  }
 
-    return action + " " + ret;
+  /**
+   * Returns a tree that could have generated the instruction.
+   * This is a debug method and not meant for productioni use.
+   */
+  public Tree<String> getTreeForInstruction(List<String> instruction) {
+    Intersectable<List<String>> invhom = strI.parse(instruction);
+    var ta = irtg.getAutomaton().intersect(invhom);
+    if (ta.languageIterator().hasNext()) {
+      return ta.languageIterator().next();
+    } else {
+      return null;
+    }
+  }
+
+  /**
+   * Checks whether the instruciton is in principle derivable from the grammar.
+   * does not check
+   */
+  public boolean isDerivable(List<String> instruction) {
+    return isDerivable(instruction, irtg.getAutomaton());
+  }
+
+  /**
+   * Checks whether the instruction can be derived in the automaton.
+   * Note: The instruction needs to be tokenized according to the rules in the automaton,
+   * i.e. if a rule has *("to the left", ?1), "to the left" has to be a single entry
+   * in the instruction list.q
+   */
+  public boolean isDerivable(List<String> instruction, TreeAutomaton<String> automaton) {
+    Intersectable<List<String>> invhom = strI.parse(instruction);
+    var ta = automaton.intersect(invhom);
+    ta.analyze();
+    for (Tree<String> tree :ta.languageIterable()) {
+      System.out.println(semA.representAsString(semI.interpret(tree)));
+      System.out.println(refA.representAsString(refI.interpret(tree)));
+      System.out.println("weight: " + ta.getWeight(tree, LogDoubleArithmeticSemiring.INSTANCE));
+    }
+    //System.out.println(ta.getWeight(ta.languageIterable().iterator().next()));
+    return ta.languageIterable().iterator().hasNext();
   }
 }
