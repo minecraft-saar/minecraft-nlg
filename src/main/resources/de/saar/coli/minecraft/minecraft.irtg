@@ -131,22 +131,22 @@ LocP -> twoabove(DefNP) [-0.9]
 LocP -> betweenlr(DefNP, DefNP) [-0.9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(left-of,?1)),project_1(intersect_2(left-of,?2)))
-  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1, ?2)
+  [sem] firstarg(eunion(x1+y1+z1+x2+y2+z2, ?1), ?2)
 
 LocP -> betweenfb(DefNP, DefNP) [-0.9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(in-front-of,?1)),project_1(intersect_2(in-front-of,?2)))
-  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1, ?2)
+  [sem] firstarg(eunion(x1+y1+z1+x2+y2+z2, ?1), ?2)
 
 LocP -> betweenrl(DefNP, DefNP) [-0.9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(left-of,?2)),project_1(intersect_2(left-of,?1)))
-  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1, ?2)
+  [sem] firstarg(eunion(x1+y1+z1+x2+y2+z2, ?1), ?2)
 
 LocP -> betweenbf(DefNP, DefNP) [-0.9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(in-front-of,?2)),project_1(intersect_2(in-front-of,?1)))
-  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1, ?2)
+  [sem] firstarg(eunion(x1+y1+z1+x2+y2+z2, ?1), ?2)
 
 // Single addressable blocks of larger objects
 
