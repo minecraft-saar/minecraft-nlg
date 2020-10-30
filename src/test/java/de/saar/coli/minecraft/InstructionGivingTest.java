@@ -52,6 +52,11 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZMINUS);
 
+    assertTrue(mcr.isDerivable(List.of("a", "block", "in front of", "the", "blue", "block")));
+    List<String> incorr = List.of("a", "block", "in front of", "the", "blue", "blue", "block");
+    assertTrue(mcr.isDerivable(incorr));
+    System.out.println(mcr.getTreeForInstruction(incorr));
+
     // now have two alternatives to reference to block at (x:0,y:0,z:1)
     String var1 = "put a block in front of the blue block";
     String var2 = "put a block two blocks behind the yellow block";
@@ -59,12 +64,6 @@ public class InstructionGivingTest {
     boolean correct = res.equals(var1) || res.equals(var2);
     assertTrue(correct, "instruction incorrect, was " + res);
     System.out.println(res);
-
-    assertTrue(mcr.isDerivable(List.of("a", "block", "in front of", "the", "blue", "block")));
-    List<String> incorr = List.of("a", "block", "in front of", "the", "blue", "blue", "block");
-    assertTrue(mcr.isDerivable(incorr));
-    System.out.println(mcr.getTreeForInstruction(incorr));
-    assertEquals("put a block in front of the blue block", res);
 
     res = mcr.generateInstruction(world,
         new Block(0,0,1),
@@ -76,6 +75,7 @@ public class InstructionGivingTest {
     correct = res.equals(var1) || res.equals(var2);
     assertTrue(correct, "instruction incorrect, was " + res);
     System.out.println(res);
+
     // checking left-of
     res = mcr.generateInstruction(world,
         new Block(2,0,3),
@@ -209,11 +209,15 @@ public class InstructionGivingTest {
         Orientation.ZPLUS
     );
     String exampleInstruction = "build a row of length three to the right to the top of the red block";
-    assertEquals(exampleInstruction.length(), res.length(), "Incorrect instruction:" + res);
+    String exampleAlternative = "build a row of length three from left to right to the top of the red block";
+    assertTrue(
+        ((exampleInstruction.length() == res.length()) || exampleAlternative.length() == res.length()),
+        "Incorrect instruction:" + res);
     assertTrue(res.contains("build a row"));
     assertTrue(res.contains("of length three"));
-    assertTrue(res.contains("to the right"));
+    assertTrue((res.contains("to the right") || res.contains("from left to right")));
     assertTrue(res.contains("to the top of the red block"));
+    System.out.println(res);
   }
 
   @Test
@@ -320,7 +324,8 @@ public class InstructionGivingTest {
 
     String var1 = "build a row on top of the previous wall";
     boolean correct = res.equals(var1);
-    assertTrue(correct);
+    System.out.println(res);
+    assertTrue(correct, "instruction incorrect, was "+ res);
   }
 
   private Set<MinecraftObject> createWorld(){
