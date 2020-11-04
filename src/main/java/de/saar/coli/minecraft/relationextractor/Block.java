@@ -118,36 +118,24 @@ public class Block extends MinecraftObject {
       var thiscoord = this.getRotatedCoords(orientation);
       var othercoord = ob.getRotatedCoords(orientation);
 
-      // Top-of (always Y axis)
+      var xdistance = thiscoord.x1 - othercoord.x1;
+      var ydistance = thiscoord.y1 - othercoord.y1;
+      var zdistance = othercoord.z1 - thiscoord.z1;
+
       if (thiscoord.x1 == othercoord.x1
           && thiscoord.z1 == othercoord.z1
-          && thiscoord.y1 == othercoord.y1 + 1) {
-        result.add(new Relation("top-of",
+          && ydistance > 0) {
+        result.add(new Relation("top-of"+ydistance,
             this, Lists.immutable.of(other)));
-      } else if (thiscoord.x1 == othercoord.x1 + 1
+      } else if (thiscoord.y1 == othercoord.y1
           && thiscoord.z1 == othercoord.z1
-          && thiscoord.y1 == othercoord.y1) {
-        result.add(new Relation("left-of",
+          && xdistance > 0) {
+        result.add(new Relation("left-of"+xdistance,
             this, Lists.immutable.of(other)));
       } else if (thiscoord.x1 == othercoord.x1
-          && thiscoord.z1 == othercoord.z1 - 1
-          && thiscoord.y1 == othercoord.y1) {
-        result.add(new Relation("in-front-of",
-            this, Lists.immutable.of(other)));
-      } else if (thiscoord.x1 == othercoord.x1 + 2
-          && thiscoord.z1 == othercoord.z1
-          && thiscoord.y1 == othercoord.y1) {
-        result.add(new Relation("two-left-of",
-            this, Lists.immutable.of(other)));
-      } else if (thiscoord.x1 == othercoord.x1
-          && thiscoord.z1 == othercoord.z1 - 2
-          && thiscoord.y1 == othercoord.y1) {
-        result.add(new Relation("two-in-front-of",
-            this, Lists.immutable.of(other)));
-      } else if (thiscoord.x1 == othercoord.x1
-          && thiscoord.z1 == othercoord.z1
-          && thiscoord.y1 == othercoord.y1 + 2) {
-        result.add(new Relation("two-above",
+          && thiscoord.y1 == othercoord.y1
+          && zdistance > 0) {
+        result.add(new Relation("in-front-of"+zdistance,
             this, Lists.immutable.of(other)));
       }
     }
