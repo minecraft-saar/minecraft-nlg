@@ -64,61 +64,136 @@ Obj -> floor [-0.9]
 
 // locations
 ////////////////////////////////////////////////////////////////////////
-LocP -> top(DefNP) [-0.9]
+LocP -> top(DefNP) [-9]
   [string] *("on top of", ?1)
-  [ref] project_1(intersect_2(top-of,?1))
+  [ref] project_1(intersect_2(top-of1,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> below(DefNP) [-0.9]
   [string] *("below of", ?1)
-  [ref] project_2(intersect_1(top-of,?1))
+  [ref] project_2(intersect_1(top-of1,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
   
 LocP -> left(DefNP) [-0.9]
   [string] *("to the left of", ?1)
-  [ref] project_1(intersect_2(left-of,?1))
+  [ref] project_1(intersect_2(left-of1,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
   
 LocP -> right(DefNP) [-0.9]
   [string] *("to the right of", ?1)
-  [ref] project_2(intersect_1(left-of,?1))
+  [ref] project_2(intersect_1(left-of1,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
   
 LocP -> front(DefNP) [-0.9]
   [string] *("in front of", ?1)
-  [ref] project_1(intersect_2(in-front-of,?1))
+  [ref] project_1(intersect_2(in-front-of1,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
   
 LocP -> behind(DefNP) [-0.9]
   [string] *("behind", ?1)
-  [ref] project_2(intersect_1(in-front-of,?1))
+  [ref] project_2(intersect_1(in-front-of1,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
-// add "two blocks" - distance relations
+// add "x blocks" - distance relations
 
 LocP -> twoleft(DefNP) [-0.9]
   [string] *("two blocks left of", ?1)
-  [ref] project_1(intersect_2(two-left-of,?1))
+  [ref] project_1(intersect_2(left-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> tworight(DefNP) [-0.9]
   [string] *("two blocks right of", ?1)
-  [ref] project_2(intersect_1(two-left-of,?1))
+  [ref] project_2(intersect_1(left-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> twofront(DefNP) [-0.9]
   [string] *("two blocks in front of", ?1)
-  [ref] project_1(intersect_2(two-in-front-of,?1))
+  [ref] project_1(intersect_2(in-front-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> twobehind(DefNP) [-0.9]
   [string] *("two blocks behind", ?1)
-  [ref] project_2(intersect_1(two-in-front-of,?1))
+  [ref] project_2(intersect_1(in-front-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 LocP -> twoabove(DefNP) [-0.9]
   [string] *("two blocks above", ?1)
-  [ref] project_1(intersect_2(two-above,?1))
+  [ref] project_1(intersect_2(top-of2,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> threeleft(DefNP) [-0.9]
+  [string] *("three blocks left of", ?1)
+  [ref] project_1(intersect_2(left-of3,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> threeright(DefNP) [-0.9]
+  [string] *("three blocks right of", ?1)
+  [ref] project_2(intersect_1(left-of3,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> threefront(DefNP) [-0.9]
+  [string] *("three blocks in front of", ?1)
+  [ref] project_1(intersect_2(in-front-of3,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> threebehind(DefNP) [-0.9]
+  [string] *("three blocks behind", ?1)
+  [ref] project_2(intersect_1(in-front-of3,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> threeabove(DefNP) [-0.9]
+  [string] *("three blocks above", ?1)
+  [ref] project_1(intersect_2(top-of3,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fourleft(DefNP) [-0.9]
+  [string] *("four blocks left of", ?1)
+  [ref] project_1(intersect_2(left-of4,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fourright(DefNP) [-0.9]
+  [string] *("four blocks right of", ?1)
+  [ref] project_2(intersect_1(left-of4,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fourfront(DefNP) [-0.9]
+  [string] *("four blocks in front of", ?1)
+  [ref] project_1(intersect_2(in-front-of4,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fourbehind(DefNP) [-0.9]
+  [string] *("four blocks behind", ?1)
+  [ref] project_2(intersect_1(in-front-of4,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fourabove(DefNP) [-0.9]
+  [string] *("four blocks above", ?1)
+  [ref] project_1(intersect_2(top-of4,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fiveleft(DefNP) [-0.9]
+  [string] *("five blocks left of", ?1)
+  [ref] project_1(intersect_2(left-of5,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fiveright(DefNP) [-0.9]
+  [string] *("five blocks right of", ?1)
+  [ref] project_2(intersect_1(left-of5,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fivefront(DefNP) [-0.9]
+  [string] *("five blocks in front of", ?1)
+  [ref] project_1(intersect_2(in-front-of5,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fivebehind(DefNP) [-0.9]
+  [string] *("five blocks behind", ?1)
+  [ref] project_2(intersect_1(in-front-of5,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+LocP -> fiveabove(DefNP) [-0.9]
+  [string] *("five blocks above", ?1)
+  [ref] project_1(intersect_2(top-of5,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 // between
