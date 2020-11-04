@@ -349,6 +349,39 @@ public class InstructionGivingTest {
     assertTrue(correct, "instruction incorrect, was "+ res);
   }
 
+  @Test
+  public void rowTopOf(){
+    var row1 = new Row("row1", 0,0,3,0,0);
+    var row2 = new Row("row2", 0,0,3,0,1);
+
+    Set<MinecraftObject> world = Set.of(
+        row1
+    );
+    var res = mcr.generateInstruction(world,
+        row2,
+        Set.of(row1),
+        Orientation.ZPLUS
+    );
+
+    String var1 = "build a row on top of the previous row";
+    boolean correct = res.equals(var1);
+    System.out.println(res);
+    assertTrue(correct, "instruction incorrect, was "+ res);
+
+    var wall1 = new Wall("wall1", 0,1,0,3,4,0);
+
+    res = mcr.generateInstruction(world,
+        wall1,
+        Set.of(row1),
+        Orientation.ZPLUS
+    );
+
+    var1 = "build a wall of height three on top of the previous row";
+    correct = res.equals(var1);
+    System.out.println(res);
+    assertTrue(correct, "instruction incorrect, was "+ res);
+  }
+
   private Set<MinecraftObject> createWorld(){
     var res = new HashSet<MinecraftObject>();
     res.add(new Block(1,1,1));
