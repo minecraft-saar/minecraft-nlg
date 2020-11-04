@@ -90,12 +90,15 @@ public class InstructionGivingTest {
   }
 
   @Test
-  public void testTwoLeftOf(){
+  public void testXLeftOf(){
     var world = createWorld();
     var res = mcr.generateInstruction(world, new Block(5, 0,0),
         new HashSet<>(),
         Orientation.ZPLUS);
-    assertEquals("put a block two blocks left of the black block", res);
+    String var1 = "put a block two blocks left of the black block";
+    String var2 = "put a block five blocks left of the blue block";
+    boolean correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was "+res);
     System.out.println(res);
     res = mcr.generateInstruction(world, new Block(-2, 0,0),
         new HashSet<>(),
@@ -116,6 +119,22 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZMINUS);
     assertEquals("put a block two blocks above the red block", res);
+    System.out.println(res);
+
+    res = mcr.generateInstruction(world, new Block(-3, 0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    assertEquals("put a block three blocks right of the blue block", res);
+    System.out.println(res);
+    res = mcr.generateInstruction(world, new Block(-4, 0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    assertEquals("put a block four blocks right of the blue block", res);
+    System.out.println(res);
+    res = mcr.generateInstruction(world, new Block(-5, 0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    assertEquals("put a block five blocks right of the blue block", res);
     System.out.println(res);
   }
 
@@ -313,11 +332,12 @@ public class InstructionGivingTest {
   @Test
   public void testWalltopof(){
     var wall1 = new Wall("wall1", 0,0,0,3,3,0);
+    var row1 = new Row("row1", 0,0,3,0,4);
     Set<MinecraftObject> world = Set.of(
         wall1
     );
     var res = mcr.generateInstruction(world,
-        new Row("row1", 0,0,3,0,4),
+        row1,
         Set.of(wall1),
         Orientation.ZPLUS
     );
@@ -325,6 +345,7 @@ public class InstructionGivingTest {
     String var1 = "build a row on top of the previous wall";
     boolean correct = res.equals(var1);
     System.out.println(res);
+    System.out.println(row1.getFeatures());
     assertTrue(correct, "instruction incorrect, was "+ res);
   }
 
