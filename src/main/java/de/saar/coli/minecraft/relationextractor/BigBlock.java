@@ -220,27 +220,39 @@ public class BigBlock extends MinecraftObject {
     else if (other instanceof BigBlock) {
       var oblock =(BigBlock) other;
       var ocoords = oblock.getRotatedCoords(orientation);
+
+      var xdistance = coord.getMinX() - ocoords.getMinX();
+      var ydistance = coord.getMinY() - ocoords.getMaxY();
+      var zdistance = ocoords.getMinZ() - coord.getMinZ();
+
       if (this.sameShapeAs(oblock)) {
-        if (coord.getMinX() == ocoords.getMinX() + 1
-            && coord.getMinY() == ocoords.getMinY()
-            && coord.getMinZ() == ocoords.getMinZ()
+        if (xdistance > 0
+            && ydistance == 0
+            && zdistance == 0
         ) {
-          result.add(new Relation("left-of", this, other));
+          result.add(new Relation("left-of"+xdistance, this, other));
         }
-        if (coord.getMinX() == ocoords.getMinX()
-            && coord.getMinY() == ocoords.getMinY()
-            && coord.getMinZ() == ocoords.getMinZ() - 1
+        if (xdistance == 0
+            && ydistance > 0
+            && zdistance == 0
         ) {
-          result.add(new Relation("in-front-of", this, other));
+          result.add(new Relation("top-of-same-shape"+ydistance, this, other));
+        }
+        if (xdistance == 0
+            && ydistance == 0
+            && zdistance > 0
+        ) {
+          result.add(new Relation("in-front-of"+zdistance, this, other));
         }
       }
+      // if length and width are the same and only height differs
       if (ocoords.x1 - ocoords.x2 == coord.x1 - coord.x2
           && ocoords.z1 - ocoords.z2 == coord.z1 - coord.z2 ) {
-        if (coord.getMinX() == ocoords.getMinX()
-            && coord.getMinY() == ocoords.getMaxY() + 1
-            && coord.getMinZ() == ocoords.getMinZ()
+        if (xdistance == 0
+            && ydistance > 0
+            && zdistance == 0
         ) {
-          result.add(new Relation("top-of", this, other));
+          result.add(new Relation("top-of"+ydistance, this, other));
         }
       }
     }

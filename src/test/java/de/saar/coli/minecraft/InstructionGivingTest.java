@@ -92,6 +92,8 @@ public class InstructionGivingTest {
   @Test
   public void testXLeftOf(){
     var world = createWorld();
+
+    // test 2-blocks distance relation for all locations
     var res = mcr.generateInstruction(world, new Block(5, 0,0),
         new HashSet<>(),
         Orientation.ZPLUS);
@@ -121,6 +123,7 @@ public class InstructionGivingTest {
     assertEquals("put a block two blocks above the red block", res);
     System.out.println(res);
 
+    // test "three/four/five blocks left of"
     res = mcr.generateInstruction(world, new Block(-3, 0,0),
         new HashSet<>(),
         Orientation.ZPLUS);
@@ -135,6 +138,16 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZPLUS);
     assertEquals("put a block five blocks right of the blue block", res);
+    System.out.println(res);
+
+    // test x-blocks distance relation for BigBlock objects
+    var row1 = new Row("row1", 0,0,3,0,0);
+    var row2 = new Row("row2", 0,2,3,2,0);
+    res = mcr.generateInstruction(Set.of(row1),
+        row2,
+        Set.of(row1),
+        Orientation.ZPLUS);
+    assertEquals("build a row two blocks behind the previous row", res);
     System.out.println(res);
   }
 
@@ -213,8 +226,9 @@ public class InstructionGivingTest {
     );
     String var1 = "put a block on top of the upper right corner of the previous wall";
     String var2 = "put a block on top of the back right corner of the previous wall";
+    String var3 = "put a block four blocks above the blue block";
 
-    boolean correct = res.equals(var1) || res.equals(var2);
+    boolean correct = res.equals(var1) || res.equals(var2) || res.equals(var3);
     assertTrue(correct, "wall instruction incorrect, was " + res);
     System.out.println(res);
   }
