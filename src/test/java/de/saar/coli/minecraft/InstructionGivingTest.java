@@ -120,7 +120,10 @@ public class InstructionGivingTest {
     res = mcr.generateInstruction(world, new Block(3, 2,3),
         new HashSet<>(),
         Orientation.ZMINUS);
-    assertEquals("put a block two blocks above the red block", res);
+    var1 = "put a block two blocks above the red block";
+    var2 = "put a block two blocks on top of the red block";
+    correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct,"instruction incorrect, was "+res);
     System.out.println(res);
 
     // test "three/four/five blocks left of"
@@ -227,8 +230,9 @@ public class InstructionGivingTest {
     String var1 = "put a block on top of the upper right corner of the previous wall";
     String var2 = "put a block on top of the back right corner of the previous wall";
     String var3 = "put a block four blocks above the blue block";
+    String var4 = "put a block four blocks on top of the blue block";
 
-    boolean correct = res.equals(var1) || res.equals(var2) || res.equals(var3);
+    boolean correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4);
     assertTrue(correct, "wall instruction incorrect, was " + res);
     System.out.println(res);
   }
