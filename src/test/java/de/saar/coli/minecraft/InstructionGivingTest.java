@@ -105,17 +105,26 @@ public class InstructionGivingTest {
     res = mcr.generateInstruction(world, new Block(-2, 0,0),
         new HashSet<>(),
         Orientation.ZPLUS);
-    assertEquals("put a block two blocks right of the blue block", res);
+    var1 = "put a block two blocks right of the blue block";
+    var2 = "put a block five blocks right of the black block";
+    correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was "+res);
     System.out.println(res);
     res = mcr.generateInstruction(world, new Block(0, 0,-2),
         new HashSet<>(),
         Orientation.ZPLUS);
-    assertEquals("put a block two blocks in front of the blue block", res);
+    var1 ="put a block two blocks in front of the blue block";
+    var2 = "put a block five blocks in front of the yellow block";
+    correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was "+res);
     System.out.println(res);
     res = mcr.generateInstruction(world, new Block(0, 0,-2),
         new HashSet<>(),
         Orientation.ZMINUS);
-    assertEquals("put a block two blocks behind the blue block", res);
+    var1 = "put a block two blocks behind the blue block";
+    var2 = "put a block five blocks behind the yellow block";
+    correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was "+res);
     System.out.println(res);
     res = mcr.generateInstruction(world, new Block(3, 2,3),
         new HashSet<>(),
