@@ -344,14 +344,30 @@ N -> height2(N) [-0.9]
   [string] *(?1, "of height two")
   [ref] intersect(height2, ?1)
   [sem] eunion(height, ?1)
+
+N -> high2(N) [-0.9]
+  [string] *(?1, "which is two blocks high")
+  [ref] intersect(height2, ?1)
+  [sem] eunion(height, ?1)
+
 /* see https://github.com/coli-saar/alto/issues/62
 N -> height3(N) [-0.9]
   [string] *(?1, "of height three")
   [ref] intersect(height3, ?1)
   [sem] eunion(height, ?1)
 
+N -> high3(N) [-0.9]
+  [string] *(?1, "which is three blocks high")
+  [ref] intersect(height3, ?1)
+  [sem] eunion(height, ?1)
+
 N -> height4(N) [-0.9]
   [string] *(?1, "of height four")
+  [ref] intersect(height4, ?1)
+  [sem] eunion(height, ?1)
+
+N -> high4(N) [-0.9]
+  [string] *(?1, "which is four blocks high")
   [ref] intersect(height4, ?1)
   [sem] eunion(height, ?1)
 */
@@ -360,13 +376,28 @@ N -> length2(N) [-0.9]
   [ref] intersect(length2, ?1)
   [sem] eunion(length, ?1)
 
+N -> long2(N) [-0.9]
+  [string] *(?1, "which is two blocks long")
+  [ref] intersect(length2, ?1)
+  [sem] eunion(length, ?1)
+
 N -> length3(N) [-0.9]
   [string] *(?1, "of length three")
   [ref] intersect(length3, ?1)
   [sem] eunion(length, ?1)
 
+N -> long3(N) [-0.9]
+  [string] *(?1, "which is three blocks long")
+  [ref] intersect(length3, ?1)
+  [sem] eunion(length, ?1)
+
 N -> length4(N) [-0.9]
   [string] *(?1, "of length four")
+  [ref] intersect(length4, ?1)
+  [sem] eunion(length, ?1)
+
+N -> long4(N) [-0.9]
+  [string] *(?1, "which is four blocks long")
   [ref] intersect(length4, ?1)
   [sem] eunion(length, ?1)
 
