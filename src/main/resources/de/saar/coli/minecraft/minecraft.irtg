@@ -69,6 +69,11 @@ LocP -> top(DefNP) [-0.9]
   [ref] project_1(intersect_2(top-of1,?1))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
+LocP -> topsameshape(DefNP) [-0.9]
+  [string] *("on top of", ?1)
+  [ref] project_1(intersect_2(top-of-same-shape1,?1))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
 LocP -> below(DefNP) [-0.9]
   [string] *("below of", ?1)
   [ref] project_2(intersect_1(top-of1,?1))
