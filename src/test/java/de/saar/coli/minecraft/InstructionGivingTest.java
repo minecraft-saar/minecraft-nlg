@@ -90,6 +90,39 @@ public class InstructionGivingTest {
   }
 
   @Test
+  public void testNextTo(){
+    var blueBlock = new UniqueBlock("blue_wool", 0,0,0);
+    var block1 = new Block(1, 0,0);
+    Set<MinecraftObject> world = Set.of(blueBlock, block1);
+    var res = mcr.generateInstruction(world,
+        new Block(-1,0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+
+    String var1 = "put a block to the right of the blue block";
+    String var2 = "put a block next to the blue block";
+
+    boolean correct = res.equals(var1)||res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was "+res);
+
+    var redBlock = new UniqueBlock("red_wool", 0,0,0);
+    var block2 = new Block(-1, 0,0);
+    world = Set.of(redBlock, block2);
+    res = mcr.generateInstruction(world,
+        new Block(1,0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS
+        );
+
+    var1 = "put a block to the left of the red block";
+    var2 = "put a block next to the red block";
+
+    correct = res.equals(var1)||res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was "+res);
+
+  }
+
+  @Test
   public void testXLeftOf(){
     var world = createWorld();
 
