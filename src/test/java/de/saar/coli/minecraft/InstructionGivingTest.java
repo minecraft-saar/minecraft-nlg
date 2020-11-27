@@ -312,15 +312,18 @@ public class InstructionGivingTest {
     Set<MinecraftObject> world = Set.of(
         wall1
     );
-    var res = mcr.generateInstruction(world,
-        new Row("row1", 0,0,3,0,4),
+    var target = new Row("row1", 0,0,3,0,4);
+    assertTrue(mcr.isDerivable(List.of("a", "row", "on top of", "the", "wall")));
+    var res = mcr.generateInstructionTree(world,
+        target,
         Set.of(wall1),
         Orientation.ZPLUS
     );
-
-    String var1 = "build a row on top of the previous wall";
-    boolean correct = res.equals(var1);
-    assertTrue(correct);
+    var instruction = mcr.treeToInstruction(target, res);
+    String var1 = "build a row on top of the wall";
+    assertEquals(var1, instruction);
+    //boolean correct = res.equals(var1);
+    //assertTrue(correct);
   }
 
   private Set<MinecraftObject> createWorld(){

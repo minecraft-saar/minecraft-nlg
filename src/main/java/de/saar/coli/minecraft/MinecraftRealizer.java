@@ -15,14 +15,17 @@ import de.up.ling.irtg.algebra.SubsetAlgebra;
 import de.up.ling.irtg.automata.Intersectable;
 import de.up.ling.irtg.automata.TreeAutomaton;
 import de.up.ling.irtg.codec.IrtgInputCodec;
+import de.up.ling.irtg.codec.TreeAutomatonInputCodec;
 import de.up.ling.irtg.semiring.AdditiveViterbiSemiring;
 import de.up.ling.irtg.semiring.LogDoubleArithmeticSemiring;
 import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.Tree;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -219,15 +222,7 @@ public class MinecraftRealizer {
     return generateStatement(action, obj.toString(), features);
   }
 
-  /**
-   * Builds an instruction for the target object in the given world.
-   * @param world A set of objects already in the world.
-   * @param target The object (not yet part of the world) that should be created by the user
-   * @param it Every object of the world that could be described by "it"
-   * @param lastOrientation The last observed orientation of the user.
-   * @return A string that correctly instructs the user.
-   */
-  public String generateInstruction(Set<MinecraftObject> world,
+  public void updateWorld(Set<MinecraftObject> world,
       MinecraftObject target,
       Set<MinecraftObject> it,
       Orientation lastOrientation) {
@@ -241,9 +236,25 @@ public class MinecraftRealizer {
       relations.add(new Relation("it", elem));
     }
     relations.add(new Relation("target", target));
+    setRelations(relations);
+  }
+  
+  /**
+   * Builds an instruction for the target object in the given world.
+   * @param world A set of objects already in the world.
+   * @param target The object (not yet part of the world) that should be created by the user
+   * @param it Every object of the world that could be described by "it"
+   * @param lastOrientation The last observed orientation of the user.
+   * @return A string that correctly instructs the user.
+   */
+  public String generateInstruction(Set<MinecraftObject> world,
+      MinecraftObject target,
+      Set<MinecraftObject> it,
+      Orientation lastOrientation) {
+
     var response = "";
     try {
-      setRelations(relations);
+      updateWorld(world, target, it, lastOrientation);
       response = generateStatement(target.getVerb(), target, target.getFeaturesStrings());
     } catch (ParserException e) {
       e.printStackTrace();
@@ -260,14 +271,26 @@ public class MinecraftRealizer {
     var bestTree = generateStatementTree(objName, features);
     String ret = "**NONE**";
     if (bestTree != null) {
-      ret = treeToInstruction(bestTree);
+      ret = String.join(" ", strI.getAlgebra().evaluate(bestTree));
     }
     return action + " " + ret;
   }
 
-  public String treeToInstruction(Tree<String> tree) {
+  public String treeToInstruction(MinecraftObject target, Tree<String> tree) {
     Tree<String> stringTree = strI.getHomomorphism().apply(tree);
-    return String.join(" ", strI.getAlgebra().evaluate(stringTree));
+    return target.getVerb() + " " +  String.join(" ", strI.getAlgebra().evaluate(stringTree));
+  }
+  
+  public Tree<String> generateInstructionTree(Set<MinecraftObject> world,
+      MinecraftObject target,
+      Set<MinecraftObject> it,
+      Orientation lastOrientation) {
+    updateWorld(world, target, it, lastOrientation);
+    try {
+      return generateStatementTree(target.toString(), target.getFeaturesStrings());
+    } catch (ParserException e) {
+      throw new RuntimeException(e);
+    }
   }
   
   /**
@@ -302,6 +325,9 @@ public class MinecraftRealizer {
       TreeAutomaton<Pair<Pair<String, Set<List<String>>>, BitSet>> ta =
           automaton.intersect(refO).intersect(semO);
       ta = ta.asConcreteTreeAutomaton();
+      
+      debugViterbi(ta);
+      
       bestTree = ta.viterbi(AdditiveViterbiSemiring.INSTANCE);
     } else {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
@@ -317,6 +343,23 @@ public class MinecraftRealizer {
     return bestTree;
   }
 
+  private void debugViterbi(TreeAutomaton ta) {
+    try {
+      System.err.println("Tree from old TA: "+ ta.viterbi(AdditiveViterbiSemiring.INSTANCE).toString());
+      
+      var li = ta.sortedLanguageIterator();
+      for (int i=0; i<5; i++) {
+        System.err.println(li.next());
+      }
+      
+      var taStr = ta.toString();
+      TreeAutomaton tanew = new TreeAutomatonInputCodec().read(new ByteArrayInputStream(taStr.getBytes()));
+      System.err.println("Tree from new TA: "+ tanew.viterbi(AdditiveViterbiSemiring.INSTANCE).toString());
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+  }
+  
   /**
    * Returns a tree that could have generated the instruction.
    * This is a debug method and not meant for productioni use.
