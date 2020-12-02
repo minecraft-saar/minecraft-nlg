@@ -64,6 +64,13 @@ public class InstructionGivingTest {
     boolean correct = res.equals(var1) || res.equals(var2);
     assertTrue(correct, "instruction incorrect, was " + res);
     System.out.println(res);
+    /*
+    assertTrue(mcr.isDerivable(List.of("a", "block", "in front of", "the", "blue", "block")));
+    List<String> incorr = List.of("a", "block", "in front of", "the", "blue", "blue", "block");
+    assertTrue(mcr.isDerivable(incorr));
+    System.out.println(mcr.getTreeForInstruction(incorr));
+    assertEquals("put a block in front of the blue block", res);
+    */
 
     res = mcr.generateInstruction(world,
         new Block(0,0,1),
@@ -224,7 +231,23 @@ public class InstructionGivingTest {
     System.out.println("between: "+res);
   }
 
-    @Test
+  @Test
+  public void testBetweenNotSameShape(){
+    var blueBlock = new UniqueBlock("blue_wool", 0,0,0);
+    var yellowBlock = new UniqueBlock("yellow_wool", 4,0,0);
+    var row1 = new Row("row1", 1,0,3,0,0);
+    Set<MinecraftObject> world = Set.of(blueBlock,yellowBlock);
+    var res = mcr.generateInstruction(world, row1,
+        new HashSet<>(),
+        Orientation.ZPLUS);
+
+    String var1 = "build a row between the blue block and the yellow block";
+    String var2 = "build a row between the yellow block and the blue block";
+    boolean correct = res.equals(var1)||res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was " + res);
+  }
+  
+  @Test
   public void testDisjointUnion()
       throws NoSuchFieldException, IllegalAccessException, ParseException {
     Field f = MinecraftRealizer.class.getDeclaredField("irtg");
@@ -403,7 +426,8 @@ public class InstructionGivingTest {
     );
 
     String var1 = "build a row on top of the previous wall";
-    boolean correct = res.equals(var1);
+    String var2 = "build a row on top of the wall";
+    boolean correct = res.equals(var1) || res.equals(var2);
     System.out.println(res);
     System.out.println(row1.getFeatures());
     assertTrue(correct, "instruction incorrect, was "+ res);

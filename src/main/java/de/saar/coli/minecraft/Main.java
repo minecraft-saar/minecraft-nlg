@@ -13,7 +13,7 @@ import picocli.CommandLine.Option;
 import picocli.CommandLine.Parameters;
 
 
-@Command(name = "mcrealizer", mixinStandardHelpOptions = true, version = "Ḿinecraft realizer 0.1")
+@Command(name = "mcrealizer", mixinStandardHelpOptions = true, version = "Minecraft realizer 0.1")
 public class Main implements Runnable {
 
   @Option(names = {"-c",
