@@ -15,7 +15,6 @@ import de.up.ling.irtg.algebra.SubsetAlgebra;
 import de.up.ling.irtg.automata.Intersectable;
 import de.up.ling.irtg.automata.TreeAutomaton;
 import de.up.ling.irtg.codec.IrtgInputCodec;
-import de.up.ling.irtg.semiring.AdditiveViterbiSemiring;
 import de.up.ling.irtg.semiring.LogDoubleArithmeticSemiring;
 import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.Tree;
@@ -299,16 +298,15 @@ public class MinecraftRealizer {
     Tree<String> bestTree;
 
     if (semO != null) {
-      TreeAutomaton<Pair<Pair<String, Set<List<String>>>, BitSet>> ta =
-          automaton.intersect(refO).intersect(semO);
+      var ta = automaton.intersect(refO).intersect(semO);
       ta = ta.asConcreteTreeAutomaton();
-      bestTree = ta.viterbi(AdditiveViterbiSemiring.INSTANCE);
+      bestTree =  ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE).next();
     } else {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);
       ta = ta.asConcreteTreeAutomaton();
       // bestTree = ta.viterbi(AdditiveMinCostViterbiSemiring.INSTANCE);
-      bestTree = ta.viterbi(AdditiveViterbiSemiring.INSTANCE);
+      bestTree = ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE).next();
     }
     // TODO: Ask alexander what this was supposed to do and why it resulted in different
     // outputs than the line above together with building the stringTree below.
