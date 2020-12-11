@@ -212,6 +212,9 @@ public class MinecraftRealizer {
   /**
    * Builds a statement that represents building objName using the action.
    * The features define how objName should be described.
+   *
+   * This assumes that the world is already set and is mainly used for testing
+   * purposes.
    */
   public String generateStatement(String action, MinecraftObject obj, Collection<String> features)
       throws ParserException {
@@ -230,6 +233,22 @@ public class MinecraftRealizer {
       MinecraftObject target,
       Set<MinecraftObject> it,
       Orientation lastOrientation) {
+    return target.getVerb() + " " +
+        treeToReferringExpression(generateReferringExpressionTree(world, target, it, lastOrientation));
+  }
+
+  /**
+   * Builds an RE tree for the target object in the given world.
+   * @param world A set of objects already in the world.
+   * @param target The object (not yet part of the world) that should be created by the user
+   * @param it Every object of the world that could be described by "it"
+   * @param lastOrientation The last observed orientation of the user.
+   * @return A derivation tree from which the string interpretation can generate the correct RE
+   */
+  public Tree<String> generateReferringExpressionTree(Set<MinecraftObject> world,
+      MinecraftObject target,
+      Set<MinecraftObject> it,
+      Orientation lastOrientation) {
     var relations = Relation.generateAllRelationsBetweeen(
         Iterables.concat(world,
             org.eclipse.collections.impl.factory.Iterables.iList(target)
@@ -240,14 +259,21 @@ public class MinecraftRealizer {
       relations.add(new Relation("it", elem));
     }
     relations.add(new Relation("target", target));
-    var response = "";
     try {
       setRelations(relations);
-      response = generateStatement(target.getVerb(), target, target.getFeaturesStrings());
+      return generateStatementTree(target.toString(), target.getFeaturesStrings());
     } catch (ParserException e) {
-      e.printStackTrace();
+      throw new RuntimeException(e);
     }
-    return response;
+  }
+
+  /**
+   * Converts the derivation tree to an instruction via the
+   * homomorphism to the string interpretation.
+   */
+  public String treeToReferringExpression(Tree<String> tree) {
+    Tree<String> stringTree = strI.getHomomorphism().apply(tree);
+    return String.join(" ", strI.getAlgebra().evaluate(stringTree));
   }
 
   /**
@@ -259,21 +285,18 @@ public class MinecraftRealizer {
     var bestTree = generateStatementTree(objName, features);
     String ret = "**NONE**";
     if (bestTree != null) {
-      ret = treeToInstruction(bestTree);
+      ret = treeToReferringExpression(bestTree);
     }
     return action + " " + ret;
-  }
-
-  public String treeToInstruction(Tree<String> tree) {
-    Tree<String> stringTree = strI.getHomomorphism().apply(tree);
-    return String.join(" ", strI.getAlgebra().evaluate(stringTree));
   }
   
   /**
    * Produces a derivation tree that encodes an indefinite referential expression
    * to the object objName, describing features of objName.
+   * Features are a set of possible feature combinations to describe objName.
+   * Assumes that the current state of the world was already set via {@link #setRelations}.
    */
-  public Tree<String> generateStatementTree(String objName, Collection<String> features)
+  protected Tree<String> generateStatementTree(String objName, Collection<String> features)
       throws ParserException {
     
     logger.debug("generating a statement for this model: " + (refA.getModel().toString()));
@@ -315,9 +338,16 @@ public class MinecraftRealizer {
     return bestTree;
   }
 
+  /*
+  ===================================
+  BEGIN DEBUG AND TEST HELPER METHODS
+  ===================================
+   */
+
+
   /**
    * Returns a tree that could have generated the instruction.
-   * This is a debug method and not meant for productioni use.
+   * This is a debug method and not meant for production use.
    */
   public Tree<String> getTreeForInstruction(List<String> instruction) {
     Intersectable<List<String>> invhom = strI.parse(instruction);
@@ -331,7 +361,8 @@ public class MinecraftRealizer {
 
   /**
    * Checks whether the instruciton is in principle derivable from the grammar.
-   * does not check
+   * does not check whether the instruction fits the current world; mainly used
+   * for debug.
    */
   public boolean isDerivable(List<String> instruction) {
     return isDerivable(instruction, irtg.getAutomaton());
@@ -341,7 +372,9 @@ public class MinecraftRealizer {
    * Checks whether the instruction can be derived in the automaton.
    * Note: The instruction needs to be tokenized according to the rules in the automaton,
    * i.e. if a rule has *("to the left", ?1), "to the left" has to be a single entry
-   * in the instruction list.q
+   * in the instruction list.
+   *
+   * Used for debugging.
    */
   public boolean isDerivable(List<String> instruction, TreeAutomaton<String> automaton) {
     Intersectable<List<String>> invhom = strI.parse(instruction);
