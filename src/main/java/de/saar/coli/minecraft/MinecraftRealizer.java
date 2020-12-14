@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
@@ -318,24 +319,22 @@ public class MinecraftRealizer {
     TreeAutomaton<String> automaton = irtg.getAutomaton();
     Intersectable<Set<List<String>>> refO = refI.parse(refInput);
 
-    Tree<String> bestTree;
+    Iterator<Tree<String>> langIt;
 
     if (semO != null) {
       var ta = automaton.intersect(refO).intersect(semO);
       ta = ta.asConcreteTreeAutomaton();
-      bestTree =  ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE).next();
+      langIt = ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
     } else {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);
       ta = ta.asConcreteTreeAutomaton();
-      // bestTree = ta.viterbi(AdditiveMinCostViterbiSemiring.INSTANCE);
-      bestTree = ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE).next();
+      langIt = ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
     }
-    // TODO: Ask alexander what this was supposed to do and why it resulted in different
-    // outputs than the line above together with building the stringTree below.
-    // TreeAutomaton<List<String>> outputChart = irtg.decodeToAutomaton(strI, ta);
-    // Tree<String> bestTree = outputChart.viterbi();
-    return bestTree;
+    if (langIt.hasNext()) {
+      return langIt.next();
+    }
+    return null;
   }
 
   /*
