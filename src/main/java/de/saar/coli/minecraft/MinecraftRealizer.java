@@ -323,18 +323,23 @@ public class MinecraftRealizer {
 
     if (semO != null) {
       var ta = automaton.intersect(refO).intersect(semO);
-      ta = ta.asConcreteTreeAutomaton();
       langIt = ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
     } else {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);
-      ta = ta.asConcreteTreeAutomaton();
       langIt = ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
     }
     if (langIt.hasNext()) {
       return langIt.next();
     }
     return null;
+  }
+
+  /**
+   * Returns the weight (i.e. expected completion duration) of a derivation tree.
+   */
+  public double getWeightForTree(Tree<String> tree) {
+    return irtg.getAutomaton().getWeight(tree, LogDoubleArithmeticSemiring.INSTANCE);
   }
 
   /*
