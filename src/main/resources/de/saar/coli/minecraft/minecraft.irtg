@@ -16,12 +16,12 @@ interpretation sem: de.up.ling.irtg.algebra.SubsetAlgebra
 IndefNP! -> np(N) [-0.9]
   [string] *("a", ?1)
   [ref] ?1
-  [sem] ?1
+  [sem] contains(?1, indef)
 
 DefNP -> dnp(N)  [-0.9]
   [string] *("the", ?1)
   [ref] size_1(?1)
-  [sem] ?1
+  [sem] not_contains(?1, indef)
 
 
 // objects
@@ -60,6 +60,38 @@ Obj -> floor [-0.9]
   [string] "floor"
   [ref] floor
   [sem] type
+
+// indefinite objects
+
+Obj -> ibridge [-0.9]
+  [string] "bridge"
+  [ref] bridge
+  [sem] type+indef
+
+Obj -> iwall [-0.9]
+  [string] "wall"
+  [ref] wall
+  [sem] type+indef
+
+Obj -> irow [-0.9]
+  [string] "row"
+  [ref] row
+  [sem] type+indef
+
+Obj -> irailing [-0.9]
+  [string] "railing"
+  [ref] railing
+  [sem] type+indef
+
+Obj -> iblock [-0.9]
+  [string] "block"
+  [ref] block
+  [sem] type+indef
+
+Obj -> ifloor [-0.9]
+  [string] "floor"
+  [ref] floor
+  [sem] type+indef
 
 
 // locations

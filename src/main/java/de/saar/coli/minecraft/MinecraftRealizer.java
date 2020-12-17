@@ -49,7 +49,7 @@ public class MinecraftRealizer {
   private static final String FEATURES = Arrays.stream(Features.values())
       .map(Features::toString)
       .map(String::toLowerCase)
-      .collect(Collectors.joining("+"));
+      .collect(Collectors.joining("+")) + "+indef";
 
   private final InterpretedTreeAutomaton irtg;
   private final Interpretation<List<String>> strI;
