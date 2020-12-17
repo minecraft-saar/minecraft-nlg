@@ -471,6 +471,37 @@ public class InstructionGivingTest {
     assertTrue(correct, "instruction incorrect, was: " + res);
   }
 
+  @Test
+  public void testIndefandDefRules(){
+    Set<MinecraftObject> world = createWorld();
+    Tree tree = mcr.generateReferringExpressionTree(world,
+        new Block(0,0,1),
+        new HashSet<>(),
+        Orientation.ZMINUS);
+    String treestring = tree.toString();
+    String var1 = "np(loc(obj(iblock),twobehind(dnp(obj(yelloww(block))))))";
+    String var2 = "np(loc(obj(iblock),front(dnp(obj(bluew(block))))))";
+    System.out.println(treestring);
+    boolean correct = var1.equals(treestring) || var2.equals(treestring);
+    assertTrue(correct, "tree incorrect, was: " + treestring);
+
+    var row1 = new Row("row1", 0, 0, 3, 0, 0);
+    var row2 = new Row("row2", 0, 0, 3, 0, 1);
+
+    world = Set.of(
+        row1
+    );
+    tree = mcr.generateReferringExpressionTree(world,
+        row2,
+        Set.of(row1),
+        Orientation.ZPLUS);
+    treestring = tree.toString();
+    var1 = "np(loc(obj(irow),top(dnp(obj(prev(row))))))";
+    System.out.println(treestring);
+    correct = var1.equals(treestring);
+    assertTrue(correct, "tree incorrect, was: " + treestring);
+  }
+
   private Set<MinecraftObject> createWorld(){
     var res = new HashSet<MinecraftObject>();
     res.add(new Block(1,1,1));
