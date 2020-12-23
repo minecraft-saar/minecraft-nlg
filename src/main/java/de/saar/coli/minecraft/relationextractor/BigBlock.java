@@ -216,6 +216,31 @@ public class BigBlock extends MinecraftObject {
       if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
         result.add(new Relation("totopof", this, other));
       }
+
+      // add also left-of-relations for BigBlock-Block relations
+      var xdistance = coord.getMinX() - oc.x1;
+      var ydistance = coord.getMinY() - oc.y1;
+      var zdistance = oc.z1 - coord.z1;
+
+      if (xdistance > 0
+          && ydistance == 0
+          && zdistance == 0
+      ) {
+        result.add(new Relation("left-of-BigBlock-Block"+xdistance, this, other));
+      }
+      if (xdistance == 0
+          && ydistance > 0
+          && zdistance == 0
+      ) {
+        result.add(new Relation("top-of-BigBlock-Block"+ydistance, this, other));
+      }
+      if (xdistance == 0
+          && ydistance == 0
+          && zdistance > 0
+      ) {
+        result.add(new Relation("in-front-of-BigBlock-Block"+zdistance, this, other));
+      }
+
     } // end other==Block
     else if (other instanceof BigBlock) {
       var oblock =(BigBlock) other;
@@ -255,7 +280,6 @@ public class BigBlock extends MinecraftObject {
           result.add(new Relation("top-of"+ydistance, this, other));
         }
       }
-    }
     return result;
   }
 
