@@ -14,6 +14,7 @@ import de.saar.coli.minecraft.relationextractor.UniqueBlock;
 import de.saar.coli.minecraft.relationextractor.Wall;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
+import de.up.ling.irtg.algebra.ParserException;
 import de.up.ling.irtg.algebra.SubsetAlgebra;
 import de.up.ling.irtg.semiring.LogDoubleArithmeticSemiring;
 import de.up.ling.tree.ParseException;
@@ -201,6 +202,28 @@ public class InstructionGivingTest {
         Orientation.ZPLUS);
     assertEquals("build a row two blocks behind the previous row", res);
     System.out.println(res);
+  }
+
+  @Test
+  public void testBigBlockBlockRelations() throws ParserException {
+    // orientleftright
+    // Block position is uniquely specified
+    var row1 = new Row("row1", 0,0,3,0,0);
+    Set<MinecraftObject> world = Set.of(row1);
+    var res = mcr.generateInstruction(world, new Block(-1,0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    String var1 = "put a block to the right of the row";
+    boolean correct = res.equals(var1);
+    assertTrue(correct, "instruction incorrect, was " + res);
+
+    // orientaway
+    // only z-coordinate and y-coordinate specified
+    // no instruction can be generated with current grammar
+    var target = new Block(0,0,1);
+    var tree = mcr.generateStatementTree(target.toString(), target.getFeaturesStrings());
+    assertEquals(null, tree);
+
   }
 
   @Test
