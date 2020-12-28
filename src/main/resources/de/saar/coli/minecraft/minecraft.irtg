@@ -137,6 +137,52 @@ LocP -> nexttol(DefNP) [-0.9]
   [ref] project_1(intersect_1(left-of2, project_1(intersect_2(left-of1,?1))))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
+// locations for BigBlock - Block relations
+
+//orientleftright
+
+LocP -> leftorientlr(DefNP) [-0.9]
+  [string] *("to the left of", ?1)
+  [ref] project_1(intersect_2(left-of1-BigBlock-Block,intersect(orientleftright, ?1)))
+  [sem] firstarg(x1+y1+z1, ?1)
+
+LocP -> rightorientlr(DefNP) [-0.9]
+  [string] *("to the right of", ?1)
+  [ref] project_2(intersect_1(left-of1-BigBlock-Block,intersect(orientleftright,?1)))
+  [sem] firstarg(x1+y1+z1, ?1)
+
+LocP -> frontorientlr(DefNP) [-0.9]
+  [string] *("in front of", ?1)
+  [ref] project_1(intersect_2(in-front-of1-BigBlock-Block,intersect(orientleftright,?1)))
+  [sem] firstarg(y1+z1, ?1)
+
+LocP -> behindorientlr(DefNP) [-0.9]
+  [string] *("behind", ?1)
+  [ref] project_2(intersect_1(in-front-of1-BigBlock-Block,intersect(orientleftright,?1)))
+  [sem] firstarg(y1+z1, ?1)
+
+//orientaway
+
+LocP -> leftorientaway(DefNP) [-0.9]
+  [string] *("to the left of", ?1)
+  [ref] project_1(intersect_2(left-of1-BigBlock-Block,intersect(orientaway, ?1)))
+  [sem] firstarg(x1+y1, ?1)
+
+LocP -> rightorientaway(DefNP) [-0.9]
+  [string] *("to the right of", ?1)
+  [ref] project_2(intersect_1(left-of1-BigBlock-Block,intersect(orientaway,?1)))
+  [sem] firstarg(x1+y1, ?1)
+
+LocP -> frontorientaway(DefNP) [-0.9]
+  [string] *("in front of", ?1)
+  [ref] project_1(intersect_2(in-front-of1-BigBlock-Block,intersect(orientaway,?1)))
+  [sem] firstarg(x1+y1+z1, ?1)
+
+LocP -> behindorientaway(DefNP) [-0.9]
+  [string] *("behind", ?1)
+  [ref] project_2(intersect_1(in-front-of1-BigBlock-Block,intersect(orientaway,?1)))
+  [sem] firstarg(x1+y1+z1, ?1)
+
 // add "x blocks" - distance relations
 
 LocP -> twotop(DefNP) [-0.9]
