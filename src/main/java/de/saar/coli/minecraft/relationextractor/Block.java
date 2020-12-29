@@ -112,10 +112,9 @@ public class Block extends MinecraftObject {
   @Override
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other, Orientation orientation) {
     MutableSet<Relation> result = Sets.mutable.empty();
+    var thiscoord = this.getRotatedCoords(orientation);
     if (other instanceof Block) {
       Block ob = (Block) other;
-
-      var thiscoord = this.getRotatedCoords(orientation);
       var othercoord = ob.getRotatedCoords(orientation);
 
       var xdistance = thiscoord.x1 - othercoord.x1;
@@ -138,6 +137,35 @@ public class Block extends MinecraftObject {
         result.add(new Relation("in-front-of"+zdistance,
             this, Lists.immutable.of(other)));
       }
+    } // add also left-of/front-of/top-of-relations for Block-BigBlock relations
+    else if (other instanceof BigBlock) {
+      var oblock =(BigBlock) other;
+      var ocoords = oblock.getRotatedCoords(orientation);
+
+      var xdistance = thiscoord.x1 - ocoords.getMaxX();
+      var ydistance = thiscoord.y1 - ocoords.getMinY();
+      var zdistance = ocoords.getMinZ() - thiscoord.z1;
+
+      if (xdistance > 0
+          && ydistance == 0
+          && zdistance == 0
+      ) {
+        result.add(new Relation("left-of"+xdistance+"-BigBlock-Block", this, other));
+      }
+      if (xdistance == 0
+          && ydistance > 0
+          && zdistance == 0
+      ) {
+        result.add(new Relation("top-of"+ydistance+"-BigBlock-Block", this, other));
+      }
+      if (xdistance == 0
+          && ydistance == 0
+          && zdistance > 0
+      ) {
+        result.add(new Relation("in-front-of"+zdistance+"-BigBlock-Block", this, other));
+      }
+
+
     }
     return result;
   }
