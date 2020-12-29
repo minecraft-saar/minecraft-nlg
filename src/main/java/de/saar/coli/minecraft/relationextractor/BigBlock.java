@@ -220,25 +220,25 @@ public class BigBlock extends MinecraftObject {
       // add also left-of-relations for BigBlock-Block relations
       var xdistance = coord.getMinX() - oc.x1;
       var ydistance = coord.getMinY() - oc.y1;
-      var zdistance = oc.z1 - coord.z1;
+      var zdistance = oc.z1 - coord.getMaxZ();
 
       if (xdistance > 0
           && ydistance == 0
           && zdistance == 0
       ) {
-        result.add(new Relation("left-of-BigBlock-Block"+xdistance, this, other));
+        result.add(new Relation("left-of"+xdistance+"-BigBlock-Block", this, other));
       }
       if (xdistance == 0
           && ydistance > 0
           && zdistance == 0
       ) {
-        result.add(new Relation("top-of-BigBlock-Block"+ydistance, this, other));
+        result.add(new Relation("top-of"+ydistance+"-BigBlock-Block", this, other));
       }
       if (xdistance == 0
           && ydistance == 0
           && zdistance > 0
       ) {
-        result.add(new Relation("in-front-of-BigBlock-Block"+zdistance, this, other));
+        result.add(new Relation("in-front-of"+zdistance+"-BigBlock-Block", this, other));
       }
 
     } // end other==Block
@@ -246,11 +246,15 @@ public class BigBlock extends MinecraftObject {
       var oblock =(BigBlock) other;
       var ocoords = oblock.getRotatedCoords(orientation);
 
+      // TODO fix issue with xdistance and zdistance
       var xdistance = coord.getMinX() - ocoords.getMinX(); // - occords.getMaxX() would be right
       var ydistance = coord.getMinY() - ocoords.getMaxY();
       var zdistance = ocoords.getMinZ() - coord.getMinZ(); // - coord.getMaxZ() would be right
-     
+
+
       // don't need to check for same shape, need always to specify height
+      // length and width are taken care of by x and z distance?
+
       if (xdistance == 0
           && ydistance > 0
           && zdistance == 0
