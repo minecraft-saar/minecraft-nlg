@@ -373,6 +373,28 @@ LocP -> betweenbf(DefNP, DefNP) [-0.9]
   [ref] intersect_1(project_2(intersect_1(in-front-of,?2)),project_1(intersect_2(in-front-of,?1)))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
 
+//between for BigBlock-Block relations
+
+LocP -> betweenlrBigBlock(DefNP, DefNP) [-0.9]
+  [string] *("between", *(?1, *("and", ?2)))
+  [ref] intersect_1(project_2(intersect_1(left-of1-BigBlock-Block,?1)),project_1(intersect_2(left-of1-BigBlock-Block,?2)))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
+
+LocP -> betweenfbBigBlock(DefNP, DefNP) [-0.9]
+  [string] *("between", *(?1, *("and", ?2)))
+  [ref] intersect_1(project_2(intersect_1(in-front-of1-BigBlock-Block,?1)),project_1(intersect_2(in-front-of1-BigBlock-Block,?2)))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
+
+LocP -> betweenrlBigBlock(DefNP, DefNP) [-0.9]
+  [string] *("between", *(?1, *("and", ?2)))
+  [ref] intersect_1(project_2(intersect_1(left-of1-BigBlock-Block,?2)),project_1(intersect_2(left-of1-BigBlock-Block,?1)))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
+
+LocP -> betweenbfBigBlock(DefNP, DefNP) [-0.9]
+  [string] *("between", *(?1, *("and", ?2)))
+  [ref] intersect_1(project_2(intersect_1(in-front-of1-BigBlock-Block,?2)),project_1(intersect_2(in-front-of1-BigBlock-Block,?1)))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
+
 // Single addressable blocks of larger objects
 
 // diff(?1, target): We cannot explain the location of a block
