@@ -224,6 +224,37 @@ public class InstructionGivingTest {
     var tree = mcr.generateStatementTree(target.toString(), target.getFeaturesStrings());
     assertEquals(null, tree);
 
+    // for front of everything should be specified in orientaway scenario
+    world = Set.of(new Row("row2",0,0,0,3,0));
+    res = mcr.generateInstruction(world, new Block(0,0,4),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    var1 = "put a block behind the row";
+    correct = res.equals(var1);
+    assertTrue(correct, "instruction incorrect, was "+ res);
+
+  }
+
+  @Test
+  public void testBlockBigBlockRelations() {
+    var row1 = new Row("row1", 0, 0, 3, 0, 0);
+    Set<MinecraftObject> world = Set.of(row1);
+    var res = mcr.generateInstruction(world, new Block(4, 0, 0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    String var1 = "put a block to the left of the row";
+    boolean correct = res.equals(var1);
+    assertTrue(correct, "instruction incorrect, was " + res);
+
+    res = mcr.generateInstruction(Set.of(new UniqueBlock("blue_wool",4,0,0)),row1,
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    var1 = "build a row to the right of length four to the right of the blue block";
+    String var2 = "build a row to the right of length four to the right of the block";
+    correct = res.equals(var1) || res.equals(var2);
+    System.out.println(res);
+    assertTrue(correct, "instruction incorrect, was " + res);
+
   }
 
   @Test
