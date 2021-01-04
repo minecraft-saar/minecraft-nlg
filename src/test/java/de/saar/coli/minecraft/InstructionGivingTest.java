@@ -287,8 +287,7 @@ public class InstructionGivingTest {
 
   @Test
   public void testBetweenNotSameShape(){
-    // TODO this is expected to fail because the between relation we need is not implemented yet
-    /*
+    //test row between blocks
     var blueBlock = new UniqueBlock("blue_wool", 0,0,0);
     var yellowBlock = new UniqueBlock("yellow_wool", 4,0,0);
     var row1 = new Row("row1", 1,0,3,0,0);
@@ -299,9 +298,13 @@ public class InstructionGivingTest {
 
     String var1 = "build a row between the blue block and the yellow block";
     String var2 = "build a row between the yellow block and the blue block";
-    boolean correct = res.equals(var1)||res.equals(var2);
+    String var3 = "build a row to the right of the yellow block from left to right of length three";
+    String var4 = "build a row to the left of the blue block from left to right of length three";
+    boolean correct = res.equals(var1)||res.equals(var2)||res.equals(var3)||res.equals(var4);
+    System.out.println(res);
     assertTrue(correct, "instruction incorrect, was " + res);
-    */
+    //test block between rows
+    //TODO if rows are oriented away there should be no instruction that specifies positions of block?
   }
   
   @Test
