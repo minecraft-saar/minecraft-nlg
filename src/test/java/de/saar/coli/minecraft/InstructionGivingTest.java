@@ -251,7 +251,8 @@ public class InstructionGivingTest {
         Orientation.ZPLUS);
     var1 = "build a row to the right of length four to the right of the blue block";
     String var2 = "build a row to the right of length four to the right of the block";
-    correct = res.equals(var1) || res.equals(var2);
+    String var3 = "build a row of length four from left to right to the right of the block";
+    correct = res.equals(var1) || res.equals(var2) || res.equals(var3);
     System.out.println(res);
     assertTrue(correct, "instruction incorrect, was " + res);
 
