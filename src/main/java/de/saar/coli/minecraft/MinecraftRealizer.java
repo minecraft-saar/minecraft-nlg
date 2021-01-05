@@ -1,6 +1,7 @@
 package de.saar.coli.minecraft;
 
 import com.google.common.collect.Iterables;
+import com.google.gson.Gson;
 import de.saar.basic.Pair;
 
 import de.saar.coli.minecraft.relationextractor.Features;
@@ -58,6 +59,7 @@ public class MinecraftRealizer {
   private final Interpretation<BitSet> semI;
   private final SetAlgebra refA;
   private SubsetAlgebra semA;
+  private Map<String, Double> weights;
 
   /**
    * Builds a realizer from given model and grammar files.
@@ -179,7 +181,19 @@ public class MinecraftRealizer {
     for (var entry: durations.entrySet()) {
       weights.put(entry.getKey(), - entry.getValue());
     }
+    this.weights = weights;
     irtg.getAutomaton().setWeights(weights, enforceCompleteUpdate);
+  }
+
+  public Map<String, Double> getWeights() {
+    return weights;
+  }
+
+  public String getWeightsAsJson() {
+    if (weights == null) {
+      return "{}";
+    }
+    return new Gson().toJson(weights);
   }
 
   public void randomizeExpectedDurations() {
@@ -188,7 +202,7 @@ public class MinecraftRealizer {
     var rand = new Random();
     Map<String, Double> durations = new HashMap<>();
     for (String symbol: symbols) {
-      durations.put(symbol,  rand.nextDouble() * 5 + 1);
+      durations.put(symbol,  rand.nextDouble() * 10 + 1);
     }
     setExpectedDurations(durations, true);
   }
