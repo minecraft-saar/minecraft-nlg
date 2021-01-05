@@ -104,11 +104,18 @@ public class Wall extends BigBlock {
 
   @Override
   public MutableSet<Relation> generateUnaryRelations(Orientation o) {
-    return Sets.mutable.of(
+    var result = Sets.mutable.of(
         new Relation("wall", this),
         new Relation("height" + height(), this),
         new Relation("length" + width(), this)
     );
+    var coords = getRotatedCoords(o);
+    if (coords.x1 != coords.x2) {
+      result.add(new Relation("orientleftright", this));
+    } else {
+      result.add(new Relation("orientaway", this));
+    }
+    return result;
   }
 
 
