@@ -246,6 +246,15 @@ public class InstructionGivingTest {
     boolean correct = res.equals(var1);
     assertTrue(correct, "instruction incorrect, was " + res);
 
+    var wall1 = new Wall("wall1", 0,0,0,3,3,0);
+    world = Set.of(wall1);
+    res = mcr.generateInstruction(world, new Block(4, 0, 0),
+        new HashSet<>(),
+        Orientation.ZPLUS);
+    var1 = "put a block to the left of the wall";
+    correct = res.equals(var1);
+    assertTrue(correct, "instruction incorrect, was "+res);
+
     res = mcr.generateInstruction(Set.of(new UniqueBlock("blue_wool",4,0,0)),row1,
         new HashSet<>(),
         Orientation.ZPLUS);
