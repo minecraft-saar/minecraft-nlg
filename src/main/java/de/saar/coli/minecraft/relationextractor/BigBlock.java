@@ -274,9 +274,9 @@ public class BigBlock extends MinecraftObject {
       // if length and width are the same and only height differs
       if (ocoords.x1 - ocoords.x2 == coord.x1 - coord.x2
           && ocoords.z1 - ocoords.z2 == coord.z1 - coord.z2 ) {
-        if (xdistance == 0
+        if (coord.getMinX() == ocoords.getMinX()
             && ydistance > 0
-            && zdistance == 0
+            && ocoords.getMinZ() == coord.getMinZ()
         ) {
           result.add(new Relation("top-of"+ydistance, this, other));
         }
