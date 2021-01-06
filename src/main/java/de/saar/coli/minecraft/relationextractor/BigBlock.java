@@ -243,7 +243,7 @@ public class BigBlock extends MinecraftObject {
 
     } // end other==Block
     else if (other instanceof BigBlock) {
-      var oblock =(BigBlock) other;
+      var oblock = (BigBlock) other;
       var ocoords = oblock.getRotatedCoords(orientation);
 
       // TODO fix issue with xdistance and zdistance
@@ -251,6 +251,7 @@ public class BigBlock extends MinecraftObject {
       var ydistance = coord.getMinY() - ocoords.getMaxY();
       var zdistance = ocoords.getMinZ() - coord.getMinZ(); // - coord.getMaxZ() would be right
 
+      if (this.sameShapeAs(oblock)) {
 
       // don't need to check for same shape, need always to specify height
       // length and width are taken care of by x and z distance?
@@ -259,21 +260,32 @@ public class BigBlock extends MinecraftObject {
           && ydistance > 0
           && zdistance == 0
         ) {
-          result.add(new Relation("top-of"+ydistance, this, other));
+          result.add(new Relation("top-of-same-shape" + ydistance, this, other));
         }
       if (xdistance > 0
           && ydistance == 0
           && zdistance == 0
         ) {
-        result.add(new Relation("left-of"+xdistance, this, other));
+          result.add(new Relation("left-of" + xdistance, this, other));
         }
       if (xdistance == 0
           && ydistance == 0
           && zdistance > 0
         ) {
-        result.add(new Relation("in-front-of"+zdistance, this, other));
+          result.add(new Relation("in-front-of" + zdistance, this, other));
         }
       }
+      // if length and width are the same and only height differs
+      if (ocoords.x1 - ocoords.x2 == coord.x1 - coord.x2
+          && ocoords.z1 - ocoords.z2 == coord.z1 - coord.z2 ) {
+        if (xdistance == 0
+            && ydistance > 0
+            && zdistance == 0
+        ) {
+          result.add(new Relation("top-of"+ydistance, this, other));
+        }
+      }
+    }
     return result;
   }
 
