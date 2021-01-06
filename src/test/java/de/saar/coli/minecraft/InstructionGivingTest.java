@@ -98,6 +98,59 @@ public class InstructionGivingTest {
   }
 
   @Test
+  public void testBigBlockInstruction(){
+    var wall1 = new Wall("wall1", 1,0,0,4,3,0);
+    var wall2 = new Wall("wall2", 1,0,1,4,3,1);
+    var row1 = new Row("row1", 0,0,-3,0,0);
+    var row2 = new Row("row2",0,1,0,4,0);
+    var row3 = new Row("row3",0,5,0,8,0);
+    Set<MinecraftObject> world = Set.of(wall1, row2);
+
+    // test wall behind wall
+    var res = mcr.generateInstruction(world,
+        wall2,
+        Set.of(wall1),
+        Orientation.ZPLUS);
+    String var1 = "build a wall of height four behind the wall";
+    String var2 = "build a wall behind the previous wall of height four";
+    System.out.println(res);
+    boolean correct = res.equals(var1) || res.equals(var2);
+    assertTrue(correct, "instruction incorrect, was "+res);
+
+    // test row behind row orientaway
+    //TODO distinguish between orientations?
+    res = mcr.generateInstruction(world,
+        row3,
+        Set.of(row2),
+        Orientation.ZPLUS);
+    var1 = "build a row behind the previous row";
+    System.out.println(res);
+    correct = res.equals(var1);
+    assertTrue(correct, "instruction incorrect, was "+res);
+
+    // test row left of row orientleftright
+    res = mcr.generateInstruction(world,
+        row3,
+        Set.of(row2),
+        Orientation.XPLUS);
+    var1 = "build a row to the right of the previous row";
+    System.out.println(res);
+    correct = res.equals(var1);
+    assertTrue(correct, "instruction incorrect, was "+res);
+
+    //test row left of row orientaway
+    res = mcr.generateInstruction(world,
+        new Row("row4",-1,1,-1,4,0),
+        Set.of(row2),
+        Orientation.ZPLUS);
+    var1 = "build a row to the right of the previous row";
+    System.out.println(res);
+    correct = res.equals(var1);
+    assertTrue(correct, "instruction incorrect, was "+res);
+
+  }
+
+  @Test
   public void testNextTo(){
     var blueBlock = new UniqueBlock("blue_wool", 0,0,0);
     var block1 = new Block(1, 0,0);
