@@ -314,7 +314,8 @@ public class InstructionGivingTest {
     var1 = "build a row to the right of length four to the right of the blue block";
     String var2 = "build a row to the right of length four to the right of the block";
     String var3 = "build a row of length four from left to right to the right of the block";
-    correct = res.equals(var1) || res.equals(var2) || res.equals(var3);
+    String var4 = "build a row of length four to the right to the right of the block";
+    correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4);
     System.out.println(res);
     assertTrue(correct, "instruction incorrect, was " + res);
 
@@ -362,8 +363,10 @@ public class InstructionGivingTest {
     String var1 = "build a row between the blue block and the yellow block";
     String var2 = "build a row between the yellow block and the blue block";
     String var3 = "build a row to the right of the yellow block from left to right of length three";
-    String var4 = "build a row to the left of the blue block from left to right of length three";
-    boolean correct = res.equals(var1)||res.equals(var2)||res.equals(var3)||res.equals(var4);
+    String var4 = "build a row to the right of the yellow block of length three from left to right";
+    String var5 = "build a row to the right of the yellow block of length three to the right";
+    String var6 = "build a row to the left of the blue block from left to right of length three";
+    boolean correct = res.equals(var1)||res.equals(var2)||res.equals(var3)||res.equals(var4) || res.equals(var5) || res.equals(var6);
     System.out.println(res);
     assertTrue(correct, "instruction incorrect, was " + res);
     //test block between rows
