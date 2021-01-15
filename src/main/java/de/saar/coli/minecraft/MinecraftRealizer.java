@@ -13,9 +13,11 @@ import de.up.ling.irtg.InterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
 import de.up.ling.irtg.algebra.SetAlgebra;
 import de.up.ling.irtg.algebra.SubsetAlgebra;
+import de.up.ling.irtg.automata.DepthLimitingTreeAutomaton;
 import de.up.ling.irtg.automata.Intersectable;
 import de.up.ling.irtg.automata.TreeAutomaton;
 import de.up.ling.irtg.codec.IrtgInputCodec;
+import de.up.ling.irtg.semiring.AdditiveViterbiSemiring;
 import de.up.ling.irtg.semiring.LogDoubleArithmeticSemiring;
 import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.Tree;
@@ -337,11 +339,14 @@ public class MinecraftRealizer {
 
     if (semO != null) {
       var ta = automaton.intersect(refO).intersect(semO);
-      langIt = ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
+      var dlta = new DepthLimitingTreeAutomaton<>(ta, 8);
+
+      return dlta.viterbi(AdditiveViterbiSemiring.INSTANCE);
     } else {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);
-      langIt = ta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
+      var dlta = new DepthLimitingTreeAutomaton<>(ta, 8);
+      langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
     }
     if (langIt.hasNext()) {
       return langIt.next();
