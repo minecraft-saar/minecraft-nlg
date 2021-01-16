@@ -34,7 +34,7 @@ repositories {
 
 dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.6.1')
-    compile (group: "com.github.coli-saar", name:"alto", version:"3e0e24f9f9b6ca21c256fb3017591ca69269d176")
+    compile (group: "com.github.coli-saar", name:"alto", version:"edc8e69ae3d887f69d918ebb8aa76c41976509d7")
     compile 'info.picocli:picocli:3.9.3'
     implementation 'com.google.code.gson:gson:2.8.6'
     compile 'org.eclipse.collections:eclipse-collections-api:9.2.0'
