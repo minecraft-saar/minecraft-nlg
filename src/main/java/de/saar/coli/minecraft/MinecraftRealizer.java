@@ -340,8 +340,7 @@ public class MinecraftRealizer {
     if (semO != null) {
       var ta = automaton.intersect(refO).intersect(semO);
       var dlta = new DepthLimitingTreeAutomaton<>(ta, 8);
-
-      return dlta.viterbi(AdditiveViterbiSemiring.INSTANCE);
+      langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
     } else {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);

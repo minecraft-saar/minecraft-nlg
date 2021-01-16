@@ -33,6 +33,11 @@ import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+/**
+ * These tests were used to generate instances where obtaining the optimal tree was
+ * very slow, i.e. 30+ seconds. We are now back into the ms range :-)
+ */
+
 public class SlownessTest {
 
   @Test
@@ -91,56 +96,56 @@ public class SlownessTest {
           new TypeToken<Map<String, Double>>() {
           }.getType());
 */
-      var world = new HashSet<MinecraftObject>();
+    var world = new HashSet<MinecraftObject>();
 
-      world.add(new Block(6, 67, 6));
-      world.add(new Block(7, 67, 6));
-      world.add(new Block(6, 67, 7));
-      world.add(new Block(8, 67, 6));
-      world.add(new Block(6, 67, 8));
-      world.add(new Block(9, 67, 6));
-      world.add(new Block(6, 67, 9));
-      world.add(new Block(9, 67, 7));
-      world.add(new Block(7, 67, 9));
-      world.add(new Block(9, 67, 8));
-      world.add(new Block(8, 67, 9));
-      world.add(new Block(9, 67, 9));
-      world.add(new Wall("wall", 6, 66, 6, 6, 67, 9));
-      world.add(new Block(6, 68, 6));
-      world.add(new Block(6, 68, 7));
-      world.add(new UniqueBlock("blue_wool", 6, 66, 6));
-      world.add(new Block(6, 68, 8));
-      world.add(new Block(7, 66, 6));
-      world.add(new Block(6, 66, 7));
-      world.add(new Block(6, 68, 9));
-      world.add(new Block(8, 66, 6));
-      world.add(new Block(6, 66, 8));
-      world.add(new UniqueBlock("yellow_wool", 6, 66, 9));
-      world.add(new UniqueBlock("black_wool", 9, 66, 6));
-      world.add(new Block(9, 66, 7));
-      world.add(new Block(7, 66, 9));
-      world.add(new Block(9, 66, 8));
-      world.add(new Block(8, 66, 9));
-      world.add(new UniqueBlock("red_wool", 9, 66, 9));
-      world.add(new Wall("wall", 6, 66, 6, 9, 67, 6));
-      world.add(new Wall("wall", 6, 66, 9, 9, 67, 9));
+    world.add(new Block(6, 67, 6));
+    world.add(new Block(7, 67, 6));
+    world.add(new Block(6, 67, 7));
+    world.add(new Block(8, 67, 6));
+    world.add(new Block(6, 67, 8));
+    world.add(new Block(9, 67, 6));
+    world.add(new Block(6, 67, 9));
+    world.add(new Block(9, 67, 7));
+    world.add(new Block(7, 67, 9));
+    world.add(new Block(9, 67, 8));
+    world.add(new Block(8, 67, 9));
+    world.add(new Block(9, 67, 9));
+    world.add(new Wall("wall", 6, 66, 6, 6, 67, 9));
+    world.add(new Block(6, 68, 6));
+    world.add(new Block(6, 68, 7));
+    world.add(new UniqueBlock("blue_wool", 6, 66, 6));
+    world.add(new Block(6, 68, 8));
+    world.add(new Block(7, 66, 6));
+    world.add(new Block(6, 66, 7));
+    world.add(new Block(6, 68, 9));
+    world.add(new Block(8, 66, 6));
+    world.add(new Block(6, 66, 8));
+    world.add(new UniqueBlock("yellow_wool", 6, 66, 9));
+    world.add(new UniqueBlock("black_wool", 9, 66, 6));
+    world.add(new Block(9, 66, 7));
+    world.add(new Block(7, 66, 9));
+    world.add(new Block(9, 66, 8));
+    world.add(new Block(8, 66, 9));
+    world.add(new UniqueBlock("red_wool", 9, 66, 9));
+    world.add(new Wall("wall", 6, 66, 6, 9, 67, 6));
+    world.add(new Wall("wall", 6, 66, 9, 9, 67, 9));
 
-      var prevrow = new Row("row", 6, 6, 6, 9, 68);
+    var prevrow = new Row("row", 6, 6, 6, 9, 68);
 
-      world.add(prevrow);
-      world.add(new Wall("wall", 9, 66, 6, 9, 67, 9));
-      var realizer = MinecraftRealizer.createRealizer();
-/*
+    world.add(prevrow);
+    world.add(new Wall("wall", 9, 66, 6, 9, 67, 9));
+    var realizer = MinecraftRealizer.createRealizer();
+    /*
       for (var kv : weightMap.entrySet()) {
         kv.setValue(-kv.getValue());
       }
 
       realizer.setExpectedDurations(weightMap, true);
 */
-      realizer.generateReferringExpressionTree(world,
-          new Row("row", 7, 6, 7, 9, 68),
-          Set.of(prevrow),
-          Orientation.XPLUS
-      );
+    realizer.generateReferringExpressionTree(world,
+        new Row("row", 7, 6, 7, 9, 68),
+        Set.of(prevrow),
+        Orientation.XPLUS
+    );
   }
 }
