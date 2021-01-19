@@ -1,7 +1,7 @@
 plugins {
     id 'java'
     id 'application'
-    id 'com.github.johnrengelman.shadow' version '5.0.0'
+    id 'com.github.johnrengelman.shadow' version '5.2.0'
     // id 'checkstyle'
 
     // enables automatic version numbers from git tags
@@ -34,7 +34,7 @@ repositories {
 
 dependencies {
     testImplementation('org.junit.jupiter:junit-jupiter:5.6.1')
-    compile (group: "com.github.coli-saar", name:"alto", version:"40a48654deadc39276c4be442c9a092a2e94341b")
+    compile (group: "com.github.coli-saar", name:"alto", version:"edc8e69ae3d887f69d918ebb8aa76c41976509d7")
     compile 'info.picocli:picocli:3.9.3'
     implementation 'com.google.code.gson:gson:2.8.6'
     compile 'org.eclipse.collections:eclipse-collections-api:9.2.0'
