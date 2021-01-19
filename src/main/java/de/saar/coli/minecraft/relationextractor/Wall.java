@@ -2,56 +2,54 @@ package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.EnumSet;
+import java.util.HashSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Sets;
 
 public class Wall extends BigBlock {
 
-  private static final Set<EnumSet<Features>> features = Set.of(
-      // along X axis
-      EnumSet.of(Features.TYPE,
-          Features.X1,
-          Features.Y1,
-          Features.Z1,
-          Features.X1,
-          Features.Y2,
-          Features.Z2
-//          Features.FROM,
-//          Features.TO
-      ),
-      EnumSet.of(Features.TYPE,
-          Features.X1,
-          Features.Y1,
-          Features.Z1,
-          Features.X1,
-          Features.HEIGHT,
-          Features.Z2),
-      // along Z axis
-      EnumSet.of(Features.TYPE,
-          Features.X1,
-          Features.Y1,
-          Features.Z1,
-          Features.X2,
-          Features.Y2,
-          Features.Z1
-//          Features.FROM,
-//          Features.TO
-          ),
-      EnumSet.of(Features.TYPE,
-          Features.X1,
-          Features.Y1,
-          Features.Z1,
-          Features.X2,
-          Features.HEIGHT,
-          Features.Z1)
-  );
-
   /**
    * Returns the features that uniquely describe this type of object.
    */
   public Set<EnumSet<Features>> getFeatures() {
-    return features;
+    if (x1 != x2) {
+      // Wall is along X axis
+      return(Set.of(
+          EnumSet.of(Features.TYPE,
+              Features.X1,
+              Features.Y1,
+              Features.Z1,
+              Features.X2,
+              Features.HEIGHT,
+              Features.Z1),     
+          EnumSet.of(Features.TYPE,
+              Features.X1,
+              Features.Y1,
+              Features.Z1,
+              Features.X1,
+              Features.Y2,
+              Features.Z2
+          )));
+    } else {
+      // Wall is along Z axis
+      return(Set.of(
+          EnumSet.of(Features.TYPE,
+              Features.X1,
+              Features.Y1,
+              Features.Z1,
+              Features.X1,
+              Features.HEIGHT,
+              Features.Z2),
+          EnumSet.of(Features.TYPE,
+              Features.X1,
+              Features.Y1,
+              Features.Z1,
+              Features.X2,
+              Features.Y2,
+              Features.Z1
+          )));
+    }
   }
 
 
