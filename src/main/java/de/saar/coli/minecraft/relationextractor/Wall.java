@@ -21,15 +21,14 @@ public class Wall extends BigBlock {
               Features.Y1,
               Features.Z1,
               Features.X2,
-              Features.HEIGHT,
-              Features.Z1),     
+              Features.HEIGHT
+              ),
           EnumSet.of(Features.TYPE,
               Features.X1,
               Features.Y1,
               Features.Z1,
-              Features.X1,
-              Features.Y2,
-              Features.Z2
+              Features.X2,
+              Features.Y2
           )));
     } else {
       // Wall is along Z axis
@@ -38,16 +37,14 @@ public class Wall extends BigBlock {
               Features.X1,
               Features.Y1,
               Features.Z1,
-              Features.X1,
               Features.HEIGHT,
               Features.Z2),
           EnumSet.of(Features.TYPE,
               Features.X1,
               Features.Y1,
               Features.Z1,
-              Features.X2,
               Features.Y2,
-              Features.Z1
+              Features.Z2
           )));
     }
   }
