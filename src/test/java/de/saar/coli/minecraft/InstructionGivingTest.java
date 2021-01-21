@@ -409,6 +409,21 @@ public class InstructionGivingTest {
   }
 
   @Test
+  public void testWalltoherefrom(){
+    var previouswall = new Wall("previouswall", 0,0,0,0,1,3);
+    var wall2 = new Wall("wall2", 0,0,0,3,1,0);
+    var block1 = new Block(0,1,0);
+    var frontleftcorner = new Block(0,0,0);
+    var redBlock = new UniqueBlock("red_wool", 3,0,0);
+
+    Set<MinecraftObject> world = Set.of(previouswall,block1,frontleftcorner,redBlock);
+    var res = mcr.generateInstruction(world, wall2,
+        Set.of(previouswall, block1), Orientation.ZPLUS);
+
+    System.out.println(res);
+  }
+
+  @Test
   public void testWallCorner(){
     var Wall = new Wall("wall0", 0,0,3,3,3,3);
     var otherWall = new Wall("wall1",0,0,0,3,3,0);
