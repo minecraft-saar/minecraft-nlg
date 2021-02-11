@@ -189,32 +189,38 @@ public class BigBlock extends MinecraftObject {
     var coord = getRotatedCoords(orientation);
     if ((other instanceof Block)) {
       var oc =  ((Block) other).getRotatedCoords(orientation);
+
       // from is if block is at minimal positions
+
+      /* for walls along x-Axis
+       * diagonal 1 runs from bottom left to top right corner
+       * diagonal 2 runs from bottom right corner to top left
+       *
+       * for walls along z-Axis
+       * diagonal 1 runs from bottom front to top back corner
+       * diagonal 2 runs from bottom back corner to top front
+       */
+
       if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
-        result.add(new Relation("from",
+        result.add(new Relation("from-diagonal1",
             this, other));
       }
-      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()
-          && coord.getMaxZ() != coord.getMinZ()) {
-        result.add(new Relation("fromaway",
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
+        result.add(new Relation("from-diagonal2",
             this, other));
       }
       if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
-        result.add(new Relation("to", this, other));
+        result.add(new Relation("to-diagonal1", this, other));
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMinZ()
-          && coord.getMinZ() != coord.getMaxZ()) {
-        result.add(new Relation("tohere", this, other));
+      if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
+        result.add(new Relation("to-diagonal2", this, other));
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
-        result.add(new Relation("tobottom", this, other));
-      }
-      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
-        result.add(new Relation("fromtopof",
+      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
+        result.add(new Relation("fromtopof-diagonal2",
             this, Lists.immutable.of(other)));
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
-        result.add(new Relation("totopof", this, other));
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
+        result.add(new Relation("tobottom-diagonal2", this, other));
       }
 
       // add also left-of-relations for BigBlock-Block relations
