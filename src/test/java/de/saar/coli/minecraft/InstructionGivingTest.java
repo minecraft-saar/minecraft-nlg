@@ -26,12 +26,18 @@ import java.util.BitSet;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 public class InstructionGivingTest {
 
   MinecraftRealizer mcr;
+
+  //method to check if instruction contains all substrings needed (order can vary)
+  public static boolean containsWords(String input, String[] words) {
+    return Arrays.stream(words).allMatch(input::contains);
+  }
 
   @BeforeEach
   public void setup() {
@@ -60,27 +66,19 @@ public class InstructionGivingTest {
 
     // now have two alternatives to reference to block at (x:0,y:0,z:1)
     String var1 = "put a block in front of the blue block";
-    String var2 = "put a block two blocks behind the yellow block";
 
-    boolean correct = res.equals(var1) || res.equals(var2);
+    boolean correct = res.equals(var1);
     assertTrue(correct, "instruction incorrect, was " + res);
     System.out.println(res);
-    /*
-    assertTrue(mcr.isDerivable(List.of("a", "block", "in front of", "the", "blue", "block")));
-    List<String> incorr = List.of("a", "block", "in front of", "the", "blue", "blue", "block");
-    assertTrue(mcr.isDerivable(incorr));
-    System.out.println(mcr.getTreeForInstruction(incorr));
-    assertEquals("put a block in front of the blue block", res);
-    */
+
 
     res = mcr.generateInstruction(world,
         new Block(0,0,1),
         new HashSet<>(),
         Orientation.ZPLUS);
     var1 = "put a block behind the blue block";
-    var2 = "put a block two blocks in front of the yellow block";
 
-    correct = res.equals(var1) || res.equals(var2);
+    correct = res.equals(var1);
     assertTrue(correct, "instruction incorrect, was " + res);
     System.out.println(res);
 
@@ -90,9 +88,8 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZPLUS);
     var1 = "put a block to the right of the red block";
-    var2 = "put a block two blocks left of the yellow block";
 
-    correct = res.equals(var1) || res.equals(var2);
+    correct = res.equals(var1);
     assertTrue(correct, "instruction incorrect, was " + res);
     System.out.println(res);
   }
@@ -111,12 +108,8 @@ public class InstructionGivingTest {
         wall2,
         Set.of(wall1),
         Orientation.ZPLUS);
-    String var1 = "build a wall of height four behind the wall";
-    String var2 = "build a wall behind the previous wall of height four";
-    String var3 = "build a wall of height four behind the previous wall";
-    System.out.println(res);
-    boolean correct = res.equals(var1) || res.equals(var2) || res.equals(var3);
-    assertTrue(correct, "instruction incorrect, was "+res);
+    String[] substrings = {"build a wall", "of height four", "behind", "the", "wall"};
+    assertTrue(containsWords(res, substrings));
 
     // test row behind row orientaway
     //TODO distinguish between orientations?
@@ -124,9 +117,9 @@ public class InstructionGivingTest {
         row3,
         Set.of(row2),
         Orientation.ZPLUS);
-    var1 = "build a row behind the previous row";
+    String var1 = "build a row behind the previous row";
     System.out.println(res);
-    correct = res.equals(var1);
+    boolean correct = res.equals(var1);
     assertTrue(correct, "instruction incorrect, was "+res);
 
     // test row left of row orientleftright
@@ -193,40 +186,35 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZPLUS);
     String var1 = "put a block two blocks left of the black block";
-    String var2 = "put a block five blocks left of the blue block";
-    boolean correct = res.equals(var1) || res.equals(var2);
+    boolean correct = res.equals(var1);
     assertTrue(correct, "instruction incorrect, was "+res);
     System.out.println(res);
     res = mcr.generateInstruction(world, new Block(-2, 0,0),
         new HashSet<>(),
         Orientation.ZPLUS);
     var1 = "put a block two blocks right of the blue block";
-    var2 = "put a block five blocks right of the black block";
-    correct = res.equals(var1) || res.equals(var2);
+    correct = res.equals(var1);
     assertTrue(correct, "instruction incorrect, was "+res);
     System.out.println(res);
     res = mcr.generateInstruction(world, new Block(0, 0,-2),
         new HashSet<>(),
         Orientation.ZPLUS);
     var1 ="put a block two blocks in front of the blue block";
-    var2 = "put a block five blocks in front of the yellow block";
-    correct = res.equals(var1) || res.equals(var2);
+    correct = res.equals(var1);
     assertTrue(correct, "instruction incorrect, was "+res);
     System.out.println(res);
     res = mcr.generateInstruction(world, new Block(0, 0,-2),
         new HashSet<>(),
         Orientation.ZMINUS);
     var1 = "put a block two blocks behind the blue block";
-    var2 = "put a block five blocks behind the yellow block";
-    correct = res.equals(var1) || res.equals(var2);
+    correct = res.equals(var1);
     assertTrue(correct, "instruction incorrect, was "+res);
     System.out.println(res);
     res = mcr.generateInstruction(world, new Block(3, 2,3),
         new HashSet<>(),
         Orientation.ZMINUS);
-    var1 = "put a block two blocks above the red block";
-    var2 = "put a block two blocks on top of the red block";
-    correct = res.equals(var1) || res.equals(var2);
+    var1 = "put a block two blocks on top of the red block";
+    correct = res.equals(var1);
     assertTrue(correct,"instruction incorrect, was "+res);
     System.out.println(res);
 
@@ -312,15 +300,9 @@ public class InstructionGivingTest {
     res = mcr.generateInstruction(Set.of(new UniqueBlock("blue_wool",4,0,0)),row1,
         new HashSet<>(),
         Orientation.ZPLUS);
-    var1 = "build a row to the right of length four to the right of the blue block";
-    String var2 = "build a row to the right of length four to the right of the block";
-    String var3 = "build a row of length four from left to right to the right of the block";
-    String var4 = "build a row of length four to the right to the right of the block";
-    String var5 = "build a row to the right to the right of the block of length four";
-    String var6 = "build a row of length four to the right of the block from left to right";
-    correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4) || res.equals(var5) || res.equals(var6);
     System.out.println(res);
-    assertTrue(correct, "instruction incorrect, was " + res);
+    String[] substrings = {"build a row", "to the right", "of length four", "to the right of","the", "block"};
+    assertTrue(containsWords(res,substrings));
 
   }
 
@@ -332,10 +314,8 @@ public class InstructionGivingTest {
         Orientation.ZPLUS);
     String var1 = "put a block between the black block and the blue block";
     String var2 = "put a block between the blue block and the black block";
-    String var3 = "put a block to the left of the blue block";
-    String var4 = "put a block to the right of the black block";
 
-    boolean correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4);
+    boolean correct = res.equals(var1) || res.equals(var2);
     assertTrue(correct, "instruction incorrect, was " + res);
     System.out.println("between: "+res);
     //testing between front-behind
@@ -344,10 +324,8 @@ public class InstructionGivingTest {
         Orientation.ZPLUS);
     var1 = "put a block between the blue block and the yellow block";
     var2 = "put a block between the yellow block and the blue block";
-    var3 = "put a block behind the blue block";
-    var4 = "put a block in front of the yellow block";
 
-    correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4);
+    correct = res.equals(var1) || res.equals(var2);
     assertTrue(correct, "instruction incorrect, was " + res);
     System.out.println("between: "+res);
   }
