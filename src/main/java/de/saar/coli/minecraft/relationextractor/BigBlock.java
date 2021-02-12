@@ -215,12 +215,15 @@ public class BigBlock extends MinecraftObject {
       if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
         result.add(new Relation("to-diagonal2", this, other));
       }
-      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
-        result.add(new Relation("fromtopof-diagonal2",
+      // it is also possible to describe a diagonal by saying "from top of the xy block to ..."
+      // or by saying "from .. to the top of the xy block"
+      if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
+        result.add(new Relation("topof-diagonal1",
             this, Lists.immutable.of(other)));
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
-        result.add(new Relation("tobottom-diagonal2", this, other));
+      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
+        result.add(new Relation("topof-diagonal2",
+            this, Lists.immutable.of(other)));
       }
 
       // add also left-of-relations for BigBlock-Block relations
