@@ -440,45 +440,66 @@ N -> upperleftcorner(DefNP) [-0.9]
 // relations
 ////////////////////////////////////////////////////////////////////////
 
-N -> from(N, DefNP) [-0.9]
+Ndiag1 -> fromdiagonal1(N, DefNP) [-0.9]
   [string] *(?1, *("from", ?2))
-  [ref] intersect(project_1(intersect_2(from, ?2)), ?1)
+  [ref] intersect(project_1(intersect_2(from-diagonal1, ?2)), ?1)
   [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
 
-N -> fromaway(N, DefNP) [-0.9]
+Ndiag2 -> fromdiagonal2(N, DefNP) [-0.9]
   [string] *(?1, *("from", ?2))
-  [ref] intersect(project_1(intersect_2(fromaway, ?2)), ?1)
-  [sem] firstarg(eunion(?1, x1+y1+z2), ?2)
-
-N -> fromtopof(N, DefNP) [-0.9]
-  [string] *(?1, *("from the top of", ?2))
-  [ref] intersect(project_1(intersect_2(fromtopof, ?2)), ?1)
+  [ref] intersect(project_1(intersect_2(from-diagonal2, ?2)), ?1)
   [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
 
-N -> to(N, DefNP) [-0.9]
+N -> todiagonal1(Ndiag1, DefNP) [-0.9]
   [string] *(?1, *("to", ?2))
-  [ref] intersect(project_1(intersect_2(to,?2)), ?1)
+  [ref] intersect(project_1(intersect_2(to-diagonal1,?2)), ?1)
   [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
 
-// This rule is valid but might be confusing in some cases
-// e.g. "build a wall from the blue block to the top of the
-// black block" -- make the score a bit worse to disprefer
-// it against slightly longer other options
-N -> totopof(N, DefNP) [-3]
+N -> todiagonal2(Ndiag2, DefNP) [-0.9]
+  [string] *(?1, *("to", ?2))
+  [ref] intersect(project_1(intersect_2(to-diagonal2,?2)), ?1)
+  [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
+Ndiag2top -> fromtopofdiagonal2(N, DefNP) [-0.9]
+  [string] *(?1, *("from the top of", ?2))
+  [ref] intersect(project_1(intersect_2(topof-diagonal2, ?2)), ?1)
+  [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
+
+N -> tobottomdiagonal2(Ndiag2top, DefNP) [-0.9]
+  [string] *(?1, *("to", ?2))
+  [ref] intersect(project_1(intersect_2(from-diagonal2,?2)), ?1)
+  [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
+Ndiag1top -> fromtopofdiagonal1(N, DefNP) [-0.9]
+  [string] *(?1, *("from the top of", ?2))
+  [ref] intersect(project_1(intersect_2(topof-diagonal1, ?2)), ?1)
+  [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
+
+N -> tobottomdiagonal1(Ndiag1top, DefNP) [-0.9]
+  [string] *(?1, *("to", ?2))
+  [ref] intersect(project_1(intersect_2(from-diagonal1,?2)), ?1)
+  [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
+N -> totopofdiagonal1(Ndiag1, DefNP) [-3]
    [string] *(?1, *("to the top of", ?2))
-   [ref] intersect(project_1(intersect_2(totopof,?2)), ?1)
+   [ref] intersect(project_1(intersect_2(topof-diagonal1,?2)), ?1)
    [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
 
-N -> tobottom(N, DefNP) [-0.9]
+N -> totopofdiagonal2(Ndiag2, DefNP) [-3]
+   [string] *(?1, *("to the top of", ?2))
+   [ref] intersect(project_1(intersect_2(topof-diagonal2,?2)), ?1)
+   [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
+// rules to describe a wall not by diagonal, but by horizontal line plus length
+N -> tohorizontalrr(Ndiag1, DefNP) [-0.9]
   [string] *(?1, *("to", ?2))
-  [ref] intersect(project_1(intersect_2(tobottom,?2)), ?1)
+  [ref] intersect(project_1(intersect_2(from-diagonal2,?2)), ?1)
   [sem] firstarg(eunion(?1, x2+y1+z2), ?2)
 
-N -> tohere(N, DefNP) [-0.9]
+N -> tohorizontallr(Ndiag2, DefNP) [-0.9]
   [string] *(?1, *("to", ?2))
-  [ref] intersect(project_1(intersect_2(tohere,?2)), ?1)
-  [sem] firstarg(eunion(?1, x2+y2+z1), ?2)
-
+  [ref] intersect(project_1(intersect_2(from-diagonal1,?2)), ?1)
+  [sem] firstarg(eunion(?1, x2+y1+z2), ?2)
 
 // on the other side of the bridge
 N -> othersideof(N, DefNP) [-0.9]
