@@ -388,17 +388,148 @@ public class InstructionGivingTest {
 
   @Test
   public void testWalltoherefrom(){
+
     var previouswall = new Wall("previouswall", 0,0,0,0,1,3);
     var wall2 = new Wall("wall2", 0,0,0,3,1,0);
     var block1 = new Block(0,1,0);
-    var frontleftcorner = new Block(0,0,0);
-    var redBlock = new UniqueBlock("red_wool", 3,0,0);
+    var blueBlock = new UniqueBlock("blue_wool",3,0,0);
 
-    Set<MinecraftObject> world = Set.of(previouswall,block1,frontleftcorner,redBlock);
+
+    Set<MinecraftObject> world = Set.of(previouswall,block1,blueBlock);
     var res = mcr.generateInstruction(world, wall2,
+        Set.of(previouswall, block1), Orientation.XPLUS);
+
+    String var1 = "build a wall from the blue block to the previous block";
+    System.out.println(res);
+    boolean correct = res.equals(var1);
+    assertTrue(correct,"instruction incorrect was " + res);
+
+    world = Set.of(previouswall,block1,blueBlock);
+    res = mcr.generateInstruction(world, wall2,
+        Set.of(previouswall, block1), Orientation.XMINUS);
+    System.out.println(res);
+    assertTrue(correct,"instruction with orientation XMINUS incorrect was " + res);
+
+
+    world = Set.of(previouswall,block1,blueBlock);
+    res = mcr.generateInstruction(world, wall2,
         Set.of(previouswall, block1), Orientation.ZPLUS);
 
     System.out.println(res);
+  }
+
+  @Test
+  public void testWallfromtopof() {
+
+    var wall2 = new Wall("wall2", 0, 0, 0, 3, 1, 0);
+    var blueblock = new UniqueBlock("blue_wool", 0, 0, 0);
+    var yellowBlock = new UniqueBlock("yellow_wool", 3, 0, 0);
+
+    Set<MinecraftObject> world = Set.of(blueblock, yellowBlock);
+    var res = mcr.generateInstruction(world, wall2, new HashSet<>(), Orientation.ZPLUS);
+
+    String var1 = "build a wall from the blue block to the yellow block of height two";
+    String var2 = "build a wall from the blue block to the top of the yellow block";
+    String var3 = "build a wall from the yellow block to the blue block of height two";
+    String var4 = "build a wall from the yellow block to the top of the blue block";
+    String var5 = "build a wall from the top of the blue block to the yellow block";
+    String var6 = "build a wall from the top of the yellow block to the blue block";
+    System.out.println(res);
+    boolean correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4)
+     || res.equals(var5) || res.equals(var6);
+    assertTrue(correct, "instruction incorrect, was" + res);
+
+  }
+
+  @Test
+  public void testfromtorelations(){
+    var wall = new Wall("wall", 0,0,0,3,1,0);
+    var blueblock = new UniqueBlock("blue_wool",3,0,0);
+    var yellowblock = new UniqueBlock("yellow_wool", 3,1,0);
+    var redblock = new UniqueBlock("red_wool",0,0,0);
+    var blackblock = new UniqueBlock("black_wool", 0,1,0);
+
+    var from_diagonal1 = new Relation("from-diagonal1",wall,blueblock);
+    var from_diagonal2 = new Relation("from-diagonal2",wall,redblock);
+    var to_diagonal1 = new Relation("to-diagonal1",wall,blackblock);
+    var to_diagonal2 = new Relation("to-diagonal2",wall,yellowblock);
+    var topof_diagonal1 = new Relation("topof-diagonal1",wall,redblock);
+    var topof_diagonal2 = new Relation("topof-diagonal2",wall,blueblock);
+
+    Set<MinecraftObject> world = Set.of(wall,redblock,blueblock,blackblock,yellowblock);
+
+    List<Relation> relations = Relation.generateAllRelationsBetweeen(world, Orientation.ZPLUS);
+
+    assertTrue(relations.contains(from_diagonal1),
+        "For orientation ZPLUS from_diagonal1 not generated correctly");
+    assertTrue(relations.contains(from_diagonal2),
+        "For orientation ZPLUS from_diagonal2 not generated correctly");
+    assertTrue(relations.contains(to_diagonal1),
+        "For orientation ZPLUS to_diagonal1 not generated correctly");
+    assertTrue(relations.contains(to_diagonal2),
+        "For orientation ZPLUS to_diagonal2 not generated correctly");
+    assertTrue(relations.contains(topof_diagonal1),
+        "For orientation ZPLUS topof_diagonal1 not generated correctly");
+    assertTrue(relations.contains(topof_diagonal2),
+        "For orientation ZPLUS topof_diagonal1 not generated correctly");
+
+    // check with other orientation
+
+    relations = Relation.generateAllRelationsBetweeen(world, Orientation.XMINUS);
+
+    assertTrue(relations.contains(from_diagonal1),
+        "For orientation XMINUS from_diagonal1 not generated correctly");
+    assertTrue(relations.contains(from_diagonal2),
+        "For orientation XMINUS from_diagonal2 not generated correctly");
+    assertTrue(relations.contains(to_diagonal1),
+        "For orientation XMINUS to_diagonal1 not generated correctly");
+    assertTrue(relations.contains(to_diagonal2),
+        "For orientation XMINUS to_diagonal2 not generated correctly");
+    assertTrue(relations.contains(topof_diagonal1),
+        "For orientation XMINUS topof_diagonal1 not generated correctly");
+    assertTrue(relations.contains(topof_diagonal2),
+        "For orientation XMINUS topof_diagonal1 not generated correctly");
+
+    // check with other orientation
+    // with XPLUS and ZMINUS orientation diagonal1 and diagonal2 are switched,
+    // therefore define new relations
+
+    from_diagonal1 = new Relation("from-diagonal1",wall,redblock);
+    from_diagonal2 = new Relation("from-diagonal2",wall,blueblock);
+    to_diagonal1 = new Relation("to-diagonal1",wall,yellowblock);
+    to_diagonal2 = new Relation("to-diagonal2",wall,blackblock);
+    topof_diagonal1 = new Relation("topof-diagonal1",wall,blueblock);
+    topof_diagonal2 = new Relation("topof-diagonal2",wall,redblock);
+
+    relations = Relation.generateAllRelationsBetweeen(world, Orientation.XPLUS);
+    assertTrue(relations.contains(from_diagonal1),
+        "For orientation XPLUS from_diagonal1 not generated correctly");
+    assertTrue(relations.contains(from_diagonal2),
+        "For orientation XPLUS from_diagonal2 not generated correctly");
+    assertTrue(relations.contains(to_diagonal1),
+        "For orientation XPLUS to_diagonal1 not generated correctly");
+    assertTrue(relations.contains(to_diagonal2),
+        "For orientation XPLUS to_diagonal2 not generated correctly");
+    assertTrue(relations.contains(topof_diagonal1),
+        "For orientation XPLUS topof_diagonal1 not generated correctly");
+    assertTrue(relations.contains(topof_diagonal2),
+        "For orientation XPLUS topof_diagonal1 not generated correctly");
+
+    // check for ZMINUS
+
+    relations = Relation.generateAllRelationsBetweeen(world, Orientation.ZMINUS);
+    assertTrue(relations.contains(from_diagonal1),
+        "For orientation ZMINUS from_diagonal1 not generated correctly");
+    assertTrue(relations.contains(from_diagonal2),
+        "For orientation ZMINUS from_diagonal2 not generated correctly");
+    assertTrue(relations.contains(to_diagonal1),
+        "For orientation ZMINUS to_diagonal1 not generated correctly");
+    assertTrue(relations.contains(to_diagonal2),
+        "For orientation ZMINUS to_diagonal2 not generated correctly");
+    assertTrue(relations.contains(topof_diagonal1),
+        "For orientation ZMINUS topof_diagonal1 not generated correctly");
+    assertTrue(relations.contains(topof_diagonal2),
+        "For orientation ZMINUS topof_diagonal1 not generated correctly");
   }
 
   @Test
