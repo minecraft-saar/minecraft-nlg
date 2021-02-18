@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 import org.eclipse.collections.api.list.ImmutableList;
 import org.eclipse.collections.impl.factory.Lists;
@@ -76,5 +77,23 @@ public class Relation {
       result.addAll(obj.generateRelationsTo(mcobjects, orientation));
     }
     return result;
+  }
+
+  @Override
+  public boolean equals(Object o) {
+    if (this == o) {
+      return true;
+    }
+    if (o == null || getClass() != o.getClass()) {
+      return false;
+    }
+    Relation relation = (Relation) o;
+    return Objects.equals(relationString, relation.relationString) && Objects
+        .equals(otherobj, relation.otherobj) && Objects.equals(obj, relation.obj);
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(relationString, otherobj, obj);
   }
 }
