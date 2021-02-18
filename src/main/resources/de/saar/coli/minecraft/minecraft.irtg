@@ -62,6 +62,13 @@ Obj -> floor [-0.9]
   [sem] type
 
 // indefinite objects
+// Only rules for indefinite objects should have terminal symbols starting with the letter i!
+
+// Reason for implementing this: Definite and indefinite objects should be distinguishable.
+// Nouns used by the rules DefNP and IndefNP! should therefore refer to different objects.
+// This is taken care of by introducing the 'indef' feature in the [sem] interpretation which
+// forces DefNP and IndefNP! rules to use different subtrees (i.e. IndefNP! uses a subtree generated
+// with the indefinite rules, where iobjects are at the leaves of the tree).
 
 Obj -> ibridge [-0.9]
   [string] "bridge"
