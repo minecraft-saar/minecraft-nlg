@@ -508,6 +508,27 @@ N -> tohorizontallr(Ndiag2, DefNP) [-0.9]
   [ref] intersect(project_1(intersect_2(from-diagonal1,?2)), ?1)
   [sem] firstarg(eunion(?1, x2+y1+z2), ?2)
 
+// rules to describe floor on top of blocks
+Ndiag1 -> topfromdiagonal1(N, DefNP) [-0.9]
+  [string] *(?1, *("from the top of", ?2))
+  [ref] intersect(project_1(intersect_2(topof-from-diagonal1, ?2)), ?1)
+  [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
+
+Ndiag2 -> topfromdiagonal2(N, DefNP) [-0.9]
+  [string] *(?1, *("from the top of", ?2))
+  [ref] intersect(project_1(intersect_2(topof-from-diagonal2, ?2)), ?1)
+  [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
+
+N -> toptodiagonal1(Ndiag1, DefNP) [-9]
+  [string] *(?1, *("to the top of", ?2))
+  [ref] intersect(project_1(intersect_2(topof-to-diagonal1,?2)), ?1)
+  [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
+N -> toptodiagonal2(Ndiag2, DefNP) [-9]
+  [string] *(?1, *("to the top of", ?2))
+  [ref] intersect(project_1(intersect_2(topof-to-diagonal2,?2)), ?1)
+  [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
 // on the other side of the bridge
 N -> othersideof(N, DefNP) [-0.9]
   [string] *(?1, *("on the other side of", ?2))
