@@ -4,6 +4,7 @@ import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.EnumSet;
 import java.util.Set;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Sets;
 
 public class Floor extends BigBlock {
@@ -72,6 +73,23 @@ public class Floor extends BigBlock {
       if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()
           && coord.getMinZ() != coord.getMaxZ()) {
         result.add(new Relation("to-diagonal2", this, other));
+      }
+      if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
+        result.add(new Relation("topof-to-diagonal1",
+            this, Lists.immutable.of(other)));
+      }
+      if (oc.x1 == coord.getMaxX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
+        result.add(new Relation("topof-from-diagonal1",
+            this, Lists.immutable.of(other)));
+      }
+      if (oc.x1 == coord.getMaxX() && oc.y1 +1== coord.getMaxY() && oc.z1 == coord.getMaxZ()
+          && coord.getMinZ() != coord.getMaxZ()) {
+        result.add(new Relation("topof-to-diagonal2", this, other));
+      }
+      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMinZ()
+          && coord.getMaxZ() != coord.getMinZ()) {
+        result.add(new Relation("topof-from-diagonal2",
+            this, other));
       }
 
       // add also left-of-relations for BigBlock-Block relations
