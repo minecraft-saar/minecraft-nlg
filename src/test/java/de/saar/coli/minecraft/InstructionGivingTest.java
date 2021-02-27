@@ -64,7 +64,6 @@ public class InstructionGivingTest {
     assertTrue(mcr.isDerivable(incorr));
     System.out.println(mcr.getTreeForInstruction(incorr));
 
-    // now have two alternatives to reference to block at (x:0,y:0,z:1)
     String var1 = "put a block in front of the blue block";
 
     boolean correct = res.equals(var1);
@@ -263,8 +262,8 @@ public class InstructionGivingTest {
     // only z-coordinate and y-coordinate specified
     // no instruction can be generated with current grammar
     var target = new Block(0,0,1);
-    // var tree = mcr.generateStatementTree(target.toString(), target.getFeaturesStrings());
-    // assertEquals(null, tree);
+    var tree = mcr.generateStatementTree(target.toString(), target.getFeaturesStrings());
+    assertEquals(null, tree);
 
     // for front of everything should be specified in orientaway scenario
     world = Set.of(new Row("row2",0,0,0,3,0));
@@ -343,17 +342,9 @@ public class InstructionGivingTest {
 
     String var1 = "build a row between the blue block and the yellow block";
     String var2 = "build a row between the yellow block and the blue block";
-    String var3 = "build a row to the right of the yellow block from left to right of length three";
-    String var4 = "build a row to the right of the yellow block of length three from left to right";
-    String var5 = "build a row to the right of the yellow block of length three to the right";
-    String var6 = "build a row to the left of the blue block from left to right of length three";
-    String var7 = "build a row to the right of length three to the left of the blue block";
-    String var8 = "build a row of length three to the right of the yellow block from left to right";
-    boolean correct = res.equals(var1)||res.equals(var2)||res.equals(var3)||res.equals(var4) || res.equals(var5) || res.equals(var6) || res.equals(var7) || res.equals(var8);
+    boolean correct = res.equals(var1)||res.equals(var2);
     System.out.println(res);
     assertTrue(correct, "instruction incorrect, was " + res);
-    //test block between rows
-    //TODO if rows are oriented away there should be no instruction that specifies positions of block?
   }
   
   @Test
@@ -379,7 +370,8 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZPLUS
         );
-    String correctOption = "build a wall to the blue block from the black block of height two";
+    System.out.println(res);
+    String correctOption = "build a wall from the blue block to the black block of height two";
     assertEquals(correctOption.length(), res.length());
     assertTrue(res.contains("a wall"));
     assertTrue(res.contains("to the blue block"));
@@ -414,35 +406,12 @@ public class InstructionGivingTest {
     world = Set.of(previouswall,block1,blueBlock);
     res = mcr.generateInstruction(world, wall2,
         Set.of(previouswall, block1), Orientation.ZPLUS);
-
     System.out.println(res);
+    assertTrue(correct,"instruction with orientation ZPLUS incorrect was " + res);
   }
 
   @Test
-  public void testWallfromtopof() {
-
-    var wall2 = new Wall("wall2", 0, 0, 0, 3, 1, 0);
-    var blueblock = new UniqueBlock("blue_wool", 0, 0, 0);
-    var yellowBlock = new UniqueBlock("yellow_wool", 3, 0, 0);
-
-    Set<MinecraftObject> world = Set.of(blueblock, yellowBlock);
-    var res = mcr.generateInstruction(world, wall2, new HashSet<>(), Orientation.ZPLUS);
-
-    String var1 = "build a wall from the blue block to the yellow block of height two";
-    String var2 = "build a wall from the blue block to the top of the yellow block";
-    String var3 = "build a wall from the yellow block to the blue block of height two";
-    String var4 = "build a wall from the yellow block to the top of the blue block";
-    String var5 = "build a wall from the top of the blue block to the yellow block";
-    String var6 = "build a wall from the top of the yellow block to the blue block";
-    System.out.println(res);
-    boolean correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4)
-     || res.equals(var5) || res.equals(var6);
-    assertTrue(correct, "instruction incorrect, was" + res);
-
-  }
-
-  @Test
-  public void testfromtorelations(){
+  public void testfromtoRelations(){
     var wall = new Wall("wall", 0,0,0,3,1,0);
     var blueblock = new UniqueBlock("blue_wool",3,0,0);
     var yellowblock = new UniqueBlock("yellow_wool", 3,1,0);
@@ -457,38 +426,20 @@ public class InstructionGivingTest {
     var topof_diagonal2 = new Relation("topof-diagonal2",wall,blueblock);
 
     Set<MinecraftObject> world = Set.of(wall,redblock,blueblock,blackblock,yellowblock);
+    Set<Relation> gold_standard_relations = Set.of(from_diagonal1, from_diagonal2, to_diagonal1,
+        to_diagonal2, topof_diagonal1, topof_diagonal2);
 
-    List<Relation> relations = Relation.generateAllRelationsBetweeen(world, Orientation.ZPLUS);
+    Set<Relation> relations = new HashSet<>(Relation.generateAllRelationsBetweeen(world, Orientation.ZPLUS));
 
-    assertTrue(relations.contains(from_diagonal1),
+    assertTrue(relations.containsAll(gold_standard_relations),
         "For orientation ZPLUS from_diagonal1 not generated correctly");
-    assertTrue(relations.contains(from_diagonal2),
-        "For orientation ZPLUS from_diagonal2 not generated correctly");
-    assertTrue(relations.contains(to_diagonal1),
-        "For orientation ZPLUS to_diagonal1 not generated correctly");
-    assertTrue(relations.contains(to_diagonal2),
-        "For orientation ZPLUS to_diagonal2 not generated correctly");
-    assertTrue(relations.contains(topof_diagonal1),
-        "For orientation ZPLUS topof_diagonal1 not generated correctly");
-    assertTrue(relations.contains(topof_diagonal2),
-        "For orientation ZPLUS topof_diagonal1 not generated correctly");
 
     // check with other orientation
 
-    relations = Relation.generateAllRelationsBetweeen(world, Orientation.XMINUS);
+    relations = new HashSet<>(Relation.generateAllRelationsBetweeen(world, Orientation.XMINUS));
 
-    assertTrue(relations.contains(from_diagonal1),
+    assertTrue(relations.containsAll(gold_standard_relations),
         "For orientation XMINUS from_diagonal1 not generated correctly");
-    assertTrue(relations.contains(from_diagonal2),
-        "For orientation XMINUS from_diagonal2 not generated correctly");
-    assertTrue(relations.contains(to_diagonal1),
-        "For orientation XMINUS to_diagonal1 not generated correctly");
-    assertTrue(relations.contains(to_diagonal2),
-        "For orientation XMINUS to_diagonal2 not generated correctly");
-    assertTrue(relations.contains(topof_diagonal1),
-        "For orientation XMINUS topof_diagonal1 not generated correctly");
-    assertTrue(relations.contains(topof_diagonal2),
-        "For orientation XMINUS topof_diagonal1 not generated correctly");
 
     // check with other orientation
     // with XPLUS and ZMINUS orientation diagonal1 and diagonal2 are switched,
@@ -501,59 +452,47 @@ public class InstructionGivingTest {
     topof_diagonal1 = new Relation("topof-diagonal1",wall,blueblock);
     topof_diagonal2 = new Relation("topof-diagonal2",wall,redblock);
 
-    relations = Relation.generateAllRelationsBetweeen(world, Orientation.XPLUS);
-    assertTrue(relations.contains(from_diagonal1),
+    gold_standard_relations = Set.of(from_diagonal1, from_diagonal2, to_diagonal1,
+        to_diagonal2, topof_diagonal1, topof_diagonal2);
+
+    relations = new HashSet<>(Relation.generateAllRelationsBetweeen(world, Orientation.XPLUS));
+    assertTrue(relations.containsAll(gold_standard_relations),
         "For orientation XPLUS from_diagonal1 not generated correctly");
-    assertTrue(relations.contains(from_diagonal2),
-        "For orientation XPLUS from_diagonal2 not generated correctly");
-    assertTrue(relations.contains(to_diagonal1),
-        "For orientation XPLUS to_diagonal1 not generated correctly");
-    assertTrue(relations.contains(to_diagonal2),
-        "For orientation XPLUS to_diagonal2 not generated correctly");
-    assertTrue(relations.contains(topof_diagonal1),
-        "For orientation XPLUS topof_diagonal1 not generated correctly");
-    assertTrue(relations.contains(topof_diagonal2),
-        "For orientation XPLUS topof_diagonal1 not generated correctly");
 
     // check for ZMINUS
 
-    relations = Relation.generateAllRelationsBetweeen(world, Orientation.ZMINUS);
-    assertTrue(relations.contains(from_diagonal1),
+    relations = new HashSet<>(Relation.generateAllRelationsBetweeen(world, Orientation.ZMINUS));
+    assertTrue(relations.containsAll(gold_standard_relations),
         "For orientation ZMINUS from_diagonal1 not generated correctly");
-    assertTrue(relations.contains(from_diagonal2),
-        "For orientation ZMINUS from_diagonal2 not generated correctly");
-    assertTrue(relations.contains(to_diagonal1),
-        "For orientation ZMINUS to_diagonal1 not generated correctly");
-    assertTrue(relations.contains(to_diagonal2),
-        "For orientation ZMINUS to_diagonal2 not generated correctly");
-    assertTrue(relations.contains(topof_diagonal1),
-        "For orientation ZMINUS topof_diagonal1 not generated correctly");
-    assertTrue(relations.contains(topof_diagonal2),
-        "For orientation ZMINUS topof_diagonal1 not generated correctly");
   }
+
 
   @Test
   public void testWallCorner(){
-    var Wall = new Wall("wall0", 0,0,3,3,3,3);
-    var otherWall = new Wall("wall1",0,0,0,3,3,0);
-    var blueBlock = new UniqueBlock("blue_wool", 0,0,0);
-    var redBlock = new UniqueBlock("red_wool", 3,0,0);
-    var block1 = new Block(0, 3,0);
+    var otherWall = new Wall("wall1",0,0,0,3,1,0);
+    var block1 = new Block(3, 1,0);
+    var block2 = new Block(3,0,0);
     Set<MinecraftObject> world = Set.of(
-        otherWall, blueBlock, redBlock, block1, Wall
+        otherWall, block1, block2
     );
 
-    var res = mcr.generateInstruction(world, new Block(0,4, 0),
-        Set.of(otherWall),
+    var res = mcr.generateInstruction(world, new Block(3,2, 0),
+        new HashSet<>(),
         Orientation.ZPLUS
     );
-    String var1 = "put a block on top of the upper right corner of the previous wall";
-    String var2 = "put a block on top of the back right corner of the previous wall";
-    String var3 = "put a block four blocks above the blue block";
-    String var4 = "put a block four blocks on top of the blue block";
+    String var1 = "put a block on top of the upper left corner of the wall";
 
-    boolean correct = res.equals(var1) || res.equals(var2) || res.equals(var3) || res.equals(var4);
+    boolean correct = res.equals(var1);
     assertTrue(correct, "wall instruction incorrect, was " + res);
+    System.out.println(res);
+
+    res = mcr.generateInstruction(world, new Block(4,0,0),
+        new HashSet<>(),
+        Orientation.ZPLUS
+    );
+    var1 = "put a block to the left of the lower left corner of the wall";
+    correct = res.equals(var1);
+    assertTrue(correct, "wall instruction incorrect, was "+ res);
     System.out.println(res);
   }
 
@@ -566,14 +505,27 @@ public class InstructionGivingTest {
         Orientation.ZPLUS
     );
     String exampleInstruction = "build a row of length three to the right to the top of the red block";
-    String exampleAlternative = "build a row of length three from left to right to the top of the red block";
-    assertTrue(
-        ((exampleInstruction.length() == res.length()) || exampleAlternative.length() == res.length()),
+    assertTrue( exampleInstruction.length() == res.length(),
         "Incorrect instruction:" + res);
     assertTrue(res.contains("build a row"));
     assertTrue(res.contains("of length three"));
-    assertTrue((res.contains("to the right") || res.contains("from left to right")));
+    assertTrue(res.contains("to the right"));
     assertTrue(res.contains("to the top of the red block"));
+    System.out.println(res);
+
+    // check other direction
+    res = mcr.generateInstruction(world,
+        new Row("row", 0,3,-2,3,1),
+        new HashSet<>(),
+        Orientation.ZPLUS
+    );
+    exampleInstruction = "build a row of length three to the right to the top of the yellow block";
+    assertTrue( exampleInstruction.length() == res.length(),
+        "Incorrect instruction:" + res);
+    assertTrue(res.contains("build a row"));
+    assertTrue(res.contains("of length three"));
+    assertTrue(res.contains("to the right"));
+    assertTrue(res.contains("to the top of the yellow block"));
     System.out.println(res);
   }
 
@@ -585,14 +537,13 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZPLUS
     );
-    String var1 = "build a floor to the top of the yellow block from the top of the black block";
-    String var2 = "build a floor from the top of the black block to the top of the yellow block";
+    String var1 = "build a floor from the top of the black block to the top of the yellow block";
     
     List<String> expected = List.of("a", "floor", "from the top of", "the", "black", "block", "to the top of", "the", "yellow", "block");
     assertTrue(mcr.isDerivable(expected));
     mcr.getTreeForInstruction(expected);
-
-    boolean correct = res.equals(var1) || res.equals(var2);
+    System.out.print(res);
+    boolean correct = res.equals(var1);
     assertTrue(correct, "floor instruction incorrect, was: " + res);
   }
 
@@ -605,9 +556,8 @@ public class InstructionGivingTest {
         new HashSet<>(),
         Orientation.ZPLUS
     );
-    String var1 = "build a floor to the red block from the orange block";
-    String var2 = "build a floor from the orange block to the red block";
-    boolean correct = res.equals(var1) || res.equals(var2);
+    String var1 = "build a floor from the red block to the orange block";
+    boolean correct = res.equals(var1);
     assertTrue(correct, "floor instruction incorrect, was: " + res);
   }
 
@@ -618,9 +568,16 @@ public class InstructionGivingTest {
         new Railing("railing", 0,0,3,0,1),
         new HashSet<>(),
         Orientation.XPLUS);
-    String var1 = "build a railing to the top of the black block from the top of the blue block";
-    String var2 = "build a railing from the top of the blue block to the top of the black block";
-    boolean correct = res.equals(var1) || res.equals(var2);
+    String var1 = "build a railing from the top of the blue block to the top of the black block";
+    boolean correct = res.equals(var1);
+    assertTrue(correct, "railing instruction incorrect, was: " + res);
+    // test for railing along x-axis
+    res = mcr.generateInstruction(world,
+        new Railing("railing", 0,0,3,0,1),
+        new HashSet<>(),
+        Orientation.ZMINUS);
+    var1 = "build a railing from the top of the blue block to the top of the black block";
+    correct = res.equals(var1);
     assertTrue(correct, "railing instruction incorrect, was: " + res);
   }
 
