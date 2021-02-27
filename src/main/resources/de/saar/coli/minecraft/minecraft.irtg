@@ -154,7 +154,7 @@ LocP -> nexttol(DefNP) [-0.9]
 //orientleftright
 //one rule for BigBlock-Block relations, one for Block-BigBlock relations
 
-LocP -> leftorientlr(DefNP) [-0.9]
+LocP -> leftorientlr(DefNP) [-2.9]
   [string] *("to the left of", ?1)
   [ref] project_1(intersect_2(left-of1-BigBlock-Block,intersect(orientleftright, ?1)))
   [sem] firstarg(x1+y1+z1, ?1)
@@ -238,122 +238,122 @@ LocP -> behindorientawayblock(DefNP) [-0.9]
 
 // add "x blocks" - distance relations
 
-LocP -> twotop(DefNP) [-0.9]
+LocP -> twotop(DefNP) [-1.9]
   [string] *("two blocks on top of", ?1)
   [ref] project_1(intersect_2(top-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> twoabove(DefNP) [-0.9]
+LocP -> twoabove(DefNP) [-2.9]
   [string] *("two blocks above", ?1)
   [ref] project_1(intersect_2(top-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> twoleft(DefNP) [-0.9]
+LocP -> twoleft(DefNP) [-1.9]
   [string] *("two blocks left of", ?1)
   [ref] project_1(intersect_2(left-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> tworight(DefNP) [-0.9]
+LocP -> tworight(DefNP) [-1.9]
   [string] *("two blocks right of", ?1)
   [ref] project_2(intersect_1(left-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> twofront(DefNP) [-0.9]
+LocP -> twofront(DefNP) [-1.9]
   [string] *("two blocks in front of", ?1)
   [ref] project_1(intersect_2(in-front-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> twobehind(DefNP) [-0.9]
+LocP -> twobehind(DefNP) [-1.9]
   [string] *("two blocks behind", ?1)
   [ref] project_2(intersect_1(in-front-of2,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> threetop(DefNP) [-0.9]
+LocP -> threetop(DefNP) [-2.9]
   [string] *("three blocks on top of", ?1)
   [ref] project_1(intersect_2(top-of3,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> threeabove(DefNP) [-0.9]
+LocP -> threeabove(DefNP) [-3.9]
   [string] *("three blocks above", ?1)
   [ref] project_1(intersect_2(top-of3,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> threeleft(DefNP) [-0.9]
+LocP -> threeleft(DefNP) [-2.9]
   [string] *("three blocks left of", ?1)
   [ref] project_1(intersect_2(left-of3,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> threeright(DefNP) [-0.9]
+LocP -> threeright(DefNP) [-2.9]
   [string] *("three blocks right of", ?1)
   [ref] project_2(intersect_1(left-of3,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> threefront(DefNP) [-0.9]
+LocP -> threefront(DefNP) [-2.9]
   [string] *("three blocks in front of", ?1)
   [ref] project_1(intersect_2(in-front-of3,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> threebehind(DefNP) [-0.9]
+LocP -> threebehind(DefNP) [-2.9]
   [string] *("three blocks behind", ?1)
   [ref] project_2(intersect_1(in-front-of3,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fourtop(DefNP) [-0.9]
+LocP -> fourtop(DefNP) [-2.9]
   [string] *("four blocks on top of", ?1)
   [ref] project_1(intersect_2(top-of4,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fourabove(DefNP) [-0.9]
+LocP -> fourabove(DefNP) [-3.9]
   [string] *("four blocks above", ?1)
   [ref] project_1(intersect_2(top-of4,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fourleft(DefNP) [-0.9]
+LocP -> fourleft(DefNP) [-2.9]
   [string] *("four blocks left of", ?1)
   [ref] project_1(intersect_2(left-of4,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fourright(DefNP) [-0.9]
+LocP -> fourright(DefNP) [-2.9]
   [string] *("four blocks right of", ?1)
   [ref] project_2(intersect_1(left-of4,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fourfront(DefNP) [-0.9]
+LocP -> fourfront(DefNP) [-2.9]
   [string] *("four blocks in front of", ?1)
   [ref] project_1(intersect_2(in-front-of4,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fourbehind(DefNP) [-0.9]
+LocP -> fourbehind(DefNP) [-2.9]
   [string] *("four blocks behind", ?1)
   [ref] project_2(intersect_1(in-front-of4,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fivetop(DefNP) [-0.9]
+LocP -> fivetop(DefNP) [-2.9]
   [string] *("five blocks on top of", ?1)
   [ref] project_1(intersect_2(top-of5,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fiveabove(DefNP) [-0.9]
+LocP -> fiveabove(DefNP) [-3.9]
   [string] *("five blocks above", ?1)
   [ref] project_1(intersect_2(top-of5,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fiveleft(DefNP) [-0.9]
+LocP -> fiveleft(DefNP) [-2.9]
   [string] *("five blocks left of", ?1)
   [ref] project_1(intersect_2(left-of5,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fiveright(DefNP) [-0.9]
+LocP -> fiveright(DefNP) [-2.9]
   [string] *("five blocks right of", ?1)
   [ref] project_2(intersect_1(left-of5,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fivefront(DefNP) [-0.9]
+LocP -> fivefront(DefNP) [-2.9]
   [string] *("five blocks in front of", ?1)
   [ref] project_1(intersect_2(in-front-of5,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
-LocP -> fivebehind(DefNP) [-0.9]
+LocP -> fivebehind(DefNP) [-2.9]
   [string] *("five blocks behind", ?1)
   [ref] project_2(intersect_1(in-front-of5,?1))
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
@@ -365,29 +365,29 @@ LocP -> fivebehind(DefNP) [-0.9]
 // matter whether we say "between A and B" or "between B and A" therefore we need betweenlr and
 // betweenrl.
 
-LocP -> betweenlr(DefNP, DefNP) [-0.9]
+LocP -> betweenlr(DefNP, DefNP) [-4.7]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(left-of1,?1)),project_1(intersect_2(left-of1,?2)))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
 
-LocP -> betweenfb(DefNP, DefNP) [-0.9]
+LocP -> betweenfb(DefNP, DefNP) [-4.7]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(in-front-of1,?1)),project_1(intersect_2(in-front-of1,?2)))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
 
-LocP -> betweenrl(DefNP, DefNP) [-0.9]
+LocP -> betweenrl(DefNP, DefNP) [4.7]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(left-of1,?2)),project_1(intersect_2(left-of1,?1)))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
 
-LocP -> betweenbf(DefNP, DefNP) [-0.9]
+LocP -> betweenbf(DefNP, DefNP) [4.7]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(in-front-of1,?2)),project_1(intersect_2(in-front-of1,?1)))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
 
 //between for BigBlock-Block relations
 
-LocP -> betweenlrBigBlock(DefNP, DefNP) [-0.9]
+LocP -> betweenlrBigBlock(DefNP, DefNP) [9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(left-of1-BigBlock-Block,?1)),project_1(intersect_2(left-of1-BigBlock-Block,?2)))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
@@ -397,7 +397,7 @@ LocP -> betweenfbBigBlock(DefNP, DefNP) [-0.9]
   [ref] intersect_1(project_2(intersect_1(in-front-of1-BigBlock-Block,?1)),project_1(intersect_2(in-front-of1-BigBlock-Block,?2)))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
 
-LocP -> betweenrlBigBlock(DefNP, DefNP) [-0.9]
+LocP -> betweenrlBigBlock(DefNP, DefNP) [9]
   [string] *("between", *(?1, *("and", ?2)))
   [ref] intersect_1(project_2(intersect_1(left-of1-BigBlock-Block,?2)),project_1(intersect_2(left-of1-BigBlock-Block,?1)))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, firstarg(?1, ?2))
@@ -416,32 +416,43 @@ LocP -> betweenbfBigBlock(DefNP, DefNP) [-0.9]
 
 N -> frontleftcorner(DefNP) [-0.9]
   [string] *("front left corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(from, diff(?1, target))))
+  [ref] intersect(block, project_2(intersect_1(from-diagonal1, intersect(floor, diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
-N -> backtleftcorner(DefNP) [-0.9]
+N -> backleftcorner(DefNP) [-0.9]
   [string] *("back left corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(fromaway, diff(?1, target))))
+  [ref] intersect(block, project_2(intersect_1(to-diagonal2, intersect(floor, diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 N -> frontrightcorner(DefNP) [-0.9]
   [string] *("front right corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(tohere, diff(?1, target))))
+  [ref] intersect(block, project_2(intersect_1(from-diagonal2, intersect(floor, diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 N -> backrightcorner(DefNP) [-0.9]
   [string] *("back right corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(to, diff(?1, target))))
+  [ref] intersect(block, project_2(intersect_1(to-diagonal1, intersect(floor, diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 N -> upperrightcorner(DefNP) [-0.9]
   [string] *("upper right corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(to, intersect(wall, diff(?1, target)))))
+  [ref] intersect(block, project_2(intersect_1(to-diagonal1, intersect(wall, diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+// why do we specify all three coordinates?
 
 N -> upperleftcorner(DefNP) [-0.9]
   [string] *("upper left corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(fromaway, intersect(wall, diff(?1, target)))))
+  [ref] intersect(block, project_2(intersect_1(to-diagonal2, intersect(wall, diff(?1, target)))))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+N -> lowerleftcorner(DefNP) [-0.9]
+  [string] *("lower left corner of", ?1)
+  [ref] intersect(block, project_2(intersect_1(from-diagonal1, intersect(wall, diff(?1, target)))))
+  [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
+
+N -> lowerrightcorner(DefNP) [-0.9]
+  [string] *("lower right corner of", ?1)
+  [ref] intersect(block, project_2(intersect_1(from-diagonal2, intersect(wall, diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 // relations
@@ -457,7 +468,7 @@ Ndiag2 -> fromdiagonal2(N, DefNP) [-0.9]
   [ref] intersect(project_1(intersect_2(from-diagonal2, ?2)), ?1)
   [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
 
-N -> todiagonal1(Ndiag1, DefNP) [-0.9]
+N -> todiagonal1(Ndiag1, DefNP) [-9]
   [string] *(?1, *("to", ?2))
   [ref] intersect(project_1(intersect_2(to-diagonal1,?2)), ?1)
   [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
@@ -482,22 +493,22 @@ Ndiag2top -> fromtopofdiagonal2(N, DefNP) [-9]
   [ref] intersect(project_1(intersect_2(topof-diagonal2, ?2)), ?1)
   [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
 
-N -> tobottomdiagonal2(Ndiag2top, DefNP) [-0.9]
+N -> tobottomdiagonal2(Ndiag2top, DefNP) [-9]
   [string] *(?1, *("to", ?2))
   [ref] intersect(project_1(intersect_2(from-diagonal2,?2)), ?1)
   [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
 
-Ndiag1top -> fromtopofdiagonal1(N, DefNP) [-0.9]
+Ndiag1top -> fromtopofdiagonal1(N, DefNP) [-9]
   [string] *(?1, *("from the top of", ?2))
   [ref] intersect(project_1(intersect_2(topof-diagonal1, ?2)), ?1)
   [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
 
-N -> tobottomdiagonal1(Ndiag1top, DefNP) [-0.9]
+N -> tobottomdiagonal1(Ndiag1top, DefNP) [-9]
   [string] *(?1, *("to", ?2))
   [ref] intersect(project_1(intersect_2(from-diagonal1,?2)), ?1)
   [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
 
-N -> totopofdiagonal1(Ndiag1, DefNP) [-3]
+N -> totopofdiagonal1(Ndiag1, DefNP) [-9]
    [string] *(?1, *("to the top of", ?2))
    [ref] intersect(project_1(intersect_2(topof-diagonal1,?2)), ?1)
    [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
@@ -528,7 +539,7 @@ N -> tohorizontallr(Ndiag2, DefNP) [-0.9]
   [ref] intersect(project_1(intersect_2(from-diagonal1,?2)), ?1)
   [sem] firstarg(eunion(?1, x2+y1+z2), ?2)
 
-// rules to describe floor on top of blocks
+// rules to describe floor on top of blocks and to describe railing
 Ndiag1 -> topfromdiagonal1(N, DefNP) [-0.9]
   [string] *(?1, *("from the top of", ?2))
   [ref] intersect(project_1(intersect_2(topof-from-diagonal1, ?2)), ?1)
@@ -571,7 +582,7 @@ N -> height2(N) [-0.9]
   [ref] intersect(height2, ?1)
   [sem] eunion(height, ?1)
 
-N -> high2(N) [-1.9]
+N -> high2(N) [-0.9]
   [string] *(?1, "which is two blocks high")
   [ref] intersect(height2, ?1)
   [sem] eunion(height, ?1)
@@ -637,7 +648,7 @@ N -> orientaway(N) [-0.9]
   [ref] intersect(orientaway, ?1)
   [sem] eunion(orientation, ?1)
 
-N -> fromlefttoright(N) [-0.9]
+N -> fromlefttoright(N) [-1.9]
   [string] *(?1, "from left to right")
   [ref] intersect(orientleftright, ?1)
   [sem] eunion(orientation, ?1)
