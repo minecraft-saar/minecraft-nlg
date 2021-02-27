@@ -462,12 +462,22 @@ N -> todiagonal1(Ndiag1, DefNP) [-0.9]
   [ref] intersect(project_1(intersect_2(to-diagonal1,?2)), ?1)
   [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
 
-N -> todiagonal2(Ndiag2, DefNP) [-0.9]
+N -> onlytodiagonal1(N, DefNP) [-9]
+  [string] *(?1, *("to", ?2))
+  [ref] intersect(project_1(intersect_2(to-diagonal1,?2)), intersect(row, ?1))
+  [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
+N -> todiagonal2(Ndiag2, DefNP) [-9]
   [string] *(?1, *("to", ?2))
   [ref] intersect(project_1(intersect_2(to-diagonal2,?2)), ?1)
   [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
 
-Ndiag2top -> fromtopofdiagonal2(N, DefNP) [-0.9]
+N -> onlytodiagonal2(N, DefNP) [-9]
+  [string] *(?1, *("to", ?2))
+  [ref] intersect(project_1(intersect_2(to-diagonal2,?2)), intersect(row, ?1))
+  [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
+Ndiag2top -> fromtopofdiagonal2(N, DefNP) [-9]
   [string] *(?1, *("from the top of", ?2))
   [ref] intersect(project_1(intersect_2(topof-diagonal2, ?2)), ?1)
   [sem] firstarg(eunion(?1, x1+y1+z1), ?2)
@@ -492,9 +502,19 @@ N -> totopofdiagonal1(Ndiag1, DefNP) [-3]
    [ref] intersect(project_1(intersect_2(topof-diagonal1,?2)), ?1)
    [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
 
-N -> totopofdiagonal2(Ndiag2, DefNP) [-3]
+N -> onlytotopofdiagonal1(N, DefNP) [-9]
+   [string] *(?1, *("to the top of", ?2))
+   [ref] intersect(project_1(intersect_2(topof-diagonal1,?2)), intersect(row, ?1))
+   [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
+N -> totopofdiagonal2(Ndiag2, DefNP) [-9]
    [string] *(?1, *("to the top of", ?2))
    [ref] intersect(project_1(intersect_2(topof-diagonal2,?2)), ?1)
+   [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
+
+N -> onlytotopofdiagonal2(N, DefNP) [-9]
+   [string] *(?1, *("to the top of", ?2))
+   [ref] intersect(project_1(intersect_2(topof-diagonal2,?2)), intersect(row, ?1))
    [sem] firstarg(eunion(?1, x2+y2+z2), ?2)
 
 // rules to describe a wall not by diagonal, but by horizontal line plus length
