@@ -360,6 +360,19 @@ public class MinecraftRealizer {
     return irtg.getAutomaton().getWeight(tree, LogDoubleArithmeticSemiring.INSTANCE);
   }
 
+  /**
+   * computes an instruction for building {@code mco} in {@code world} and returns
+   * the predicted cost in terms of negative rule weights for the instruction tree.
+   * @param world set of objects already in the world (includes blocks of HLOs)
+   * @param mco the MineCraft Object to be built
+   * @param it all objects that can be referred to as "it" (e.g. "the previous wall")
+   * @return predicted cost in seconds to completion of the instruction
+   */
+  public double estimateCostForPlanningSystem(Set <MinecraftObject>world, MinecraftObject mco,
+      Set<MinecraftObject> it) {
+    return - getWeightForTree(generateReferringExpressionTree(world, mco, it, Orientation.ZMINUS));
+  }
+
   /*
   ===================================
   BEGIN DEBUG AND TEST HELPER METHODS
