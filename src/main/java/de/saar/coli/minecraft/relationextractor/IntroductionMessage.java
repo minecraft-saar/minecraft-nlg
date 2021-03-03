@@ -1,4 +1,4 @@
-package de.saar.minecraft.simplearchitect;
+package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.relationextractor.Block;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
