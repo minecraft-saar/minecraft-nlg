@@ -357,6 +357,9 @@ public class MinecraftRealizer {
    * Returns the weight (i.e. expected completion duration) of a derivation tree.
    */
   public double getWeightForTree(Tree<String> tree) {
+    if (tree == null) {
+      return Double.NaN;
+    }
     return irtg.getAutomaton().getWeight(tree, LogDoubleArithmeticSemiring.INSTANCE);
   }
 
