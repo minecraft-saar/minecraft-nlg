@@ -337,18 +337,43 @@ public class MinecraftRealizer {
 
     Iterator<Tree<String>> langIt;
 
+    /*
+      We use a depth limiting automaton to not have cycles.  Initially we
+       use a depth of 8, which is enough for most derivations.
+       Sometimes the only existing trees have a depth of more than 8.
+       We therefore increase the depth by two until we find a tree.
+       A depth of 20 is already very deep so after that we give up.
+
+       We initially use a smaller depth because the search space grows
+       with depth and therefore the time it takes to decode.
+
+       We might sometimes not get the optimal tree (e.g. optim has
+       depth 9 but there exists a tree with depth 8) but that should
+       be pretty rare.
+    */
+    
+    Tree<String> result = null;
     if (semO != null) {
       var ta = automaton.intersect(refO).intersect(semO);
-      var dlta = new DepthLimitingTreeAutomaton<>(ta, 8);
-      langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
+      for (int maxdepth = 8; maxdepth < 20; maxdepth +=2) {
+        System.out.println(maxdepth);
+        var dlta = new DepthLimitingTreeAutomaton<>(ta, maxdepth);
+        langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
+        if (langIt.hasNext()) {
+          return langIt.next();
+        }
+      }
     } else {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);
-      var dlta = new DepthLimitingTreeAutomaton<>(ta, 8);
-      langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
-    }
-    if (langIt.hasNext()) {
-      return langIt.next();
+      for (int maxdepth = 6; maxdepth < 20; maxdepth +=2) {
+        System.out.println(maxdepth);
+        var dlta = new DepthLimitingTreeAutomaton<>(ta, maxdepth);
+        langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
+        if (langIt.hasNext()) {
+          return langIt.next();
+        }
+      }
     }
     return null;
   }
