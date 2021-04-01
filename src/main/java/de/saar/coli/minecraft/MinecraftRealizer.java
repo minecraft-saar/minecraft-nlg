@@ -356,7 +356,6 @@ public class MinecraftRealizer {
     if (semO != null) {
       var ta = automaton.intersect(refO).intersect(semO);
       for (int maxdepth = 8; maxdepth < 20; maxdepth +=2) {
-        System.out.println(maxdepth);
         var dlta = new DepthLimitingTreeAutomaton<>(ta, maxdepth);
         langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
         if (langIt.hasNext()) {
@@ -367,7 +366,6 @@ public class MinecraftRealizer {
       TreeAutomaton<Pair<String, Set<List<String>>>> ta =
           automaton.intersect(refO);
       for (int maxdepth = 6; maxdepth < 20; maxdepth +=2) {
-        System.out.println(maxdepth);
         var dlta = new DepthLimitingTreeAutomaton<>(ta, maxdepth);
         langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
         if (langIt.hasNext()) {
