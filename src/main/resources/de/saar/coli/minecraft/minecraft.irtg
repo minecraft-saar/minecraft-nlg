@@ -436,23 +436,23 @@ N -> backrightcorner(DefNP) [-0.9]
 
 N -> upperrightcorner(DefNP) [-0.9]
   [string] *("upper right corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(to-diagonal1, intersect(wall, diff(?1, target)))))
+  [ref] intersect(block, project_2(intersect_1(to-diagonal1, intersect(intersect(wall, orientleftright), diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 // why do we specify all three coordinates?
 
 N -> upperleftcorner(DefNP) [-0.9]
   [string] *("upper left corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(to-diagonal2, intersect(wall, diff(?1, target)))))
+  [ref] intersect(block, project_2(intersect_1(to-diagonal2, intersect(intersect(wall, orientleftright), diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 N -> lowerleftcorner(DefNP) [-0.9]
   [string] *("lower left corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(from-diagonal1, intersect(wall, diff(?1, target)))))
+  [ref] intersect(block, project_2(intersect_1(from-diagonal1, intersect(intersect(wall, orientleftright), diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 N -> lowerrightcorner(DefNP) [-0.9]
   [string] *("lower right corner of", ?1)
-  [ref] intersect(block, project_2(intersect_1(from-diagonal2, intersect(wall, diff(?1, target)))))
+  [ref] intersect(block, project_2(intersect_1(from-diagonal2, intersect(intersect(wall, orientleftright), diff(?1, target)))))
   [sem] firstarg(x1+y1+z1+x2+y2+z2, ?1)
 
 // relations
