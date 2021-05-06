@@ -150,9 +150,16 @@ LocP -> nexttol(DefNP) [-0.9]
   [sem] firstarg(x1+y1+z1+x2+z2, ?1)
 
 // locations for BigBlock - Block relations
+// for relations between Block and BigBlock objects we need to distinguish between the orientations
+// the BigBlock Object can have. This is because saying "build a block to the left of the row" is
+// fine if the row is oriented from left to right, but not if it is oriented away. Names of the rules
+// therefore incorporate the orientation.
+// To accurately check for the orientation in the [ref] interpretation of the rule we need to know
+// whether ?1 or the target is the BigBlock Object (depending on this we need to intersect with the
+// orientation-relation at different points). Names of the rules therefore contain 'block' if
+// we insert a Block Object for ?1
 
 //orientleftright
-//one rule for BigBlock-Block relations, one for Block-BigBlock relations
 
 LocP -> leftorientlr(DefNP) [-2.9]
   [string] *("to the left of", ?1)
