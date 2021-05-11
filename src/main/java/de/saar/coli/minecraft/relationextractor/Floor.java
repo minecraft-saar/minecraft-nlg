@@ -86,7 +86,7 @@ public class Floor extends BigBlock {
           && coord.getMinZ() != coord.getMaxZ()) {
         result.add(new Relation("topof-to-diagonal2", this, other));
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMinZ()
+      if (oc.x1 == coord.getMinX() && oc.y1 +1== coord.getMinY() && oc.z1 == coord.getMinZ()
           && coord.getMaxZ() != coord.getMinZ()) {
         result.add(new Relation("topof-from-diagonal2",
             this, other));
