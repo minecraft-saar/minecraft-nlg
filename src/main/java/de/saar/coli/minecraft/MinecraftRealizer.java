@@ -17,7 +17,6 @@ import de.up.ling.irtg.automata.DepthLimitingTreeAutomaton;
 import de.up.ling.irtg.automata.Intersectable;
 import de.up.ling.irtg.automata.TreeAutomaton;
 import de.up.ling.irtg.codec.IrtgInputCodec;
-import de.up.ling.irtg.semiring.AdditiveViterbiSemiring;
 import de.up.ling.irtg.semiring.LogDoubleArithmeticSemiring;
 import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.Tree;
@@ -199,12 +198,16 @@ public class MinecraftRealizer {
   }
 
   public void randomizeExpectedDurations() {
+    randomizeExpectedDurations(10);
+  }
+
+  public void randomizeExpectedDurations(int span) {
     var auto = irtg.getAutomaton();
     var symbols = auto.getSignature().resolveSymbolIDs(auto.getAllLabels());
     var rand = new Random();
     Map<String, Double> durations = new HashMap<>();
     for (String symbol: symbols) {
-      durations.put(symbol,  rand.nextDouble() * 10 + 1);
+      durations.put(symbol,  rand.nextDouble() * span + 1);
     }
     setExpectedDurations(durations, true);
   }
