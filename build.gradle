@@ -29,6 +29,11 @@ repositories {
     mavenLocal()
     mavenCentral()
     maven { url 'https://jitpack.io' }
+    // We need this repository because alto uses a MacOS window menu
+    // library that seems to be not packaged but is a transitive dependency
+    // of alto.
+    maven { url "http://akci.coli.uni-saarland.de/artifactory/external"
+            allowInsecureProtocol = true }
 }
 
 dependencies {
