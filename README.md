@@ -1,6 +1,13 @@
 A NLG component for the Minecraft domain
 ========================================
 
+This repository contains a sentence generator (and a grammar).  Based
+on a 3d representation of a world and a target object to describe, the
+system 1) translates the representation to a relation-based one and 2)
+computes the optimal referring expression for the target object in the
+world, based on (learned or otherwise generated) grammar weights.
+
+
 Compilation: run `./gradlew shadowJar`
 
 Running: 
