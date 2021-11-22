@@ -16,12 +16,11 @@ import picocli.CommandLine.Parameters;
 @Command(name = "mcrealizer", mixinStandardHelpOptions = true, version = "Minecraft realizer 0.1")
 public class Main implements Runnable {
 
-  @Option(names = {"-c",
-      "--continuous"}, description = "Read goal from stdin, return to stdout, don't exit")
+  @Option(names = {"-c", "--continuous"}, description = "Read goal from stdin, return to stdout, don't exit")
   private boolean continuous = false;
 
-  @Option(names = {"-t", "--tirtg"}, required = true, description = "Path to the tirtg to use")
-  private File tirtgFile;
+  @Option(names = {"-i", "--irtg", "-t", "--tirtg"}, required = true, description = "Path to the IRTG to use")
+  private File irtgFile;
 
   @Option(names = {"-m", "--model"}, required = true, description = "Path to the model to use")
   private File modelFile;
@@ -37,7 +36,7 @@ public class Main implements Runnable {
   public void run() {
     try {
 
-      mcr = MinecraftRealizer.createRealizer(tirtgFile, modelFile);
+      mcr = MinecraftRealizer.createRealizer(irtgFile, modelFile);
       if (continuous) {
         BufferedReader is = new BufferedReader(new InputStreamReader(System.in));
         String input = is.readLine();

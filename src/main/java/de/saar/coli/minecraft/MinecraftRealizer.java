@@ -67,8 +67,8 @@ public class MinecraftRealizer {
    * This essentially handles reading the model and grammar for you.
    * @throws Exception if something goes wrong
    */
-  public static MinecraftRealizer createRealizer(File tirtgFile, File modelFile) throws Exception {
-    MinecraftRealizer mcr = createRealizer(tirtgFile);
+  public static MinecraftRealizer createRealizer(File irtgFile, File modelFile) throws Exception {
+    MinecraftRealizer mcr = createRealizer(irtgFile);
     try (
         FileInputStream modelin = new FileInputStream(modelFile);
     ) {
@@ -84,11 +84,11 @@ public class MinecraftRealizer {
    * This essentially handles reading the model and grammar for you.
    * @throws Exception if something goes wrong
    */
-  public static MinecraftRealizer createRealizer(File tirtgFile) throws Exception {
+  public static MinecraftRealizer createRealizer(File irtgFile) throws Exception {
     try (
-        FileInputStream tirtgin = new FileInputStream(tirtgFile);
+        FileInputStream irtgin = new FileInputStream(irtgFile);
     ) {
-      InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(tirtgin);
+      InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(irtgin);
       return new MinecraftRealizer(irtg);
     }
   }
