@@ -8,7 +8,7 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Sets;
 
-public class Railing extends MinecraftObject {
+public class Stairs extends MinecraftObject {
   public Row row;
   public Wall lowerWall;
   public Wall higherWall;
@@ -95,10 +95,11 @@ public class Railing extends MinecraftObject {
   public Set<EnumSet<Features>> getFeatures() {
     return features;
   }
-/*
+
   @Override
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other, Orientation orientation) {
     MutableSet<Relation> result = Sets.mutable.empty();
+    /*
     var coord = new BigBlock.CoordinatesTuple(block1.xpos, block1.ypos, block1.zpos,
         block2.xpos, block2.ypos+1, block2.zpos, orientation);
     if (other instanceof Block) {
@@ -114,9 +115,9 @@ public class Railing extends MinecraftObject {
         result.add(new Relation("topof-to-diagonal1",
             this, other));
       }
-    }
+    }*/
     return result;
-  } */
+  }
 
 
   public int height() {
