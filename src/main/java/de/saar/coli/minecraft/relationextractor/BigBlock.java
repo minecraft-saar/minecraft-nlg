@@ -4,6 +4,8 @@ import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Sets;
@@ -331,5 +333,18 @@ public class BigBlock extends MinecraftObject {
   @Override
   public String toString() {
     return name + x1 + '-' + y1 + '-' + z1 + '-' + x2+ '-' + y2+ '-' + z2;
+  }
+
+  private static final Pattern PARSING_PATTERN = Pattern.compile("(.*?)(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+)");
+
+  protected static BigBlock parseObject(String objectDescription) {
+    Matcher m = PARSING_PATTERN.matcher(objectDescription);
+    if( m.matches() ) {
+      return new BigBlock(m.group(1), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)),
+          Integer.parseInt(m.group(4)), Integer.parseInt(m.group(5)), Integer.parseInt(m.group(6)),
+          Integer.parseInt(m.group(7)));
+    } else {
+      return null;
+    }
   }
 }

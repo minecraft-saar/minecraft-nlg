@@ -78,6 +78,21 @@ public class MinecraftRealizer {
     }
   }
 
+  /**
+   * Builds a realizer from a given model and grammar,
+   * which are being read from input streams.
+   *
+   * @param irtgInputStream
+   * @param modelReader
+   * @return
+   * @throws Exception
+   */
+  public static MinecraftRealizer createRealizer(InputStream irtgInputStream, Reader modelReader) throws Exception {
+    MinecraftRealizer mcr = createRealizer(irtgInputStream);
+    FirstOrderModel mcModel = FirstOrderModel.read(modelReader);
+    mcr.setModel(mcModel);
+    return mcr;
+  }
 
   /**
    * Builds a realizer from given model and grammar files.
@@ -88,8 +103,9 @@ public class MinecraftRealizer {
     try (
         FileInputStream irtgin = new FileInputStream(irtgFile);
     ) {
-      InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(irtgin);
-      return new MinecraftRealizer(irtg);
+      return createRealizer(irtgin);
+//      InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(irtgin);
+//      return new MinecraftRealizer(irtg);
     }
   }
 
@@ -389,6 +405,9 @@ public class MinecraftRealizer {
     return irtg.getAutomaton().getWeight(tree, LogDoubleArithmeticSemiring.INSTANCE);
   }
 
+  private static int NEXT_ID = 1;
+  private static final boolean LOG_REALIZER_IN_FILE = false;
+
   /**
    * computes an instruction for building {@code mco} in {@code world} and returns
    * the predicted cost in terms of negative rule weights for the instruction tree.
@@ -397,9 +416,44 @@ public class MinecraftRealizer {
    * @param it all objects that can be referred to as "it" (e.g. "the previous wall")
    * @return predicted cost in seconds to completion of the instruction
    */
-  public double estimateCostForPlanningSystem(Set <MinecraftObject>world, MinecraftObject mco,
-      Set<MinecraftObject> it) {
-    return - getWeightForTree(generateReferringExpressionTree(world, mco, it, Orientation.ZMINUS));
+  public double estimateCostForPlanningSystem(Set <MinecraftObject>world, MinecraftObject mco, Set<MinecraftObject> it) {
+    java.io.PrintWriter f = null;
+    double ret = Double.MAX_VALUE;
+
+    try {
+      if (LOG_REALIZER_IN_FILE) {
+        String filename = "nlg-input-" + (NEXT_ID++) + ".txt";
+        f = new java.io.PrintWriter(new java.io.FileWriter(filename));
+        System.err.printf("%s -> %s\n", mco, filename);
+        f.printf("realize: %s\n", mco);
+        f.printf("it: %s\n", it);
+      }
+
+      Tree<String> derivationTree = generateReferringExpressionTree(world, mco, it, Orientation.ZMINUS);
+
+      if (derivationTree == null) {
+        if (LOG_REALIZER_IN_FILE) {
+          f.println(" -> null\n[null]\n");
+        }
+      } else {
+        ret = -getWeightForTree(derivationTree);
+        String s = treeToReferringExpression(derivationTree);
+        if (LOG_REALIZER_IN_FILE) {
+          f.printf(" -> %s\n", derivationTree);
+          f.printf("%s\n\n", s);
+        }
+      }
+    } catch(java.io.IOException e) {
+    } finally {
+      if( LOG_REALIZER_IN_FILE ) {
+        f.println(world);
+        f.println(refA.getModel());
+        f.flush();
+        f.close();
+      }
+
+      return ret;
+    }
   }
 
   /*

@@ -1,6 +1,7 @@
 package de.saar.coli.minecraft.relationextractor;
 
 import com.google.gson.Gson;
+import de.saar.coli.minecraft.MinecraftRealizer;
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import java.util.EnumSet;
 import java.util.HashSet;
@@ -142,5 +143,20 @@ public abstract class MinecraftObject {
         .getAsJsonObject();
     json.addProperty("type", this.getClass().getSimpleName());
     return json.toString();
+  }
+
+  /**
+   * Parses a string representation of the MinecraftObject (as produced
+   * by toString) into the MinecraftObject itself.
+   *
+   * @param objectDescription
+   * @return
+   */
+  public static MinecraftObject fromString(String objectDescription) {
+    if( objectDescription.startsWith("row")) {
+      return Row.parseObject(objectDescription);
+    } else {
+      throw new UnsupportedOperationException("Cannot resolve " + objectDescription + " to a MinecraftObject.");
+    }
   }
 }
