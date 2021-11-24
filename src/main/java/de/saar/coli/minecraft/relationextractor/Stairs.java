@@ -42,6 +42,7 @@ public class Stairs extends MinecraftObject {
     } else {
       throw new RuntimeException("Stairs does neither extend over the x nor the z axis!");
     }
+    blocks = new HashSet<>();
     blocks.addAll(row.getBlocks());
     blocks.addAll(lowerWall.getBlocks());
     blocks.addAll(higherWall.getBlocks());
@@ -76,7 +77,7 @@ public class Stairs extends MinecraftObject {
           //Features.X3,
           //Features.Y3,
           //Fetures.Z3
-      ),
+      )/*,
       EnumSet.of(Features.TYPE,
           Features.X1,
           Features.Y1,
@@ -86,7 +87,7 @@ public class Stairs extends MinecraftObject {
           //Features.X3,
           //Features.HEIGHT,
           //Fetures.Z3
-      )
+      )*/
   );
 
   /**
