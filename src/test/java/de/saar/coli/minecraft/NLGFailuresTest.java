@@ -1,6 +1,7 @@
 package de.saar.coli.minecraft;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import de.saar.coli.minecraft.relationextractor.Block;
@@ -16,11 +17,15 @@ import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
 import de.up.ling.irtg.algebra.SubsetAlgebra;
+import de.up.ling.irtg.codec.IrtgInputCodec;
 import de.up.ling.irtg.semiring.LogDoubleArithmeticSemiring;
+import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.ParseException;
 import de.up.ling.tree.Tree;
 import de.up.ling.tree.TreeParser;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.StringReader;
 import java.lang.reflect.Field;
 import java.util.BitSet;
 import java.util.HashSet;
@@ -40,10 +45,41 @@ public class NLGFailuresTest {
   }
 
   @BeforeEach
-  public void setup() {
-    mcr = MinecraftRealizer.createRealizer();
+  public void setup() throws IOException {
+    InterpretedTreeAutomaton irtg = new IrtgInputCodec().read(getClass().getResourceAsStream("/de/saar/coli/minecraft/minecraft.irtg"));
+    mcr = new MinecraftRealizer(irtg);
   }
 
+  // this has never failed, just to check that the test setup is correct
+  @Test
+  public void testRow() throws Exception {
+    testRealizer("row6-66-6-8-66-6", "a row to the right of length three to the blue block",
+        "{\"in-front-of8\":[[\"UniqueBlock-black_wool66614\",\"UniqueBlock-blue_wool6666\"]],\"yellow_wool\":[[\"UniqueBlock-yellow_wool8668\"]],\"in-front-of4\":[[\"UniqueBlock-red_wool86612\",\"UniqueBlock-yellow_wool8668\"]],\"in-front-of8-BigBlock-Block\":[[\"UniqueBlock-black_wool66614\",\"row6-66-6-8-66-6\"]],\"blue_wool\":[[\"UniqueBlock-blue_wool6666\"]],\"target\":[[\"row6-66-6-8-66-6\"]],\"red_wool\":[[\"UniqueBlock-red_wool86612\"]],\"orientleftright\":[[\"row6-66-6-8-66-6\"]],\"length3\":[[\"row6-66-6-8-66-6\"]],\"black_wool\":[[\"UniqueBlock-black_wool66614\"]],\"from-diagonal1\":[[\"row6-66-6-8-66-6\",\"UniqueBlock-blue_wool6666\"]],\"block\":[[\"UniqueBlock-red_wool86612\"],[\"UniqueBlock-black_wool66614\"],[\"UniqueBlock-yellow_wool8668\"],[\"UniqueBlock-blue_wool6666\"]],\"row\":[[\"row6-66-6-8-66-6\"]],\"to-diagonal2\":[[\"row6-66-6-8-66-6\",\"UniqueBlock-blue_wool6666\"]]}"
+        );
+  }
+
+//  @Test
+  public void testStairs() throws Exception {
+    testRealizer("Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8", "(don't know yet)",
+        "{\"red_wool\":[[\"UniqueBlock-red_wool86612\"]],\"in-front-of8\":[[\"UniqueBlock-black_wool66614\",\"UniqueBlock-blue_wool6666\"]],\"black_wool\":[[\"UniqueBlock-black_wool66614\"]],\"height3\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"yellow_wool\":[[\"UniqueBlock-yellow_wool8668\"]],\"in-front-of4\":[[\"UniqueBlock-red_wool86612\",\"UniqueBlock-yellow_wool8668\"]],\"stairs\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"block\":[[\"UniqueBlock-red_wool86612\"],[\"UniqueBlock-black_wool66614\"],[\"UniqueBlock-yellow_wool8668\"],[\"UniqueBlock-blue_wool6666\"]],\"blue_wool\":[[\"UniqueBlock-blue_wool6666\"]],\"target\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]]}\n"
+    );
+  }
+
+  private void testRealizer(String targetObject, String intendedString, String modelJson)
+      throws Exception {
+    MinecraftObject o = MinecraftObject.fromString(targetObject);
+    FirstOrderModel mcModel = FirstOrderModel.read(new StringReader(modelJson));
+    mcr.setModel(mcModel);
+
+    Tree<String> bestTree = mcr.generateStatementTree(targetObject, o.getFeaturesStrings());
+    assertNotNull(bestTree, "No derivation tree found.");
+
+    String s = mcr.treeToReferringExpression(bestTree);
+    assertEquals(intendedString, s);
+  }
+
+  /*
+  * commenting out, this test cannot fail anyway - AK
   @Test
   public void testBlockInstructionBridge(){
     var blueblock = new UniqueBlock("blue_wool", 6,66,6);
@@ -70,5 +106,7 @@ public class NLGFailuresTest {
         Orientation.ZMINUS);
     System.out.println(res);
   }
+
+   */
 
 }

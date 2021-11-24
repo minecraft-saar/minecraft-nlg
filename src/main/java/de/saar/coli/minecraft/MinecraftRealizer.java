@@ -169,7 +169,7 @@ public class MinecraftRealizer {
     }
   }
 
-  private void setModel(FirstOrderModel model) {
+  public void setModel(FirstOrderModel model) {
     refA.setModel(model);
   }
   

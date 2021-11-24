@@ -19,6 +19,14 @@ import picocli.CommandLine;
 import picocli.CommandLine.Command;
 import picocli.CommandLine.Option;
 
+/**
+ * Realizes the inputs from the given logfile as a derivation tree and a string.
+ * This can be useful for debugging and grammar development purposes.<p>
+ * 
+ * The logfiles will be produced by {@link MinecraftRealizer#estimateCostForPlanningSystem(Set, MinecraftObject, Set)},
+ * which is called by the planner, if you set the variable LOG_REALIZER_IN_FILE to true in that class.
+ *
+ */
 @Command(name = "logrealizer", mixinStandardHelpOptions = true)
 public class RealizeFromLogfile implements Runnable {
   @Option(names = {"-i", "--irtg"}, required = true, description = "Path to the IRTG to use")
