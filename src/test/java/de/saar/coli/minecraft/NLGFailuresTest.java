@@ -55,21 +55,16 @@ public class NLGFailuresTest {
   // this has never failed, just to check that the test setup is correct
   @Test
   public void testRow() throws Exception {
-    testRealizer("row6-66-6-8-66-6", "a row to the right of length three to the blue block",
-        "{\"in-front-of8\":[[\"UniqueBlock-black_wool66614\",\"UniqueBlock-blue_wool6666\"]],\"yellow_wool\":[[\"UniqueBlock-yellow_wool8668\"]],\"in-front-of4\":[[\"UniqueBlock-red_wool86612\",\"UniqueBlock-yellow_wool8668\"]],\"in-front-of8-BigBlock-Block\":[[\"UniqueBlock-black_wool66614\",\"row6-66-6-8-66-6\"]],\"blue_wool\":[[\"UniqueBlock-blue_wool6666\"]],\"target\":[[\"row6-66-6-8-66-6\"]],\"red_wool\":[[\"UniqueBlock-red_wool86612\"]],\"orientleftright\":[[\"row6-66-6-8-66-6\"]],\"length3\":[[\"row6-66-6-8-66-6\"]],\"black_wool\":[[\"UniqueBlock-black_wool66614\"]],\"from-diagonal1\":[[\"row6-66-6-8-66-6\",\"UniqueBlock-blue_wool6666\"]],\"block\":[[\"UniqueBlock-red_wool86612\"],[\"UniqueBlock-black_wool66614\"],[\"UniqueBlock-yellow_wool8668\"],[\"UniqueBlock-blue_wool6666\"]],\"row\":[[\"row6-66-6-8-66-6\"]],\"to-diagonal2\":[[\"row6-66-6-8-66-6\",\"UniqueBlock-blue_wool6666\"]]}"
-        );
+    testRealizerWithRelationGenerator("row6-66-6-8-66-6",
+        "a row to the right of length three to the blue block",
+        FANCY_BRIDGE_WORLD);
   }
 
   @Test
   public void testStairs() throws Exception {
-//    testRealizer("Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8", "(don't know yet)",
-//        "{\"red_wool\":[[\"UniqueBlock-red_wool86612\"]],\"in-front-of8\":[[\"UniqueBlock-black_wool66614\",\"UniqueBlock-blue_wool6666\"]],\"black_wool\":[[\"UniqueBlock-black_wool66614\"]],\"height3\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"yellow_wool\":[[\"UniqueBlock-yellow_wool8668\"]],\"in-front-of4\":[[\"UniqueBlock-red_wool86612\",\"UniqueBlock-yellow_wool8668\"]],\"stairs\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"block\":[[\"UniqueBlock-red_wool86612\"],[\"UniqueBlock-black_wool66614\"],[\"UniqueBlock-yellow_wool8668\"],[\"UniqueBlock-blue_wool6666\"]],\"blue_wool\":[[\"UniqueBlock-blue_wool6666\"]],\"target\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]]}\n"
-//    );
-
     testRealizerWithRelationGenerator("Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8",
         "a staircase from the blue block to the yellow block of height three",
         FANCY_BRIDGE_WORLD);
-
   }
 
   @Test
@@ -90,21 +85,7 @@ public class NLGFailuresTest {
     assertEquals(intendedString, s);
   }
 
-  private void testRealizer(String targetObject, String intendedString, String modelJson)
-      throws Exception {
-    MinecraftObject o = MinecraftObject.fromString(targetObject);
-    FirstOrderModel mcModel = FirstOrderModel.read(new StringReader(modelJson));
-    mcr.setModel(mcModel);
-
-//    System.err.printf("model: %s\n", mcModel);
-
-    Tree<String> bestTree = mcr.generateStatementTree(targetObject, o.getFeaturesStrings());
-    assertNotNull(bestTree, "No derivation tree found.");
-
-    String s = mcr.treeToReferringExpression(bestTree);
-    assertEquals(intendedString, s);
-  }
-
+  // shared-resources/.../worlds/fancy-bridge.csv
   private static final String FANCY_BRIDGE_WORLD = ""
       + "6,66,6,BLUE_WOOL\n"
       + "8,66,8,YELLOW_WOOL\n"

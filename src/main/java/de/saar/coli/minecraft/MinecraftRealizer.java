@@ -516,6 +516,18 @@ public class MinecraftRealizer {
     return ta.languageIterable().iterator().hasNext();
   }
 
+  /**
+   * Reads a world in CSV format and converts it into MinecraftObjects.
+   *
+   * Each of these objects is a UniqueBlock of the material that is specified in the
+   * fourth column.
+   *
+   * The method is suitable for the CSV format used in shared-resources/.../*.csv.
+   *
+   * @param reader
+   * @return
+   * @throws IOException
+   */
   public Set<MinecraftObject> readWorld(Reader reader) throws IOException {
     BufferedReader bufferedReader = new BufferedReader(reader);
     String line = null;
