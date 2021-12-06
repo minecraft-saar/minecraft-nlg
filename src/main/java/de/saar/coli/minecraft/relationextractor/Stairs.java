@@ -149,6 +149,9 @@ public class Stairs extends MinecraftObject {
         // or by saying "from .. to the top of the xy block" (cf. BigBlock#generateRelationsTo).
         Block.CoordinatesTuple oneAboveBlock = new Block.CoordinatesTuple(blockCoordsUnrotated.x1, blockCoordsUnrotated.y1+1, blockCoordsUnrotated.z1, orientation);
 
+        // TODO This is probably incorrect; for the stairs, it matters which corner is "from" and which is "to"
+        // (because "from" should be the lower end), and so we need to double-check the grammar to make
+        // sure that topof-diagonal is used correctly.
         if( oneAboveBlock.matchesLeftCoordinates(diagonal) ) {
           result.add(new Relation("topof-diagonal" + ix, this, other));
         } else if( oneAboveBlock.matchesRightCoordinates(diagonal)) {
