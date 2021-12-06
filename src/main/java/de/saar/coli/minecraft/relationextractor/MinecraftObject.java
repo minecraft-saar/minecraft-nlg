@@ -155,6 +155,10 @@ public abstract class MinecraftObject {
   public static MinecraftObject fromString(String objectDescription) {
     if( objectDescription.startsWith("row")) {
       return Row.parseObject(objectDescription);
+    } else if( objectDescription.startsWith("wall")) {
+      return Wall.parseObject(objectDescription);
+    } else if( objectDescription.startsWith("Stairs")) {
+      return Stairs.parseObject(objectDescription);
     } else {
       throw new UnsupportedOperationException("Cannot resolve " + objectDescription + " to a MinecraftObject.");
     }

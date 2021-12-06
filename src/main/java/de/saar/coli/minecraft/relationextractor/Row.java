@@ -32,7 +32,7 @@ public class Row extends BigBlock {
           Features.ORIENTATION)
   );
 
-  protected static Row parseObject(String objectDescription) {
+  public static Row parseObject(String objectDescription) {
     BigBlock bb = BigBlock.parseObject(objectDescription);
     return new Row(bb.name, bb.x1, bb.z1, bb.x2, bb.z2, bb.y1);
   }

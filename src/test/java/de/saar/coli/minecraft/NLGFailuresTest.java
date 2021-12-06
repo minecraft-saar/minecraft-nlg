@@ -30,6 +30,7 @@ import java.lang.reflect.Field;
 import java.util.BitSet;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.Arrays;
 import org.junit.jupiter.api.BeforeEach;
@@ -58,11 +59,18 @@ public class NLGFailuresTest {
         );
   }
 
-//  @Test
+  @Test
   public void testStairs() throws Exception {
     testRealizer("Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8", "(don't know yet)",
         "{\"red_wool\":[[\"UniqueBlock-red_wool86612\"]],\"in-front-of8\":[[\"UniqueBlock-black_wool66614\",\"UniqueBlock-blue_wool6666\"]],\"black_wool\":[[\"UniqueBlock-black_wool66614\"]],\"height3\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"yellow_wool\":[[\"UniqueBlock-yellow_wool8668\"]],\"in-front-of4\":[[\"UniqueBlock-red_wool86612\",\"UniqueBlock-yellow_wool8668\"]],\"stairs\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"block\":[[\"UniqueBlock-red_wool86612\"],[\"UniqueBlock-black_wool66614\"],[\"UniqueBlock-yellow_wool8668\"],[\"UniqueBlock-blue_wool6666\"]],\"blue_wool\":[[\"UniqueBlock-blue_wool6666\"]],\"target\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]]}\n"
     );
+  }
+
+  @Test
+  public void parseStairs() throws Exception {
+    String s = "Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8";
+    MinecraftObject o = MinecraftObject.fromString(s);
+    assertEquals(s.toLowerCase(), o.toString().toLowerCase());
   }
 
   private void testRealizer(String targetObject, String intendedString, String modelJson)
@@ -70,6 +78,8 @@ public class NLGFailuresTest {
     MinecraftObject o = MinecraftObject.fromString(targetObject);
     FirstOrderModel mcModel = FirstOrderModel.read(new StringReader(modelJson));
     mcr.setModel(mcModel);
+
+    System.err.printf("model: %s\n", mcModel);
 
     Tree<String> bestTree = mcr.generateStatementTree(targetObject, o.getFeaturesStrings());
     assertNotNull(bestTree, "No derivation tree found.");

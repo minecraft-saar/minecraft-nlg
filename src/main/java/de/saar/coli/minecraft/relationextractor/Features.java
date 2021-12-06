@@ -9,7 +9,11 @@ public enum Features {
   Y2,
   Z1,
   Z2,
-  TO,
-  FROM,
-  HEIGHT, WIDTH, LENGTH, ORIENTATION
+  @Deprecated  TO,   // these don't seem to be used anywhere
+  @Deprecated  FROM,
+
+  HEIGHT,
+  WIDTH,
+  LENGTH,
+  ORIENTATION
 }

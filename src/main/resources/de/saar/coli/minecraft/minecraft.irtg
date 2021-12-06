@@ -41,6 +41,12 @@ Obj -> wall [-0.9]
   [ref] wall
   [sem] type
 
+Obj -> stairs [-0.9]
+  [string] "stairs"
+  [ref] stairs
+  [sem] type
+
+
 Obj -> row [-0.9]
   [string] "row"
   [ref] row
@@ -78,6 +84,11 @@ Obj -> ibridge [-0.9]
 Obj -> iwall [-0.9]
   [string] "wall"
   [ref] wall
+  [sem] type+indef
+
+Obj -> istairs [-0.9]
+  [string] "stairs"
+  [ref] stairs
   [sem] type+indef
 
 Obj -> irow [-0.9]

@@ -113,5 +113,8 @@ public class Wall extends BigBlock {
     return result;
   }
 
-
+  public static Wall parseObject(String objectDescription) {
+    BigBlock bb = BigBlock.parseObject(objectDescription);
+    return new Wall(bb.name, bb.x1, bb.y1, bb.z1, bb.x2, bb.y2, bb.z2);
+  }
 }
