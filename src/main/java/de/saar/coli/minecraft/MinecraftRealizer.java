@@ -8,6 +8,7 @@ import de.saar.coli.minecraft.relationextractor.Features;
 import de.saar.coli.minecraft.relationextractor.Relation;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
+import de.saar.coli.minecraft.relationextractor.UniqueBlock;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
@@ -24,6 +25,7 @@ import de.up.ling.tree.Tree;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -33,6 +35,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -41,8 +44,13 @@ import java.util.Set;
 
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.apache.logging.log4j.core.LoggerContext;
+import org.apache.logging.log4j.core.config.Configuration;
+import org.apache.logging.log4j.core.config.Configurator;
+import org.apache.logging.log4j.core.config.LoggerConfig;
 
 
 public class MinecraftRealizer {
@@ -252,8 +260,7 @@ public class MinecraftRealizer {
    * This assumes that the world is already set and is mainly used for testing
    * purposes.
    */
-  public String generateStatement(String action, MinecraftObject obj, Collection<String> features)
-      throws ParserException {
+  public String generateStatement(String action, MinecraftObject obj, Collection<String> features) throws ParserException {
     return generateStatement(action, obj.toString(), features);
   }
 
@@ -332,14 +339,15 @@ public class MinecraftRealizer {
    * Features are a set of possible feature combinations to describe objName.
    * Assumes that the current state of the world was already set via {@link #setRelations}.
    */
-  protected Tree<String> generateStatementTree(String objName, Collection<String> features)
-      throws ParserException {
-    
+  protected Tree<String> generateStatementTree(String objName, Collection<String> features) throws ParserException {
     logger.debug("generating a statement for this model: " + (refA.getModel().toString()));
+
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
+
     Intersectable<BitSet> semO = null;
+
     if (semI != null) {
-      Set<BitSet> semInputs = features.stream().map((x) -> {
+      Set<BitSet> semInputs = features.stream().map((String x) -> {
         try {
           return semA.parseString(x);
         } catch (ParserException e) {
@@ -347,6 +355,7 @@ public class MinecraftRealizer {
           throw new RuntimeException(e);
         }
       }).collect(Collectors.toSet());
+
       var ta = semA.decompose(semInputs);
       semO = semI.invhom(ta);
     }
@@ -372,26 +381,26 @@ public class MinecraftRealizer {
     */
     
     Tree<String> result = null;
+    TreeAutomaton ta = null;
+    int minMaxdepth = 0;
+
     if (semO != null) {
-      var ta = automaton.intersect(refO).intersect(semO);
-      for (int maxdepth = 8; maxdepth < 20; maxdepth +=2) {
-        var dlta = new DepthLimitingTreeAutomaton<>(ta, maxdepth);
-        langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
-        if (langIt.hasNext()) {
-          return langIt.next();
-        }
-      }
+      ta = automaton.intersect(refO).intersect(semO);
+      minMaxdepth = 8;
     } else {
-      TreeAutomaton<Pair<String, Set<List<String>>>> ta =
-          automaton.intersect(refO);
-      for (int maxdepth = 6; maxdepth < 20; maxdepth +=2) {
-        var dlta = new DepthLimitingTreeAutomaton<>(ta, maxdepth);
-        langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
-        if (langIt.hasNext()) {
-          return langIt.next();
-        }
+      ta = automaton.intersect(refO);
+      minMaxdepth = 6;
+    }
+
+    for (int maxdepth = 8; maxdepth < 20; maxdepth +=2) {
+      var dlta = new DepthLimitingTreeAutomaton<>(ta, maxdepth);
+      langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
+      if (langIt.hasNext()) {
+        return langIt.next();
       }
     }
+
+
     return null;
   }
 
@@ -506,4 +515,29 @@ public class MinecraftRealizer {
     //System.out.println(ta.getWeight(ta.languageIterable().iterator().next()));
     return ta.languageIterable().iterator().hasNext();
   }
+
+  public Set<MinecraftObject> readWorld(Reader reader) throws IOException {
+    BufferedReader bufferedReader = new BufferedReader(reader);
+    String line = null;
+    Set<MinecraftObject> ret = new HashSet<>();
+
+    while( (line = bufferedReader.readLine()) != null ) {
+      String[] data = line.split(",");
+      int x = Integer.parseInt(data[0]);
+      int y = Integer.parseInt(data[1]);
+      int z = Integer.parseInt(data[2]);
+      String blockType = data[3].toLowerCase();
+
+      if (x < 0 || y < 0 || z < 0) {
+        continue;
+      }
+
+      if( ! "water".equals(blockType) ) {
+        ret.add(new UniqueBlock(blockType, x, y, z));
+      }
+    }
+
+    return ret;
+  }
+
 }

@@ -1,6 +1,8 @@
 package de.saar.coli.minecraft.relationextractor;
 
+import de.saar.coli.minecraft.relationextractor.BigBlock.CoordinatesTuple;
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
+import java.awt.Point;
 import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
@@ -11,10 +13,15 @@ import org.eclipse.collections.impl.factory.Lists;
 import org.eclipse.collections.impl.factory.Sets;
 
 public class Stairs extends MinecraftObject {
-  public Row row;
-  public Wall lowerWall;
-  public Wall higherWall;
-  public Set<Block> blocks;
+  private Row row;
+  private Wall lowerWall;
+  private Wall higherWall;
+  private Set<Block> blocks;
+
+  // Each diagonal goes from one corner of the lowest step to a block at the same Y-level
+  // below a corner of the highest step. There are two of these, so we have an array of size 2.
+  private BigBlock.CoordinatesTuple[] baselineDiagonal;
+
 
   /**
    * A set of stairs consists if a row and two walls behind the row.
@@ -31,19 +38,34 @@ public class Stairs extends MinecraftObject {
    */
   public Stairs(String name, int x1, int y1, int z1, int x2, int z2, int x3, int y3, int z3) {
     row = new Row("row-" + name, x1, z1, x2, z2, y1);
-    if(x1 == x3){
+
+    if(x1 == x3) {
+      // steps are parallel to the z-axis
       lowerWall = new Wall("lowerWall-" + name, x1, y1, z1+1, x2, y1+1, z1+1);
       higherWall = new Wall("higherWall-" + name, x1, y1, z3, x2, y3, z3);
-    } else if (z1 == z3){
+
+      BigBlock.CoordinatesTuple diagonal1 = new CoordinatesTuple(x1, y1, z1, x2, y1, z3);
+      BigBlock.CoordinatesTuple diagonal2 = new CoordinatesTuple(x2, y1, z2, x1, y1, z3);
+      baselineDiagonal = new CoordinatesTuple[] { diagonal1, diagonal2 };
+    } else if (z1 == z3) {
+      // steps are parallel to the x-axis
       lowerWall = new Wall("lowerWall-" + name, x1+1, y1, z1, x1+1, y1+1, z2);
       higherWall = new Wall("higherWall-" + name, x3, y1, z1, x3, y3, z2);
+
+      BigBlock.CoordinatesTuple diagonal1 = new CoordinatesTuple(x1, y1, z1, x3, y1, z2);
+      BigBlock.CoordinatesTuple diagonal2 = new CoordinatesTuple(x2, y1, z2, x3, y1, x3);
+      baselineDiagonal = new CoordinatesTuple[] { diagonal1, diagonal2 };
     } else {
       throw new RuntimeException("Stairs does neither extend over the x nor the z axis!");
     }
+
+    // add blocks
     blocks = new HashSet<>();
     blocks.addAll(row.getBlocks());
     blocks.addAll(lowerWall.getBlocks());
     blocks.addAll(higherWall.getBlocks());
+
+    // add child high-level objects
     children = new HashSet<>();
     children.add(row);
     children.add(lowerWall);
@@ -70,7 +92,7 @@ public class Stairs extends MinecraftObject {
       EnumSet.of(Features.TYPE,
           Features.HEIGHT,
           Features.X1, Features.Z1, // one corner
-          Features.Z2
+          Features.X2, Features.Z2
 //          Features.X1,
 //          Features.Y1,
 //          Features.Z1,
@@ -105,23 +127,38 @@ public class Stairs extends MinecraftObject {
   @Override
   public MutableSet<Relation> generateRelationsTo(MinecraftObject other, Orientation orientation) {
     MutableSet<Relation> result = Sets.mutable.empty();
-    /*
-    var coord = new BigBlock.CoordinatesTuple(block1.xpos, block1.ypos, block1.zpos,
-        block2.xpos, block2.ypos+1, block2.zpos, orientation);
-    if (other instanceof Block) {
-      var oc = ((Block) other).getRotatedCoords(orientation);
-      // railing needs only one from and one to relation
-      // use topof-relations because in instructions want to say e.g.
-      // "build a railing from the top of the black block to the top of the blue block"
-      if (oc.x1 == coord.getMaxX() && oc.y1 +1== coord.getMinY() && oc.z1 == coord.getMinZ()) {
-        result.add(new Relation("topof-from-diagonal1",
-            this, other));
+
+    if ((other instanceof Block)) {
+      Block.CoordinatesTuple blockCoordsUnrotated = ((Block) other).getRotatedCoords(Orientation.ZPLUS); // unrotated coordinates
+      Block.CoordinatesTuple blockCoordinatesRotated = ((Block) other).getRotatedCoords(orientation);
+
+//      System.err.printf("Compare to block %s at %s\n", other, blockCoordsUnrotated);
+
+      for( int i = 0; i < 2; i++ ) {
+        BigBlock.CoordinatesTuple diagonal = baselineDiagonal[i].orient(orientation);
+        int ix = i+1;
+//        System.err.printf("Diagonal %d at %s\n", ix, baselineDiagonal[i]);
+
+        if( blockCoordinatesRotated.matchesLeftCoordinates(diagonal) ) {
+          result.add(new Relation("from-diagonal" + ix, this, other));
+        } else if( blockCoordinatesRotated.matchesRightCoordinates(diagonal)) {
+          result.add(new Relation("to-diagonal" + ix, this, other));
+        }
+
+        // It is also possible to describe a diagonal by saying "from top of the xy block to ..."
+        // or by saying "from .. to the top of the xy block" (cf. BigBlock#generateRelationsTo).
+        Block.CoordinatesTuple oneAboveBlock = new Block.CoordinatesTuple(blockCoordsUnrotated.x1, blockCoordsUnrotated.y1+1, blockCoordsUnrotated.z1, orientation);
+
+        if( oneAboveBlock.matchesLeftCoordinates(diagonal) ) {
+          result.add(new Relation("topof-diagonal" + ix, this, other));
+        } else if( oneAboveBlock.matchesRightCoordinates(diagonal)) {
+          result.add(new Relation("topof-diagonal" + ix, this, other));
+        }
       }
-      if (oc.x1 == coord.getMinX() && oc.y1 +1== coord.getMinY() && oc.z1 == coord.getMaxZ()) {
-        result.add(new Relation("topof-to-diagonal1",
-            this, other));
-      }
-    }*/
+
+
+    }
+
     return result;
   }
 

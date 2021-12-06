@@ -113,8 +113,7 @@ public abstract class MinecraftObject {
   /**
    * Generates and returns all relations from this object to the objects in other.
    */
-  public MutableSet<Relation> generateRelationsTo(Iterable<MinecraftObject> other,
-      Orientation orientation) {
+  public MutableSet<Relation> generateRelationsTo(Iterable<MinecraftObject> other, Orientation orientation) {
     MutableSet<Relation> result = Sets.mutable.empty();
     for (MinecraftObject o: other) {
       if (this.equals(o)) {

@@ -41,8 +41,8 @@ Obj -> wall [-0.9]
   [ref] wall
   [sem] type
 
-Obj -> stairs [-0.9]
-  [string] "stairs"
+Obj -> staircase [-0.9]
+  [string] "staircase"
   [ref] stairs
   [sem] type
 
@@ -86,8 +86,8 @@ Obj -> iwall [-0.9]
   [ref] wall
   [sem] type+indef
 
-Obj -> istairs [-0.9]
-  [string] "stairs"
+Obj -> istaircase [-0.9]
+  [string] "staircase"
   [ref] stairs
   [sem] type+indef
 

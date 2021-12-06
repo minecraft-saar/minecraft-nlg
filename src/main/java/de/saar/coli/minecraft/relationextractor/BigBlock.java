@@ -29,6 +29,14 @@ public class BigBlock extends MinecraftObject {
     public final int y2;
     public final int z2;
 
+    public CoordinatesTuple(int x1, int y1, int z1, int x2, int y2, int z2) {
+      this(x1, y1, z1, x2, y2, z2, Orientation.ZPLUS);
+    }
+
+    public CoordinatesTuple orient(Orientation o) {
+      return new CoordinatesTuple(x1, y1, z1, x2, y2, z2, o);
+    }
+
     public CoordinatesTuple(int x1, int y1, int z1, int x2, int y2, int z2, Orientation o) {
       this.y1 = y1;
       this.y2 = y2;
@@ -204,12 +212,10 @@ public class BigBlock extends MinecraftObject {
        */
 
       if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMinZ()) {
-        result.add(new Relation("from-diagonal1",
-            this, other));
+        result.add(new Relation("from-diagonal1", this, other));
       }
       if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMinY() && oc.z1 == coord.getMaxZ()) {
-        result.add(new Relation("from-diagonal2",
-            this, other));
+        result.add(new Relation("from-diagonal2", this, other));
       }
       if (oc.x1 == coord.getMinX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {
         result.add(new Relation("to-diagonal1", this, other));
@@ -217,6 +223,7 @@ public class BigBlock extends MinecraftObject {
       if (oc.x1 == coord.getMaxX() && oc.y1 == coord.getMaxY() && oc.z1 == coord.getMinZ()) {
         result.add(new Relation("to-diagonal2", this, other));
       }
+
       // it is also possible to describe a diagonal by saying "from top of the xy block to ..."
       // or by saying "from .. to the top of the xy block"
       if (oc.x1 == coord.getMinX() && oc.y1 +1 == coord.getMaxY() && oc.z1 == coord.getMaxZ()) {

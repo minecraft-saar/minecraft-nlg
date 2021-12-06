@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Arrays;
+import org.apache.logging.log4j.Level;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -61,9 +62,14 @@ public class NLGFailuresTest {
 
   @Test
   public void testStairs() throws Exception {
-    testRealizer("Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8", "(don't know yet)",
-        "{\"red_wool\":[[\"UniqueBlock-red_wool86612\"]],\"in-front-of8\":[[\"UniqueBlock-black_wool66614\",\"UniqueBlock-blue_wool6666\"]],\"black_wool\":[[\"UniqueBlock-black_wool66614\"]],\"height3\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"yellow_wool\":[[\"UniqueBlock-yellow_wool8668\"]],\"in-front-of4\":[[\"UniqueBlock-red_wool86612\",\"UniqueBlock-yellow_wool8668\"]],\"stairs\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"block\":[[\"UniqueBlock-red_wool86612\"],[\"UniqueBlock-black_wool66614\"],[\"UniqueBlock-yellow_wool8668\"],[\"UniqueBlock-blue_wool6666\"]],\"blue_wool\":[[\"UniqueBlock-blue_wool6666\"]],\"target\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]]}\n"
-    );
+//    testRealizer("Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8", "(don't know yet)",
+//        "{\"red_wool\":[[\"UniqueBlock-red_wool86612\"]],\"in-front-of8\":[[\"UniqueBlock-black_wool66614\",\"UniqueBlock-blue_wool6666\"]],\"black_wool\":[[\"UniqueBlock-black_wool66614\"]],\"height3\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"yellow_wool\":[[\"UniqueBlock-yellow_wool8668\"]],\"in-front-of4\":[[\"UniqueBlock-red_wool86612\",\"UniqueBlock-yellow_wool8668\"]],\"stairs\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]],\"block\":[[\"UniqueBlock-red_wool86612\"],[\"UniqueBlock-black_wool66614\"],[\"UniqueBlock-yellow_wool8668\"],[\"UniqueBlock-blue_wool6666\"]],\"blue_wool\":[[\"UniqueBlock-blue_wool6666\"]],\"target\":[[\"Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8\"]]}\n"
+//    );
+
+    testRealizerWithRelationGenerator("Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8",
+        "a staircase from the blue block to the yellow block of height three",
+        FANCY_BRIDGE_WORLD);
+
   }
 
   @Test
@@ -73,13 +79,24 @@ public class NLGFailuresTest {
     assertEquals(s.toLowerCase(), o.toString().toLowerCase());
   }
 
+  private void testRealizerWithRelationGenerator(String targetObject, String intendedString, String worldStr)
+      throws Exception {
+    Set<MinecraftObject> world = MinecraftRealizer.createRealizer().readWorld(new StringReader(worldStr));
+    MinecraftObject o = MinecraftObject.fromString(targetObject);
+    Tree<String> derivationTree = mcr.generateReferringExpressionTree(world, o, new HashSet<>(), Orientation.ZPLUS);
+    assertNotNull(derivationTree, "No derivation tree found.");
+
+    String s = mcr.treeToReferringExpression(derivationTree);
+    assertEquals(intendedString, s);
+  }
+
   private void testRealizer(String targetObject, String intendedString, String modelJson)
       throws Exception {
     MinecraftObject o = MinecraftObject.fromString(targetObject);
     FirstOrderModel mcModel = FirstOrderModel.read(new StringReader(modelJson));
     mcr.setModel(mcModel);
 
-    System.err.printf("model: %s\n", mcModel);
+//    System.err.printf("model: %s\n", mcModel);
 
     Tree<String> bestTree = mcr.generateStatementTree(targetObject, o.getFeaturesStrings());
     assertNotNull(bestTree, "No derivation tree found.");
@@ -87,6 +104,22 @@ public class NLGFailuresTest {
     String s = mcr.treeToReferringExpression(bestTree);
     assertEquals(intendedString, s);
   }
+
+  private static final String FANCY_BRIDGE_WORLD = ""
+      + "6,66,6,BLUE_WOOL\n"
+      + "8,66,8,YELLOW_WOOL\n"
+      + "8,66,12,RED_WOOL\n"
+      + "6,66,14,BLACK_WOOL\n"
+      + "1,65,10,WATER\n"
+      + "2,65,10,WATER\n"
+      + "3,65,10,WATER\n"
+      + "4,65,10,WATER\n"
+      + "5,65,10,WATER\n"
+      + "6,65,10,WATER\n"
+      + "7,65,10,WATER\n"
+      + "8,65,10,WATER\n"
+      + "9,65,10,WATER\n"
+      + "10,65,10,WATER\n";
 
   /*
   * commenting out, this test cannot fail anyway - AK

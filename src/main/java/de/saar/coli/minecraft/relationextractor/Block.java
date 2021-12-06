@@ -20,6 +20,10 @@ public class Block extends MinecraftObject {
     public final int y1;
     public final int z1;
 
+    public CoordinatesTuple(int x1, int y1, int z1) {
+      this(x1, y1, z1, Orientation.ZPLUS);
+    }
+
     public CoordinatesTuple(int x1, int y1, int z1, Orientation o) {
       this.y1 = y1;
 
@@ -46,6 +50,14 @@ public class Block extends MinecraftObject {
           this.z1 = z1;
           throw new IllegalStateException("Unexpected value: " + o);
       }
+    }
+
+    public boolean matchesLeftCoordinates(BigBlock.CoordinatesTuple tuple) {
+      return x1 == tuple.x1 && y1 == tuple.y1 && z1 == tuple.z1;
+    }
+
+    public boolean matchesRightCoordinates(BigBlock.CoordinatesTuple tuple) {
+      return x1 == tuple.x2 && y1 == tuple.y2 && z1 == tuple.z2;
     }
   }
 
