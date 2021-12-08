@@ -41,7 +41,11 @@ public class Stairs extends MinecraftObject {
 
     if(x1 == x3) {
       // steps are parallel to the z-axis
-      lowerWall = new Wall("lowerWall-" + name, x1, y1, z1+1, x2, y1+1, z1+1);
+      if(z1<z3){
+        lowerWall = new Wall("lowerWall-" + name, x1, y1, z1+1, x2, y1+1, z1+1);
+      } else {
+        lowerWall = new Wall("lowerWall-" + name, x1, y1, z1-1, x2, y1+1, z1+1);
+      }
       higherWall = new Wall("higherWall-" + name, x1, y1, z3, x2, y3, z3);
 
       BigBlock.CoordinatesTuple diagonal1 = new CoordinatesTuple(x1, y1, z1, x2, y1, z3);
@@ -49,7 +53,11 @@ public class Stairs extends MinecraftObject {
       baselineDiagonal = new CoordinatesTuple[] { diagonal1, diagonal2 };
     } else if (z1 == z3) {
       // steps are parallel to the x-axis
-      lowerWall = new Wall("lowerWall-" + name, x1+1, y1, z1, x1+1, y1+1, z2);
+      if(x1 < x3){
+        lowerWall = new Wall("lowerWall-" + name, x1+1, y1, z1, x1+1, y1+1, z2);
+      } else {
+        lowerWall = new Wall("lowerWall-" + name, x1-1, y1, z1, x1+1, y1+1, z2);
+      }
       higherWall = new Wall("higherWall-" + name, x3, y1, z1, x3, y3, z2);
 
       BigBlock.CoordinatesTuple diagonal1 = new CoordinatesTuple(x1, y1, z1, x3, y1, z2);
