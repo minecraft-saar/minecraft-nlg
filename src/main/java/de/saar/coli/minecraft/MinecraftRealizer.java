@@ -332,7 +332,7 @@ public class MinecraftRealizer {
    * Assumes that the current state of the world was already set via {@link #setRelations}.
    */
   protected Tree<String> generateStatementTree(String objName, Collection<String> features) throws ParserException {
-    Logger.debug("generating a statement for this model: " + (refA.getModel().toString()));
+    Logger.debug("generating a statement for this model: {}", refA.getModel());
 
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
 
