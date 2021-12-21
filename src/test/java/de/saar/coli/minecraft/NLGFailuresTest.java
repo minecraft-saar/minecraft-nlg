@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 import java.util.Arrays;
-import org.apache.logging.log4j.Level;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

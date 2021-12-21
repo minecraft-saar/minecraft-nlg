@@ -44,19 +44,11 @@ import java.util.Set;
 
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import org.apache.logging.log4j.Level;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.core.LoggerContext;
-import org.apache.logging.log4j.core.config.Configuration;
-import org.apache.logging.log4j.core.config.Configurator;
-import org.apache.logging.log4j.core.config.LoggerConfig;
+
+import org.tinylog.Logger;
 
 
 public class MinecraftRealizer {
-
-  private static Logger logger = LogManager.getLogger(MinecraftRealizer.class);
-
   private static final String FEATURES = Arrays.stream(Features.values())
       .map(Features::toString)
       .map(String::toLowerCase)
@@ -340,7 +332,7 @@ public class MinecraftRealizer {
    * Assumes that the current state of the world was already set via {@link #setRelations}.
    */
   protected Tree<String> generateStatementTree(String objName, Collection<String> features) throws ParserException {
-    logger.debug("generating a statement for this model: " + (refA.getModel().toString()));
+    Logger.debug("generating a statement for this model: " + (refA.getModel().toString()));
 
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
 
