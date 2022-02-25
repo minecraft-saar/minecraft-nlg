@@ -332,7 +332,7 @@ public class MinecraftRealizer {
    * Assumes that the current state of the world was already set via {@link #setRelations}.
    */
   protected Tree<String> generateStatementTree(String objName, Collection<String> features) throws ParserException {
-    Logger.debug("generating a statement for this model: {}", refA.getModel());
+    //Logger.debug("generating a statement for this model: {}", refA.getModel());
 
     Set<List<String>> refInput = refA.parseString("{" + objName + "}");
 
@@ -456,6 +456,33 @@ public class MinecraftRealizer {
       return ret;
     }
   }
+
+  /**
+   *Returns the refA model for the given situation to be used as input for the NN-costfunction
+   * @param world the world to build a model for
+   * @param target the oobject which should be instructed
+   * @param it set of objects that can be referred to as "previous"
+   * @return a JSON String representation of the refA model
+   */
+  public String getModelforNN(Set<MinecraftObject> world,
+      MinecraftObject target,
+      Set<MinecraftObject> it) {
+    Orientation lastOrientation = Orientation.ZMINUS;
+    var relations = Relation.generateAllRelationsBetweeen(
+        Iterables.concat(world,
+            org.eclipse.collections.impl.factory.Iterables.iList(target)
+        ),
+        lastOrientation
+    );
+    for (var elem : it) {
+      relations.add(new Relation("it", elem));
+    }
+    relations.add(new Relation("target", target));
+    setRelations(relations);
+    return refA.getModel().toString();
+
+  }
+
 
   /*
   ===================================
