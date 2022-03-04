@@ -339,7 +339,7 @@ public class BigBlock extends MinecraftObject {
 
   @Override
   public String toString() {
-    return name + x1 + '-' + y1 + '-' + z1 + '-' + x2+ '-' + y2+ '-' + z2;
+    return name + '-' + x1 + '-' + y1 + '-' + z1 + '-' + x2+ '-' + y2+ '-' + z2;
   }
 
   private static final Pattern PARSING_PATTERN = Pattern.compile("(.*?)(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+)");
