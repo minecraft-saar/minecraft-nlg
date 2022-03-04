@@ -68,7 +68,7 @@ public class NLGFailuresTest {
 
   @Test
   public void parseStairs() throws Exception {
-    String s = "Stairs-row-stairs6-66-6-8-66-6-lowerWall-stairs6-66-7-8-67-7-higherWall-stairs6-66-8-8-68-8";
+    String s = "Stairs-row-stairs-6-66-6-8-66-6-lowerWall-stairs-6-66-7-8-67-7-higherWall-stairs-6-66-8-8-68-8";
     MinecraftObject o = MinecraftObject.fromString(s);
     assertEquals(s.toLowerCase(), o.toString().toLowerCase());
   }
