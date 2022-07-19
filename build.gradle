@@ -53,6 +53,7 @@ dependencies {
     implementation (group: "com.github.coli-saar", name:"alto", version:"c252ee0e9336bdb113ca0dcd4ba4c91c6e6a3469")
     implementation 'info.picocli:picocli:3.9.3'
     implementation 'com.google.code.gson:gson:2.8.6'
+    implementation 'org.yaml:snakeyaml:1.30'
     implementation 'org.eclipse.collections:eclipse-collections-api:9.2.0'
     implementation 'org.eclipse.collections:eclipse-collections:9.2.0'
 
@@ -89,6 +90,11 @@ javadoc {
 task javadocJar(type: Jar, dependsOn: javadoc) {
     classifier = 'javadoc'
     from javadoc.destinationDir
+}
+
+task irtgPrinter(dependsOn: 'classes', type: JavaExec) {
+    main = 'de.saar.coli.minecraft.PrinterMain'
+    classpath = sourceSets.main.runtimeClasspath
 }
 
 // define the github package registry as the maven repository we push our software to.

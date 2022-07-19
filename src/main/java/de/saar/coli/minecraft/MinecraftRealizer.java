@@ -1,14 +1,17 @@
 package de.saar.coli.minecraft;
 
+import org.yaml.snakeyaml.Yaml;
+
 import com.google.common.collect.Iterables;
 import com.google.gson.Gson;
 import de.saar.basic.Pair;
 
 import de.saar.coli.minecraft.relationextractor.Features;
 import de.saar.coli.minecraft.relationextractor.Relation;
+import de.saar.coli.minecraft.relationextractor.Block;
+import de.saar.coli.minecraft.relationextractor.BlockInHand;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
-import de.saar.coli.minecraft.relationextractor.UniqueBlock;
 import de.up.ling.irtg.Interpretation;
 import de.up.ling.irtg.InterpretedTreeAutomaton;
 import de.up.ling.irtg.algebra.ParserException;
@@ -22,6 +25,7 @@ import de.up.ling.irtg.semiring.LogDoubleArithmeticSemiring;
 import de.up.ling.irtg.util.FirstOrderModel;
 import de.up.ling.tree.Tree;
 
+import java.io.ByteArrayInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
@@ -30,7 +34,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringReader;
-
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.BitSet;
 import java.util.Collection;
@@ -53,6 +57,8 @@ public class MinecraftRealizer {
       .map(Features::toString)
       .map(String::toLowerCase)
       .collect(Collectors.joining("+")) + "+indef";
+
+  private static final boolean nlgIllusDebugEnabled = true;
 
   private final InterpretedTreeAutomaton irtg;
   private final Interpretation<List<String>> strI;
@@ -120,16 +126,26 @@ public class MinecraftRealizer {
     return new MinecraftRealizer(irtg);
   }
 
+  public static String[] getStandardInput() {
+    InputStream inputStream = MinecraftRealizer.class.getResourceAsStream("minecraft.irtg");
+    String[] inputStrings = new BufferedReader(new InputStreamReader(inputStream)).lines().toArray(String[]::new);
+    return inputStrings;
+  }
+
   /**
    * Builds a realizer using the default IRTG.
    * @throws Exception if something goes wrong
    */
   public static MinecraftRealizer createRealizer() {
     try {
-      var irtg = new IrtgInputCodec().read(
-          MinecraftRealizer.class.getResourceAsStream("minecraft.irtg"));
+      String transformedString = IRTGTransformer.simplify(getStandardInput());
+      InputStream transformedStream = new ByteArrayInputStream(transformedString.getBytes());
+      var irtg = new IrtgInputCodec().read(transformedStream);
+      //var irtg = new IrtgInputCodec().read(
+      //    MinecraftRealizer.class.getResourceAsStream("minecraft.irtg"));
       return new MinecraftRealizer(irtg);
     } catch (Exception e) {
+      e.printStackTrace();
       throw new RuntimeException("could not read included minecraft irtg");
     }
   }
@@ -286,7 +302,7 @@ public class MinecraftRealizer {
       Orientation lastOrientation) {
     var relations = Relation.generateAllRelationsBetweeen(
         Iterables.concat(world,
-            org.eclipse.collections.impl.factory.Iterables.iList(target)
+            org.eclipse.collections.impl.factory.Iterables.iList(target,BlockInHand.theBlock)
         ),
         lastOrientation
     );
@@ -388,7 +404,16 @@ public class MinecraftRealizer {
       var dlta = new DepthLimitingTreeAutomaton<>(ta, maxdepth);
       langIt = dlta.languageIterator(LogDoubleArithmeticSemiring.INSTANCE);
       if (langIt.hasNext()) {
-        return langIt.next();
+        var init = langIt.next();
+        if (nlgIllusDebugEnabled) { 
+          System.out.println("===== Debug Output: all trees =====");
+          System.out.println(init);
+          while (langIt.hasNext()) {
+            System.out.println(langIt.next());
+          }
+          System.out.println("==========");
+        }
+        return init;
       }
     }
 
@@ -537,7 +562,7 @@ public class MinecraftRealizer {
       }
 
       if( ! "water".equals(blockType) ) {
-        ret.add(new UniqueBlock(blockType, x, y, z));
+        ret.add(new Block(x, y, z, blockType));
       }
     }
 

@@ -9,8 +9,8 @@ import org.eclipse.collections.impl.factory.Sets;
 
 public class Floor extends BigBlock {
 
-  public Floor(String name, int x1, int z1, int x2, int z2, int y) {
-    super(name, x1, y, z1, x2, y, z2);
+  public Floor(String name, int x1, int z1, int x2, int z2, int y, String type) {
+    super(name, x1, y, z1, x2, y, z2, type);
   }
 
     private static final Set<EnumSet<Features>> features = Set.of(
@@ -40,7 +40,7 @@ public class Floor extends BigBlock {
   }
 
   @Override
-  public MutableSet<Relation> generateUnaryRelations(Orientation orientation) {
+  public MutableSet<Relation> generateOwnUnaryRelations(Orientation orientation) {
     return Sets.mutable.of(new Relation("floor", this));
   }
 

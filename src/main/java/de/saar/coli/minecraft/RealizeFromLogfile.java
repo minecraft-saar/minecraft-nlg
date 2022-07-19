@@ -41,7 +41,7 @@ public class RealizeFromLogfile implements Runnable {
       InputStream irtgStream = new FileInputStream(irtgFile);
       InputsInLogfile inputs = InputsInLogfile.read(new FileReader(logfile));
 
-      MinecraftObject o = MinecraftObject.fromString(inputs.getTargetObject());
+      MinecraftObject o = MinecraftObject.fromString(inputs.getTargetObject(), "stone"); //TODO: add types to file, realize
       MinecraftRealizer mcr = MinecraftRealizer.createRealizer(irtgStream, new StringReader(inputs.getJson()));
       Tree<String> bestTree = mcr.generateStatementTree(inputs.getTargetObject(), o.getFeaturesStrings());
 

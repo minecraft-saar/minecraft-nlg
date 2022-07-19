@@ -53,8 +53,8 @@ public class Wall extends BigBlock {
   /**
    * A wall is a special cuboid with thickness == 1, standing upright.
    */
-  public Wall(String name, int x1, int y1, int z1, int x2, int y2, int z2) {
-    super(name, x1, y1, z1, x2, y2, z2);
+  public Wall(String name, int x1, int y1, int z1, int x2, int y2, int z2, String type) {
+    super(name, x1, y1, z1, x2, y2, z2, type);
 
     /* Assumptions about walls:
      * The have a width of 1
@@ -98,7 +98,7 @@ public class Wall extends BigBlock {
   }
 
   @Override
-  public MutableSet<Relation> generateUnaryRelations(Orientation o) {
+  public MutableSet<Relation> generateOwnUnaryRelations(Orientation o) {
     var result = Sets.mutable.of(
         new Relation("wall", this),
         new Relation("height" + height(), this),
@@ -113,8 +113,8 @@ public class Wall extends BigBlock {
     return result;
   }
 
-  public static Wall parseObject(String objectDescription) {
-    BigBlock bb = BigBlock.parseObject(objectDescription);
-    return new Wall(bb.name, bb.x1, bb.y1, bb.z1, bb.x2, bb.y2, bb.z2);
+  public static Wall parseObject(String objectDescription, String type) {
+    BigBlock bb = BigBlock.parseObject(objectDescription, type);
+    return new Wall(bb.name, bb.x1, bb.y1, bb.z1, bb.x2, bb.y2, bb.z2, type);
   }
 }

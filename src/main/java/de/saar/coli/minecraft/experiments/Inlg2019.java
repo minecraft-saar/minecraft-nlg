@@ -4,7 +4,7 @@ import de.saar.coli.minecraft.MinecraftRealizer;
 import de.saar.coli.minecraft.relationextractor.BigBlock;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
 import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
-import de.saar.coli.minecraft.relationextractor.UniqueBlock;
+import de.saar.coli.minecraft.relationextractor.Block;
 import de.saar.coli.minecraft.relationextractor.Relation;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,12 +36,12 @@ public class Inlg2019 {
     
     List<MinecraftObject> objects = new ArrayList<>();
     // anchors
-    final UniqueBlock ub = new UniqueBlock("blue", 1, 1, 1);
+    final Block ub = new Block(1, 1, 1, "blue");
     objects.add(ub);
-    final UniqueBlock ub2 = new UniqueBlock("red", 4,1,5);
+    final Block ub2 = new Block(4, 1, 5, "red");
     objects.add(ub2);
     // the bridge
-    BigBlock bridge = new BigBlock("bridge", 1, 1, 1, 4, 1, 5);
+    BigBlock bridge = new BigBlock("bridge", 1, 1, 1, 4, 1, 5, "stone");
     objects.add(bridge);
     // relations that will be re-used
     List<Relation> unaryRelations = new ArrayList<>();
@@ -57,9 +57,9 @@ public class Inlg2019 {
     System.out.println(mcr.generateStatement("build", "bridge", Set.of("type+corner1+corner3")));
 
     // right and left railing
-    BigBlock railing1 = new BigBlock("railing1", 4, 2, 1, 4, 2, 5);
+    BigBlock railing1 = new BigBlock("railing1", 4,2,1, 4,2,5, "stone");
     objects.add(railing1);
-    BigBlock railing2 = new BigBlock("railing2", 1,2,1,1,2,5);
+    BigBlock railing2 = new BigBlock("railing2", 1,2,1, 1,2,5, "stone");
     objects.add(railing2);
 
     // the previous railing (right), can be referred to as "it".

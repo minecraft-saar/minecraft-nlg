@@ -2,8 +2,10 @@ package de.saar.coli.minecraft.relationextractor;
 
 import de.saar.coli.minecraft.relationextractor.Block;
 import de.saar.coli.minecraft.relationextractor.MinecraftObject;
+import de.saar.coli.minecraft.relationextractor.Relation.Orientation;
 import de.saar.coli.minecraft.relationextractor.Relation;
 import org.eclipse.collections.api.set.MutableSet;
+import org.eclipse.collections.impl.factory.Sets;
 
 import java.util.Set;
 
@@ -14,6 +16,8 @@ public class IntroductionMessage extends MinecraftObject {
     public final String name;
 
     public IntroductionMessage(MinecraftObject object, boolean starting, String name){
+        super(name); //TODO: is this correct?
+
         this.object = object;
         this.starting = starting;
         this.name = name;
@@ -27,6 +31,10 @@ public class IntroductionMessage extends MinecraftObject {
     @Override
     public boolean sameShapeAs(MinecraftObject other) {
         return object.sameShapeAs(other);
+    }
+
+    public MutableSet<Relation> generateOwnUnaryRelations(Orientation orientation) {
+      return Sets.mutable.empty();
     }
 
     @Override

@@ -13,6 +13,7 @@ public class Block extends MinecraftObject {
   public final int xpos;
   public final int ypos;
   public final int zpos;
+  private boolean uniqueType;
 
   public static class CoordinatesTuple {
 
@@ -71,7 +72,9 @@ public class Block extends MinecraftObject {
    * @param y It's ypos coordinate
    * @param z It's zpos coordinate
    */
-  public Block(int x, int y, int z) {
+  public Block(int x, int y, int z, String type) {
+    super(type);
+
     children = new HashSet<>();
     this.xpos = x;
     this.ypos = y;
@@ -81,6 +84,19 @@ public class Block extends MinecraftObject {
   @Override
   public String getVerb() {
     return "put";
+  }
+
+  //TODO: this is useless, as we can just determine this with size_1, isn't it?
+  public void setUnique() {
+    uniqueType = true;
+  }
+
+  public void setNotUnique() {
+    uniqueType = false;
+  }
+
+  public String getType() {
+    return type;
   }
 
   @Override
@@ -98,16 +114,20 @@ public class Block extends MinecraftObject {
   }
 
   @Override
-  public MutableSet<Relation> generateUnaryRelations(Orientation o) {
-    return Sets.mutable.of(new Relation("block", this));
+  public MutableSet<Relation> generateOwnUnaryRelations(Orientation o) {
+    var result = Sets.mutable.of(new Relation("block", this));
+    if (uniqueType) {
+      result.add(new Relation("unique", this));
+    } 
+    return result;
   }
 
   @Override
-  public boolean equals(Object o) {
+  public boolean equals(Object o) { //TODO: a bit hacky .equal(UniqueBlock) different to .equal(Block)
     if (this == o) {
       return true;
     }
-    if (o == null || getClass() != o.getClass()) {
+    if (o == null || !(o.getClass() == Block.class || o.getClass() == WildcardBlock.class)) {
       return false;
     }
     Block block = (Block) o;
@@ -178,6 +198,14 @@ public class Block extends MinecraftObject {
       }
 
 
+    }
+
+    if (other instanceof Pillar) {
+      Pillar p = (Pillar) other;
+      for (var relation : generateRelationsTo(p.getTop(), orientation))
+        result.add(relation);
+      for (var relation : generateRelationsTo(p.getBottom(), orientation))
+        result.add(relation);
     }
     return result;
   }

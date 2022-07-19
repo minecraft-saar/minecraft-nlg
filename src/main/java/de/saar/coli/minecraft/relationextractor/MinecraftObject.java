@@ -11,8 +11,12 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Sets;
 
 public abstract class MinecraftObject {
+  protected final String type;
   protected Set<MinecraftObject> children;
 
+  protected MinecraftObject(String type) {
+    this.type = type;
+  }
 
   private static final Set<EnumSet<Features>> features = Set.of(EnumSet.of(Features.TYPE,
                                                                Features.X1,
@@ -92,12 +96,13 @@ public abstract class MinecraftObject {
     return false;
   }
 
-  /**
-   * Generates all relations describing only this object.
-   * TODO: make abstract
-   */
+
+  protected abstract MutableSet<Relation> generateOwnUnaryRelations(Orientation orientation);
+
   public MutableSet<Relation> generateUnaryRelations(Orientation orientation) {
-    return Sets.mutable.empty();
+    var result = generateOwnUnaryRelations(orientation);
+    result.add(new Relation(type, this));
+    return result;
   }
 
   public abstract MutableSet<Relation> generateRelationsTo(MinecraftObject other,
@@ -151,13 +156,13 @@ public abstract class MinecraftObject {
    * @param objectDescription
    * @return
    */
-  public static MinecraftObject fromString(String objectDescription) {
+  public static MinecraftObject fromString(String objectDescription, String type) {
     if( objectDescription.startsWith("row")) {
-      return Row.parseObject(objectDescription);
+      return Row.parseObject(objectDescription, type);
     } else if( objectDescription.startsWith("wall")) {
-      return Wall.parseObject(objectDescription);
+      return Wall.parseObject(objectDescription, type);
     } else if( objectDescription.startsWith("Stairs")) {
-      return Stairs.parseObject(objectDescription);
+      return Stairs.parseObject(objectDescription, type);
     } else {
       throw new UnsupportedOperationException("Cannot resolve " + objectDescription + " to a MinecraftObject.");
     }

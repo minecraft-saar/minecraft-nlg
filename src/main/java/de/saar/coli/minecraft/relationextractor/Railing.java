@@ -23,13 +23,15 @@ public class Railing extends MinecraftObject {
    * @param z2 maximal z
    * @param y height at which the railing is
    */
-  public Railing(String name, int x1, int z1, int x2, int z2, int y) {
+  public Railing(String name, int x1, int z1, int x2, int z2, int y, String type) {
+    super(type);
+
     if (x1 != x2 && z1 != z2) {
       throw new RuntimeException("Railing must be along xpos or zpos axis!");
     }
-    block1 = new Block(x1, y, z1);
-    block2 = new Block(x2, y, z2);
-    row = new Row("row-" + name, x1, z1, x2, z2, y + 1);
+    block1 = new Block(x1, y, z1, type);
+    block2 = new Block(x2, y, z2, type);
+    row = new Row("row-" + name, x1, z1, x2, z2, y + 1, type);
     blocks = new HashSet<>();
     blocks.add(block1);
     blocks.add(block2);
@@ -164,7 +166,7 @@ public class Railing extends MinecraftObject {
   }
 
   @Override
-  public MutableSet<Relation> generateUnaryRelations(Orientation o) {
+  public MutableSet<Relation> generateOwnUnaryRelations(Orientation o) {
     return Sets.mutable.of(
         new Relation("railing", this),
         new Relation("length" + length(), this)

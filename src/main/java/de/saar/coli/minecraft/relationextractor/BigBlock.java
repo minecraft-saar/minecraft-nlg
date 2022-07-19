@@ -121,7 +121,9 @@ public class BigBlock extends MinecraftObject {
    * A cuboid consisting of several blocks.
    * x1, y1, z1 are the minimal coordinates, x2, y2, z2 are the maximal ones.
    */
-  public BigBlock(String name, int x1, int y1, int z1, int x2, int y2, int z2) {
+  public BigBlock(String name, int x1, int y1, int z1, int x2, int y2, int z2, String type) {
+    super(type);
+
     this.name = name;
 
     this.x1 = x1;
@@ -131,6 +133,7 @@ public class BigBlock extends MinecraftObject {
     this.x2 = x2;
     this.y2 = y2;
     this.z2 = z2;
+
     children = new HashSet<>();
     for (Block i: getBlocks()) {
       children.add(i);
@@ -167,7 +170,7 @@ public class BigBlock extends MinecraftObject {
     for (int x = x1; x <= x2; x++) {
       for (int y = y1; y <= y2; y++) {
         for (int z = z1; z <= z2; z++) {
-          res.add(new Block(x, y, z));
+          res.add(new Block(x, y, z, type));
         }
       }
     }
@@ -191,6 +194,10 @@ public class BigBlock extends MinecraftObject {
 
   public CoordinatesTuple getRotatedCoords(Orientation orientation) {
     return new CoordinatesTuple(x1,y1,z1,x2,y2,z2, orientation);
+  }
+  
+  public MutableSet<Relation> generateOwnUnaryRelations(Orientation orientation) {
+    return Sets.mutable.empty();
   }
 
   @Override
@@ -251,6 +258,9 @@ public class BigBlock extends MinecraftObject {
           && zdistance == 0
       ) {
         result.add(new Relation("top-of"+ydistance+"-BigBlock-Block", this, other));
+        if (x2 == x1 && z2 == z1) {
+          result.add(new Relation("top-of"+ydistance, this, other));
+        }
       }
       if (xdistance == 0
           && ydistance == 0
@@ -344,12 +354,12 @@ public class BigBlock extends MinecraftObject {
 
   private static final Pattern PARSING_PATTERN = Pattern.compile("(.*?)(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+)-(\\d+)");
 
-  protected static BigBlock parseObject(String objectDescription) {
+  protected static BigBlock parseObject(String objectDescription, String type) {
     Matcher m = PARSING_PATTERN.matcher(objectDescription);
     if( m.matches() ) {
       return new BigBlock(m.group(1), Integer.parseInt(m.group(2)), Integer.parseInt(m.group(3)),
           Integer.parseInt(m.group(4)), Integer.parseInt(m.group(5)), Integer.parseInt(m.group(6)),
-          Integer.parseInt(m.group(7)));
+          Integer.parseInt(m.group(7)), type);
     } else {
       return null;
     }

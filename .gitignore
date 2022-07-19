@@ -4,3 +4,5 @@
 *.class
 *~
 *#
+nlg-illus/vue-graph/node_modules/
+nlg-illus/vue-graph/src/data/

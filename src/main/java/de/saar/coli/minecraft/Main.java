@@ -19,6 +19,7 @@ public class Main implements Runnable {
   @Option(names = {"-c", "--continuous"}, description = "Read goal from stdin, return to stdout, don't exit")
   private boolean continuous = false;
 
+  //TODO: this seems wrong, path is hardcoded in MinecraftRealizer
   @Option(names = {"-i", "--irtg", "-t", "--tirtg"}, required = true, description = "Path to the IRTG to use")
   private File irtgFile;
 

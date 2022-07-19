@@ -33,13 +33,13 @@ public class RelationGenerator {
     */
 
     List<MinecraftObject> objects = new ArrayList<>();
-    final UniqueBlock ub = new UniqueBlock("blue", 1,1,1);
-    final UniqueBlock ub2 = new UniqueBlock("orange", 4,1,5);
-    final UniqueBlock ub3 = new UniqueBlock("yellow", 4,3,5);
+    final Block ub = new Block(1, 1, 1, "blue");
+    final Block ub2 = new Block(4, 1, 5, "orange");
+    final Block ub3 = new Block(4, 3, 5, "yellow");
 
     objects.add(ub);
     objects.add(ub2);
-    Bridge bridge = new Bridge("b", 1, 1, 4, 5, 1, BridgeDirection.ALONGX);
+    Bridge bridge = new Bridge("b", 1, 1, 4, 5, 1, BridgeDirection.ALONGX, "stone");
     objects.add(bridge);
 
     List<Relation> relations = generateAllRelationsBetweeen(objects);
@@ -86,12 +86,12 @@ public class RelationGenerator {
    */
   public static void buildFloor() throws Exception {
     List<MinecraftObject> objects = new ArrayList<>();
-    final UniqueBlock ub = new UniqueBlock("blue", 1,1,1);
-    final UniqueBlock ub2 = new UniqueBlock("orange", 4,1,5);
+    final Block ub = new Block(1, 1, 1, "blue");
+    final Block ub2 = new Block(4, 1, 5, "orange");
 
     objects.add(ub);
     objects.add(ub2);
-    BigBlock floor = new BigBlock("floor", 1,1,1, 4,1,5);
+    BigBlock floor = new BigBlock("floor", 1,1,1, 4,1,5, "stone");
     objects.add(floor);
 
     List<Relation> relations = generateAllRelationsBetweeen(objects);
@@ -111,14 +111,14 @@ public class RelationGenerator {
    */
   public static void buildRailing() throws Exception {
     List<MinecraftObject> objects = new ArrayList<>();
-    final UniqueBlock ub = new UniqueBlock("blue", 1,1,1);
-    final UniqueBlock ub2 = new UniqueBlock("orange", 4,1,5);
+    final Block ub = new Block(1, 1, 1, "blue");
+    final Block ub2 = new Block(4, 1, 5, "orange");
 
     objects.add(ub);
     objects.add(ub2);
-    BigBlock floor = new BigBlock("floor", 1,1,1, 4,1,5);
-    BigBlock rail2 = new BigBlock("rail2", 1,2,1, 1,2,5);
-    BigBlock rail1 = new BigBlock("rail1", 4,2,1, 4,2,5);
+    BigBlock floor = new BigBlock("floor", 1,1,1, 4,1,5, "stone");
+    BigBlock rail2 = new BigBlock("rail2", 1,2,1, 1,2,5, "stone");
+    BigBlock rail1 = new BigBlock("rail1", 4,2,1, 4,2,5, "stone");
     objects.add(floor);
     objects.add(rail1);
     objects.add(rail2);

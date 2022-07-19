@@ -7,8 +7,8 @@ import org.eclipse.collections.api.set.MutableSet;
 import org.eclipse.collections.impl.factory.Sets;
 
 public class Row extends BigBlock {
-  public Row(String name, int x1, int z1, int x2, int z2, int y) {
-    super(name, x1, y, z1, x2, y, z2);
+  public Row(String name, int x1, int z1, int x2, int z2, int y, String type) {
+    super(name, x1, y, z1, x2, y, z2, type);
   }
 
   private static final Set<EnumSet<Features>> features = Set.of(
@@ -32,9 +32,9 @@ public class Row extends BigBlock {
           Features.ORIENTATION)
   );
 
-  public static Row parseObject(String objectDescription) {
-    BigBlock bb = BigBlock.parseObject(objectDescription);
-    return new Row(bb.name, bb.x1, bb.z1, bb.x2, bb.z2, bb.y1);
+  public static Row parseObject(String objectDescription, String type) {
+    BigBlock bb = BigBlock.parseObject(objectDescription, type);
+    return new Row(bb.name, bb.x1, bb.z1, bb.x2, bb.z2, bb.y1, type);
   }
 
   @Override
@@ -43,7 +43,7 @@ public class Row extends BigBlock {
   }
 
   @Override
-  public MutableSet<Relation> generateUnaryRelations(Orientation o) {
+  public MutableSet<Relation> generateOwnUnaryRelations(Orientation o) {
     var coords = getRotatedCoords(o);
     Relation orientation;
     var result = Sets.mutable.of(

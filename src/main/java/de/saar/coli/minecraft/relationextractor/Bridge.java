@@ -37,7 +37,9 @@ public class Bridge extends MinecraftObject {
    * @param y at which height the bridge is in
    * @param dir The orientation of the bridge (along X axis or Y axis)
    */
-  public Bridge(String name, int x1, int z1, int x2, int z2, int y, BridgeDirection dir) {
+  public Bridge(String name, int x1, int z1, int x2, int z2, int y, BridgeDirection dir, String type) {
+    super(type);
+
     this.x1pos = x1;
     this.x2pos = x2;
     this.z1pos = z1;
@@ -45,13 +47,13 @@ public class Bridge extends MinecraftObject {
     this.ypos = y;
     this.name = name;
     this.dir = dir;
-    floor = new Floor("floor-" + name, x1, z1, x2, z2, y);
+    floor = new Floor("floor-" + name, x1, z1, x2, z2, y, type);
     if (dir == BridgeDirection.ALONGX) {
-      railing1 = new Railing("railing-" + name, x1, z1, x2, z1, y);
-      railing2 = new Railing("railing-" + name, x1, z2, x2, z2, y);
+      railing1 = new Railing("railing-" + name, x1, z1, x2, z1, y, type);
+      railing2 = new Railing("railing-" + name, x1, z2, x2, z2, y, type);
     } else {
-      railing1 = new Railing("railing-" + name, x1, z1, x1, z2, y);
-      railing2 = new Railing("railing-" + name, x2, z1, x2, z2, y);
+      railing1 = new Railing("railing-" + name, x1, z1, x1, z2, y, type);
+      railing2 = new Railing("railing-" + name, x2, z1, x2, z2, y, type);
     }
 
     blocks = new HashSet<Block>();
@@ -103,6 +105,10 @@ public class Bridge extends MinecraftObject {
     result.add(new Relation(orientation,
         this, Lists.immutable.empty()));
     return result;
+  }
+
+  public MutableSet<Relation> generateOwnUnaryRelations(Orientation orientation) {
+    return Sets.mutable.empty();
   }
 
   @Override
