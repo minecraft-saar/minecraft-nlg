@@ -11,7 +11,7 @@ You can still compile and run minecraft-nlg standalone:
 
 ```
 ./gradlew shadowJar
-java -jar build/libs/minecraft-<version>-SNAPSHOT.jar -c -m <world.json> -i <grammar.irtg>`
+java -jar build/libs/minecraft-nlg-<version>-SNAPSHOT-all.jar -c -m <world.json> -i <grammar.irtg>`
 ```
 
 This runs minecraft-nlg in continuous mode (`-c`), in which it reads instruction actions from the console. Here are some files you can use as input to try this out:
